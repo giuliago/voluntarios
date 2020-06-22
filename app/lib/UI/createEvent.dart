@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-//import 'DB/database_helper.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart';
 //import 'package:sqflite/sqflite.dart'
 
 class CreateEvent extends StatelessWidget {
@@ -24,19 +24,19 @@ class CreateEvent extends StatelessWidget {
   }
 }
 
-  /* Place it inside the class
+  /* Colocar dentro da classe
   _insert() async {
     Database db = await DatabaseHelper.instance.database;
   
     //raw insert
     
-      int idevento = //value obtained from the button
-      String date = //value obtained from the button
-      String name = //value obtained from the button
-      String description = //value obtained from the button
-      int disp = //value obtained from the button
-      int idorganizacao = //value obtained from the static value
-      int idusuario = //value obtained from the static value
+      int idevento = //valor obtido pelo botão
+      String date = //valor obtido pelo botão
+      String name = //valor obtido pelo botão
+      String description = //valor obtido pelo botão
+      int disp = //valor obtido pelo botão
+      int idorganizacao = //valor obtido pelo valor estático
+      int idusuario = //valor obtido pelo valor estático
       int id = await db.rawInsert(
         'INSERT INTO ${DatabaseHelper.tb_evento}'
               '(${DatabaseHelper.columnIdEvent}, ${DatabaseHelper.columnDate}, ${DatabaseHelper.columnIdName}
