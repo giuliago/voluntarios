@@ -1,5 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import './eventDetails.dart';
+//import 'DB/database_helper.dart';
+//import 'package:sqflite/sqflite.dart'
 
 class Events extends StatefulWidget {
   Events({Key key}) : super(key: key);
@@ -90,3 +92,24 @@ Widget _buildCard(BuildContext context){
     );
   }
 }
+
+/* place code inside a class
+
+  _query() async {
+
+    // get a reference to the database
+    Database db = await DatabaseHelper.instance.database;
+
+    // raw query
+    List<Map> result = await db.rawQuery('SELECT * FROM tb_evento WHERE disponibilidade=?', ['1']);
+
+    // print the results
+    result.forEach((row) =>  {
+      element = {
+        'nome' : row.ColumnName,
+        'data' : row.ColumnDate,
+        'descricao' : row.ColumnDescript}
+    });
+    // .then((_) => element); (?)
+  }
+*/

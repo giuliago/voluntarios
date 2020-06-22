@@ -1,6 +1,8 @@
 ﻿import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path/path.dart';
+//import 'DB/database_helper.dart';
+//import 'package:sqflite/sqflite.dart'
 
 class Profile extends StatefulWidget {
   @override
@@ -230,3 +232,24 @@ class _ProfilePageState extends State<Profile> {
         );
   }
 }
+
+/* place code inside a class
+
+  _query() async {
+
+    // get a reference to the database
+    Database db = await DatabaseHelper.instance.database;
+
+    // raw query
+    List<Map> result = await db.rawQuery('SELECT * FROM tb_perfilusuario');
+
+    // print the results
+    result.forEach((row) =>  {
+      element = {
+        'nome' : row.ColumnName,
+        'email' : row.ColumnEmail,
+        'regiao' : row.ColumnRegiao}
+    });
+    // .then((_) => element); (?)
+  }
+*/
