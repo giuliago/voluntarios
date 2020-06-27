@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; //this is an external package for formatting date and time
 
 class DatePicker extends StatefulWidget {
+  final int firstDate;
+  final int lastDate;
+  final int stateVar;
+
+  DatePicker({Key key, this.firstDate, this.lastDate, this.stateVar}) : super(key: key); 
+
   @override
   _DatePickerState createState() => _DatePickerState();
+  
 }
 
 class _DatePickerState extends State<DatePicker> {
@@ -15,9 +22,9 @@ class _DatePickerState extends State<DatePicker> {
             context: context,
             initialDate: DateTime.now(),
             //which date will display when user open the picker
-            firstDate: DateTime(2020),
+            firstDate: DateTime(widget.firstDate),
             //what will be the previous supported year in picker
-            lastDate: DateTime(2050)
+            lastDate: DateTime(widget.lastDate)
                 ) //what will be the up to supported date in picker
         .then((pickedDate) {
       //then usually do the future job
@@ -32,8 +39,7 @@ class _DatePickerState extends State<DatePicker> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget state1(BuildContext context){
     return Card(
       margin: EdgeInsets.only(top: 10.0),
       child: ListTile(
@@ -43,8 +49,29 @@ class _DatePickerState extends State<DatePicker> {
             ? 'Nenhuma data selecionada!'
             : 'Data: ${DateFormat.yMMMd().format(_selectedDate)}'),
         leading: Icon(Icons.calendar_today),
-        onTap: _pickDateDialog
+        onTap:() =>_pickDateDialog(),
         ),      
       );
+  }
+
+  Widget state2(BuildContext context){
+    return Container(
+      child: ListTile(
+        contentPadding: EdgeInsets.only(left: 0.0),
+        onTap: () => _pickDateDialog(),
+        title: Text('Data de nascimento'),
+        subtitle: Text(_selectedDate == null //ternary expression to check if date is null
+          ? 'Nenhuma data selecionada!'
+          : 'Data: ${DateFormat.yMMMd().format(_selectedDate)}'),
+        leading: Icon(Icons.calendar_today),
+      ) 
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: widget.stateVar == 1 ? state1(context): state2(context)
+    );
   }
 }

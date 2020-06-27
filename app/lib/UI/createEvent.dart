@@ -39,7 +39,7 @@ class CreateEvent extends StatelessWidget {
                 )
               )
               ),
-              DatePicker(),
+              DatePicker(firstDate: 2020, lastDate: 2050, stateVar: 1),
               Container(
                 padding: EdgeInsets.only(top: 12.0),
                 child: TextField(
