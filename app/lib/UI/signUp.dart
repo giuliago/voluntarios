@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 import './calendar.dart';
 import 'package:intl/intl.dart'; 
 import './navBar.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart';
 
 class SignUp extends StatelessWidget{
+    DateTime _selectedDate;
+    TextEditingController nomeController = new TextEditingController();
+    TextEditingController regiaoController = new TextEditingController();
+    TextEditingController nascimentoController = new TextEditingController();
+    TextEditingController emailController = new TextEditingController();
+    TextEditingController senhaController = new TextEditingController();
+    TextEditingController confirmaSenhaController = new TextEditingController();
     DateTime _selectedDate;
 
   Widget build(BuildContext context){
@@ -15,6 +24,7 @@ class SignUp extends StatelessWidget{
         child: ListView(
             children: <Widget>[
               TextField(
+                controller: nascimentoController,
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
@@ -24,6 +34,7 @@ class SignUp extends StatelessWidget{
                 )
               ),
               TextField(
+                controller: nascimentoController,
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
@@ -34,6 +45,7 @@ class SignUp extends StatelessWidget{
                 )
               ),
               TextField(
+                controller: nascimentoController,
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
@@ -46,6 +58,7 @@ class SignUp extends StatelessWidget{
                 )
               ),
               TextField(
+                controller: emailControler;
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
@@ -55,6 +68,7 @@ class SignUp extends StatelessWidget{
                 )
               ),
               TextField(
+                controller: senhaController;
                 obscureText: true,
                 style: TextStyle(
                   fontSize: 18.0,
@@ -79,6 +93,7 @@ class SignUp extends StatelessWidget{
               Padding(padding: EdgeInsets.only(top: 50.0),
                 child: new RaisedButton(
                   onPressed: (){
+                  _insert();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -96,5 +111,23 @@ class SignUp extends StatelessWidget{
         ),       
       )
       );
+  }
+  _insert() async {
+    Database db = await DatabaseHelper.instance.database;
+  
+    //raw insert
+    
+      //int idusuario = //valor obtido pelo botão
+      String name = nomeController.text;
+      String regiao = regiaoController.text;
+      String nascimento = nascimentoController.text;
+      String email = emailController.text;
+      String senha = senhaController.text;
+
+      int id = await db.rawInsert(
+        'INSERT INTO ${DatabaseHelper.tableUser}'
+              '${DatabaseHelper.columnName}, ${DatabaseHelper.columnEmail}, ${DatabaseHelper.columnSenha}, ${DatabaseHelper.columnNascimento}, ${DatabaseHelper.columnRegiao}) '
+              'VALUES(?, ?, ?, ?, ?)', [name, email, senha, nascimento, regiao]);
+      print(await db.query(DatabaseHelper.tableUser));
   }
 }
