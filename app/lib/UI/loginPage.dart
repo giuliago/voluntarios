@@ -11,9 +11,9 @@ class LoginPage extends StatelessWidget{
         color: Colors.white,
         child: Column(
         children: <Widget>[
-        Card(
-          color: Colors.grey,
-        child: Column(
+        Container(
+          color: Colors.grey[100],
+          child: Column(
           children: <Widget>[
             const Image(
               image: NetworkImage('https://placeimg.com/640/480/any'),
@@ -21,13 +21,21 @@ class LoginPage extends StatelessWidget{
             ),
             new Row(
               children: <Widget>[
-                new RaisedButton(
+                new FlatButton(
                   padding: EdgeInsets.only(left: 100.0),
-                  color: Colors.grey,
+                  color: Colors.grey[100],
+                  onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginPage(),
+                    ),
+                  );
+                },
                   child: Text('Sign In', style: TextStyle(fontSize: 18.0),)
                 ),
-                new RaisedButton(
-                  color: Colors.grey,
+                new FlatButton(
+                  color: Colors.grey[100],
                   padding: EdgeInsets.fromLTRB(100.0, 0.0, 80.0, 0.0),
                   child: Text('Sign Up', style: TextStyle(fontSize: 18.0),),
                   onPressed: (){
@@ -70,7 +78,7 @@ class LoginPage extends StatelessWidget{
                 )
             ),
             Padding(padding: EdgeInsets.only(top: 50.0),
-            child: new RaisedButton(
+            child: new FlatButton(
               color: Colors.white,
               padding: EdgeInsets.fromLTRB(50.0, 0.0, 50.0, 0.0),
               textColor: Colors.deepOrange,

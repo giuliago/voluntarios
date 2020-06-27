@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:convert';
+import './eventDetails.dart';
 /*import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';*/
  
@@ -103,9 +104,15 @@ class UploadImageState extends State<UploadImage> {
               child: RaisedButton(
               padding: EdgeInsets.all(0.0),
               color: Colors.white70,
-              /*onPressed: ,*/
+              onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EventDetails(),
+                    ),
+                  );
+                },
               child: Text('Escolher imagem'),
-              textColor: Colors.white,
             ),
             ),
           ],

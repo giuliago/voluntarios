@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:voluntarios/UI/eventDetails.dart';
 import 'package:voluntarios/UI/imageUploader.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart';
 import 'package:flutter/cupertino.dart';
@@ -54,7 +55,16 @@ class CreateEvent extends StatelessWidget {
               UploadImage(),  
               RaisedButton(
                 padding: EdgeInsets.all(12.0),
-                color: Colors.deepOrange,
+                color: Colors.orange[700],
+                textColor: Colors.white,
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EventDetails(),
+                    ),
+                  );
+                },
                 child: Text('Criar Evento'),
               )    
             ],
