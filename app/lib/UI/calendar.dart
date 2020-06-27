@@ -41,7 +41,7 @@ class _DatePickerState extends State<DatePicker> {
         title: Text('Data do evento'),
         subtitle: Text(_selectedDate == null //ternary expression to check if date is null
             ? 'Nenhuma data selecionada!'
-            : 'Picked Date: ${DateFormat.yMMMd().format(_selectedDate)}'),
+            : 'Data: ${DateFormat.yMMMd().format(_selectedDate)}'),
         leading: Icon(Icons.calendar_today),
         onTap: _pickDateDialog
         ),      

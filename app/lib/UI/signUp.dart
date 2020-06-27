@@ -9,7 +9,9 @@ class SignUp extends StatelessWidget{
   Widget build(BuildContext context){
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.all(20.0),
+        color: Colors.white,
+        child: Container(
+          margin: EdgeInsets.all(40.0),
         child: ListView(
             children: <Widget>[
               TextField(
@@ -62,6 +64,18 @@ class SignUp extends StatelessWidget{
                   icon: Icon(Icons.lock),
                 )
               ),
+              Container(
+                padding: EdgeInsets.only(left: 40.0),
+                child: TextField(
+                obscureText: true,
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+                decoration: InputDecoration(
+                  labelText: 'Confirme a senha',
+                )
+              ),
+              ),            
               Padding(padding: EdgeInsets.only(top: 50.0),
                 child: new RaisedButton(
                   onPressed: (){
@@ -72,12 +86,14 @@ class SignUp extends StatelessWidget{
                     ),
                   );
                 },
-                  child: Text('Sign Up'),
+                  child: Text('Sign Up', style: TextStyle(fontSize: 15)),
+                  textColor: Colors.white,
                   color: Colors.deepOrange,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
                   ))       
             ],
-        )
+        ),
+        ),       
       )
       );
   }

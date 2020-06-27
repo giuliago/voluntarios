@@ -21,8 +21,6 @@ class CreateEvent extends StatelessWidget {
                 ),
                 decoration: InputDecoration(
                   labelText: 'Nome do evento',
-                  fillColor: Colors.white,
-                  filled: true,
                 )
               ),
               Container(
@@ -49,8 +47,6 @@ class CreateEvent extends StatelessWidget {
                 ),
                 decoration: InputDecoration(
                   labelText: 'Localização',
-                  fillColor: Colors.white,
-                  filled: true,
                   icon: Icon(Icons.location_on),
                 ),
               )

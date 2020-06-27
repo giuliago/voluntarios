@@ -6,7 +6,9 @@ class LoginPage extends StatelessWidget{
 
   Widget build(BuildContext context){
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
+        color: Colors.white,
         child: Column(
         children: <Widget>[
         Card(
@@ -22,15 +24,7 @@ class LoginPage extends StatelessWidget{
                 new RaisedButton(
                   padding: EdgeInsets.only(left: 100.0),
                   color: Colors.grey,
-                  child: Text('Sign In', style: TextStyle(fontSize: 18.0),),
-                  onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NavBar(),
-                    ),
-                  );
-                },
+                  child: Text('Sign In', style: TextStyle(fontSize: 18.0),)
                 ),
                 new RaisedButton(
                   color: Colors.grey,
@@ -54,15 +48,18 @@ class LoginPage extends StatelessWidget{
           padding: EdgeInsets.all(50.0),
           child: Column(
             children: <Widget>[
-              TextField(
-              style: TextStyle(
-                  fontSize: 15.0,
+              Padding(
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: TextField(
+                  style: TextStyle(
+                      fontSize: 15.0,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'e-mail',
+                      icon: Icon(Icons.email)
+                    )
                 ),
-                decoration: InputDecoration(
-                  labelText: 'e-mail',
-                  icon: Icon(Icons.email)
-                )
-            ),
+              ),
             TextField(
               style: TextStyle(
                   fontSize: 15.0,
@@ -74,12 +71,21 @@ class LoginPage extends StatelessWidget{
             ),
             Padding(padding: EdgeInsets.only(top: 50.0),
             child: new RaisedButton(
-              padding: EdgeInsets.fromLTRB(50.0, 0.0, 50.0, 0.0),
-              onPressed: null,
-              child: Text('Sign In'),
               color: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-              ))       
+              padding: EdgeInsets.fromLTRB(50.0, 0.0, 50.0, 0.0),
+              textColor: Colors.deepOrange,
+              onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NavBar(),
+                    ),
+                  );
+                },
+              child: Text('Sign In', style: TextStyle(fontSize: 15)), 
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: BorderSide(color: Colors.deepOrange)),
+              )
+              )       
             ],
           )
         )
