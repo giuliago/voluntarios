@@ -1,27 +1,77 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:voluntarios/UI/imageUploader.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart';
+import 'package:flutter/cupertino.dart';
+import 'calendar.dart';
 //import 'package:sqflite/sqflite.dart'
 
 class CreateEvent extends StatelessWidget {
+  final maxLines = 8;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Column(
-          // center the children
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(
-              Icons.airport_shuttle,
-              size: 160.0,
-              color: Colors.blue,
-            ),
-            Text("Third Tab")
-          ],
+    return Scaffold(
+      body: Container(
+        margin: EdgeInsets.all(15.0),
+          child: ListView(
+            children: <Widget>[
+                 TextField(
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+                decoration: InputDecoration(
+                  labelText: 'Nome do evento',
+                  fillColor: Colors.white,
+                  filled: true,
+                )
+              ),
+              Container(
+                height: maxLines*24.0,
+                padding: EdgeInsets.only(top: 12.0),
+                child: TextField(
+                maxLines: maxLines,
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+                decoration: InputDecoration(
+                  labelText: 'Descrição do evento',
+                  fillColor: Colors.white,
+                  filled: true,
+                )
+              )
+              ),
+              DatePicker(),
+              Container(
+                padding: EdgeInsets.only(top: 12.0),
+                child: TextField(
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+                decoration: InputDecoration(
+                  labelText: 'Localização',
+                  fillColor: Colors.white,
+                  filled: true,
+                  icon: Icon(Icons.location_on),
+                ),
+              )
+              ), 
+              UploadImage(),  
+              RaisedButton(
+                padding: EdgeInsets.all(12.0),
+                color: Colors.deepOrange,
+                child: Text('Criar Evento'),
+              )    
+            ],
+            )
         ),
-      ),
+      appBar: AppBar(
+        title: Text("Voluntários"),
+        backgroundColor: Colors.orange,
+      )
     );
+
   }
+
 }
 
   /* Colocar dentro da classe

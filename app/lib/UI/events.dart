@@ -61,38 +61,11 @@ Widget _buildCard(BuildContext context){
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-       children: <Widget>[
-         DropdownButton<String>(
-      value: dropdownValue,
-      icon: Icon(Icons.arrow_downward),
-      iconSize: 24,
-      elevation: 16,
-      style: TextStyle(color: Colors.deepPurple),
-      underline: Container(
-        height: 2,
-        color: Colors.deepPurpleAccent,
-      ),
-      onChanged: (String newValue) {
-        setState(() {
-          dropdownValue = newValue;          
-        });
-      },
-      items: <String>['Ativos', 'Encerrados', 'Criados']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    ),
-    _buildCard(context)]
-    )
-    );
+  return Scaffold(
+    body: _buildCard(context)
+  );
   }
 }
-
 /* place code inside a class
 
   _query() async {

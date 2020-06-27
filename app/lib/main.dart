@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:voluntarios/UI/loginPage.dart';
 import 'UI/navBar.dart';
 import 'UI/eventDetails.dart';
+import 'UI/imageUploader.dart';
+import 'UI/loginPage.dart';
 
 void main() => runApp(MaterialApp(
   home: MyApp(),
@@ -23,7 +26,7 @@ class MyApp extends  StatelessWidget {
           // Notice that the counter didn't reset back to zero; the application
           // is not restarted.
           primarySwatch: Colors.deepOrange),
-      home: NavBar(),
+      home: LoginPage(),
       routes: <String, WidgetBuilder> {
       '/details': (BuildContext context) => EventDetails(),
       }
