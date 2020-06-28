@@ -57,12 +57,18 @@ class _DatePickerState extends State<DatePicker> {
   Widget state2(BuildContext context){
     return Container(
       child: ListTile(
-        contentPadding: EdgeInsets.only(left: 0.0),
+        contentPadding: EdgeInsets.fromLTRB(40.0, 0, 40.0, 0),
         onTap: () => _pickDateDialog(),
-        title: Text('Data de nascimento'),
-        subtitle: Text(_selectedDate == null //ternary expression to check if date is null
-          ? 'Nenhuma data selecionada!'
+        title: Align(
+          child: Text('Data de nascimento'),
+          alignment: Alignment(-1.23, 0),
+        ),     
+        subtitle: Align(
+          child: Text(_selectedDate == null //ternary expression to check if date is null
+          ? 'Não selecionado!'
           : 'Data: ${DateFormat.yMMMd().format(_selectedDate)}'),
+          alignment: Alignment(-1.18, 0),
+        ),
         leading: Icon(Icons.calendar_today),
       ) 
     );

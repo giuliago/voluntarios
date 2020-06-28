@@ -25,13 +25,17 @@ class _SignUp extends State<SignUp> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      color: Colors.white,
-      child: Container(
-        margin: EdgeInsets.all(40.0),
+      body: Container(
         child: ListView(
+        /*margin: EdgeInsets.all(40.0),*/
           children: <Widget>[
-            TextField(
+            Image(
+              image: NetworkImage('https://placeimg.com/640/480/any'),
+              height: 250.0,
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(40.0, 10.0, 40.0, 0.0),
+              child: TextField(
                 controller: nomeController,
                 style: TextStyle(
                   fontSize: 18.0,
@@ -40,7 +44,9 @@ class _SignUp extends State<SignUp> {
                   labelText: 'Nome',
                   icon: Icon(Icons.person),
                 )),
+            ),        
             Container(
+              padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
               child: Row(children: <Widget>[
                 Expanded(
                   flex: 0,
@@ -86,7 +92,9 @@ class _SignUp extends State<SignUp> {
               ]),
             ),
             DatePicker(firstDate: 2020, lastDate: 2050, stateVar: 2),
-            TextField(
+            Padding(
+              padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
+              child: TextField(
                 controller: emailController,
                 style: TextStyle(
                   fontSize: 18.0,
@@ -95,7 +103,10 @@ class _SignUp extends State<SignUp> {
                   labelText: 'E-mail',
                   icon: Icon(Icons.email),
                 )),
-            TextField(
+            ),
+            Padding (
+              padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
+              child: TextField(
                 controller: senhaController,
                 obscureText: true,
                 style: TextStyle(
@@ -105,8 +116,9 @@ class _SignUp extends State<SignUp> {
                   labelText: 'Senha',
                   icon: Icon(Icons.lock),
                 )),
+            ),
             Container(
-              padding: EdgeInsets.only(left: 40.0),
+              padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
               child: TextField(
                   controller: confirmaSenhaController,
                   obscureText: true,
@@ -118,28 +130,25 @@ class _SignUp extends State<SignUp> {
                   )),
             ),
             Padding(
-                padding: EdgeInsets.only(top: 50.0),
+                padding: EdgeInsets.all(37.0),
                 child: new RaisedButton(
                   onPressed: () {
-                    _confirmarEmail();
-                    String emailValido = getStringValuesSF();
-                    if (senhaController.text == confirmaSenhaController.text) {
-                      // Confirma a senha
-                      if (emailValido == "sim") {
-                        removeValues();
-                        _insert();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => NavBar(),
-                          ),
-                        );
-                      } else {
-                        // inserir hint de email incorreto
-                      }
-                    } else {
-                      // inserir o hint da senha incorreta
-                    }
+                    FutureBuilder<String>(
+                      future: _insert(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<String> snapshot) {
+                        if (snapshot.hasData) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NavBar(),
+                            ),
+                          );
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      },
+                    );
                   },
                   child: Text('Sign Up', style: TextStyle(fontSize: 15)),
                   textColor: Colors.white,
@@ -150,7 +159,7 @@ class _SignUp extends State<SignUp> {
           ],
         ),
       ),
-    ));
+    );
   }
 
   _insert() async {

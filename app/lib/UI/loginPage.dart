@@ -21,8 +21,11 @@ class LoginPage extends StatelessWidget{
             ),
             new Row(
               children: <Widget>[
-                new FlatButton(
-                  padding: EdgeInsets.only(left: 100.0),
+                Expanded(
+                  flex: 2,
+                  child: FlatButton(
+                  highlightColor: Colors.grey[100],
+                  padding: EdgeInsets.only(left: 50.0),
                   color: Colors.grey[100],
                   onPressed: (){
                   Navigator.push(
@@ -34,9 +37,13 @@ class LoginPage extends StatelessWidget{
                 },
                   child: Text('Sign In', style: TextStyle(fontSize: 18.0),)
                 ),
-                new FlatButton(
+                ),
+                Expanded(
+                  flex: 2,
+                  child: FlatButton(
+                  highlightColor: Colors.grey[100],
+                  padding: EdgeInsets.only(right: 50.0),
                   color: Colors.grey[100],
-                  padding: EdgeInsets.fromLTRB(100.0, 0.0, 80.0, 0.0),
                   child: Text('Sign Up', style: TextStyle(fontSize: 18.0),),
                   onPressed: (){
                   Navigator.push(
@@ -47,6 +54,7 @@ class LoginPage extends StatelessWidget{
                   );
                 },
                 )
+                ), 
               ]
             ),
           ],
