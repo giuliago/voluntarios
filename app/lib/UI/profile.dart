@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path/path.dart';
+import './calendar.dart';
 //import 'DB/database_helper.dart';
 //import 'package:sqflite/sqflite.dart'
 
@@ -11,225 +12,153 @@ class Profile extends StatefulWidget {
 
 class _ProfilePageState extends State<Profile> {
   File _image;
+  bool _isEditingText = false;
+  TextEditingController _editingController;
+  String initialText;
+
+  void initState() {
+    super.initState();
+    _editingController = TextEditingController(text: initialText);
+  }
+
+  @override
+  void dispose() {
+    _editingController.dispose();
+    super.dispose();
+  }
+
+  Widget _editTitleTextField(String initialText) {
+    if (_isEditingText)
+      return SizedBox(
+        width: 260,
+        child: TextField(
+          onSubmitted: (newValue) {
+            setState(() {
+              initialText = newValue;
+              _isEditingText = false;
+            });
+          },
+          autofocus: true,
+          controller: _editingController,
+        ),
+      );
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _isEditingText = true;
+        });
+      },
+      child: Text(
+        initialText,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 18.0,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Builder(
-        builder: (context) =>  Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.center,
-                    child: CircleAvatar(
-                      radius: 100,
-                      child: ClipOval(
-                        child: new SizedBox(
-                          width: 180.0,
-                          height: 180.0,
-                          child: (_image!=null)?Image.file(
-                            _image,
-                            fit: BoxFit.fill,
-                          ):Image.network(
-                            "https://images.unsplash.com/photo-1502164980785-f8aa41d53611?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ),
+      body: Builder(
+        builder: (context) => Container(
+          child: ListView(children: <Widget>[
+            Center(
+              child: Padding(
+                padding: EdgeInsets.only(top: 30.0),
+                child: CircleAvatar(
+                  radius: 70,
+                  child: ClipOval(
+                    child: new SizedBox(
+                      width: 180.0,
+                      height: 180.0,
+                      child: (_image != null)
+                          ? Image.file(
+                              _image,
+                              fit: BoxFit.fill,
+                            )
+                          : Image.network(
+                              "https://images.unsplash.com/photo-1502164980785-f8aa41d53611?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                              fit: BoxFit.fill,
+                            ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 60.0),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.camera,
-                        size: 30.0,
-                      ),
-                      /*onPressed: () {
-                        getImage();
-                      },*/
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      child: Column(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('Username',
-                                style: TextStyle(
-                                    color: Colors.blueGrey, fontSize: 18.0)),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('Michelle James',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      child: Icon(
-                        Icons.edit,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      child: Column(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('Birthday',
-                                style: TextStyle(
-                                    color: Colors.blueGrey, fontSize: 18.0)),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('1st April, 2000',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      child: Icon(
-                        Icons.edit,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      child: Column(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('Location',
-                                style: TextStyle(
-                                    color: Colors.blueGrey, fontSize: 18.0)),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('Paris, France',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      child: Icon(
-                        Icons.edit,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.all(20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text('Email',
-                        style:
-                            TextStyle(color: Colors.blueGrey, fontSize: 18.0)),
-                    SizedBox(width: 20.0),
-                    Text('michelle123@gmail.com',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold)),
-                  ],
                 ),
               ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  RaisedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    elevation: 4.0,
-                    splashColor: Colors.blueGrey,
-                    child: Text(
-                      'Cancel',
-                      style: TextStyle(color: Colors.white, fontSize: 16.0),
-                    ),
-                  ),
-                  RaisedButton(
-                    /*onPressed: () {
+            ),
+            FlatButton(
+              onPressed: () => debugPrint('teste'),
+              /*{
                      uploadPic(context);
-                    },*/
-                                     
-                    elevation: 4.0,
-                    splashColor: Colors.blueGrey,
-                    child: Text(
-                      'Submit',
-                      style: TextStyle(color: Colors.white, fontSize: 16.0),
-                    ),
+                    }*/
+              child: Text(
+                'Editar foto',
+                style: TextStyle(fontSize: 16.0, color: Colors.deepOrange),
+              ),
+              color: Colors.grey[50],
+            ),
+            Padding(
+                padding: EdgeInsets.fromLTRB(60.0, 10.0, 60.0, 10.0),
+                child: Row(children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(right: 7),
+                    child: Icon(Icons.person),
                   ),
-              
-                ],
-              )
-            ],
-          ),
+                  _editTitleTextField('Giulianna Gonçalves')
+                ])),
+            Padding(
+                padding: EdgeInsets.fromLTRB(60.0, 10.0, 60.0, 10.0),
+                child: Row(children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(right: 7),
+                    child: Icon(Icons.location_on),
+                  ),
+                  _editTitleTextField('Brasília')
+                ])),
+            Padding(
+                padding: EdgeInsets.fromLTRB(60.0, 20.0, 60.0, 20.0),
+                child: Text('Account settings',
+                    style: TextStyle(color: Colors.grey[500], fontSize: 16.0))),
+            Padding(
+                padding: EdgeInsets.fromLTRB(60.0, 10.0, 60.0, 10.0),
+                child: Row(children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(right: 7),
+                    child: Icon(Icons.email),
+                  ),
+                  _editTitleTextField('giulianna@hotmail.com')
+                ])),
+            Padding(
+                padding: EdgeInsets.fromLTRB(60.0, 10.0, 60.0, 10.0),
+                child: Row(children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(right: 7),
+                    child: Icon(Icons.lock),
+                  ),
+                  _editTitleTextField('Password')
+                ])),
+            Padding(
+                padding: EdgeInsets.fromLTRB(50, 20, 50, 0),
+                child: FlatButton(
+                    color: Colors.orange[700],
+                    onPressed: () => debugPrint('Salvar perfil'),
+                    child: Text(
+                      'Salvar Perfil',
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                    ))),
+            Padding(
+                padding: EdgeInsets.fromLTRB(50, 0, 50, 00),
+                child: FlatButton(
+                    onPressed: () => debugPrint('log out'),
+                    child: Text(
+                      'Log Out',
+                      style: TextStyle(color: Colors.red, fontSize: 16),
+                    ))),
+          ]),
         ),
-        ),
-        );
+      ),
+    );
   }
 }
 

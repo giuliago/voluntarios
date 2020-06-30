@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:voluntarios/UI/home.dart';
 import './calendar.dart';
 import 'package:intl/intl.dart';
 import './navBar.dart';
@@ -15,7 +16,6 @@ class SignUp extends StatefulWidget {
 
 class _SignUp extends State<SignUp> {
   String dropdownValue = 'Brasília';
-  DateTime _selectedDate;
   TextEditingController nomeController = new TextEditingController();
   TextEditingController regiaoController = new TextEditingController();
   TextEditingController nascimentoController = new TextEditingController();
@@ -27,7 +27,7 @@ class _SignUp extends State<SignUp> {
     return Scaffold(
       body: Container(
         child: ListView(
-        /*margin: EdgeInsets.all(40.0),*/
+          /*margin: EdgeInsets.all(40.0),*/
           children: <Widget>[
             Image(
               image: NetworkImage('https://placeimg.com/640/480/any'),
@@ -36,15 +36,15 @@ class _SignUp extends State<SignUp> {
             Padding(
               padding: EdgeInsets.fromLTRB(40.0, 10.0, 40.0, 0.0),
               child: TextField(
-                controller: nomeController,
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
-                decoration: InputDecoration(
-                  labelText: 'Nome',
-                  icon: Icon(Icons.person),
-                )),
-            ),        
+                  controller: nomeController,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: 'Nome',
+                    icon: Icon(Icons.person),
+                  )),
+            ),
             Container(
               padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
               child: Row(children: <Widget>[
@@ -95,27 +95,27 @@ class _SignUp extends State<SignUp> {
             Padding(
               padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
               child: TextField(
-                controller: emailController,
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
-                decoration: InputDecoration(
-                  labelText: 'E-mail',
-                  icon: Icon(Icons.email),
-                )),
+                  controller: emailController,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: 'E-mail',
+                    icon: Icon(Icons.email),
+                  )),
             ),
-            Padding (
+            Padding(
               padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
               child: TextField(
-                controller: senhaController,
-                obscureText: true,
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
-                decoration: InputDecoration(
-                  labelText: 'Senha',
-                  icon: Icon(Icons.lock),
-                )),
+                  controller: senhaController,
+                  obscureText: true,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: 'Senha',
+                    icon: Icon(Icons.lock),
+                  )),
             ),
             Container(
               padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
@@ -133,21 +133,11 @@ class _SignUp extends State<SignUp> {
                 padding: EdgeInsets.all(37.0),
                 child: new RaisedButton(
                   onPressed: () {
-                    FutureBuilder<String>(
-                      future: _insert(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<String> snapshot) {
-                        if (snapshot.hasData) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NavBar(),
-                            ),
-                          );
-                        } else {
-                          return CircularProgressIndicator();
-                        }
-                      },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NavBar(),
+                      ),
                     );
                   },
                   child: Text('Sign Up', style: TextStyle(fontSize: 15)),
