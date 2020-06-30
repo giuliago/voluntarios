@@ -3,6 +3,7 @@ import './navBar.dart';
 import './signUp.dart';
 
 class LoginPage extends StatelessWidget {
+
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -53,6 +54,8 @@ class LoginPage extends StatelessWidget {
                                   MaterialPageRoute(
                                     builder: (context) => SignUp(),
                                   ),
+                                ).then(
+                                  (novoCadastro) => debugPrint(novoCadastro.toString()),
                                 );
                               },
                             )),

@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:voluntarios/UI/home.dart';
 import './calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:voluntarios/models/cadastro.dart';
 import './navBar.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -133,12 +134,13 @@ class _SignUp extends State<SignUp> {
                 padding: EdgeInsets.all(37.0),
                 child: new RaisedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NavBar(),
-                      ),
-                    );
+                    final String name = nomeController.text;
+                    final String location = regiaoController.text;
+                    //final String birthday = nascimentoController.text;
+                    final String email = emailController.text;
+                    final String password = senhaController.text;
+                    final Cadastro novoCadastro = new Cadastro(name, location, email, password);
+                    Navigator.pop(context, novoCadastro);
                   },
                   child: Text('Sign Up', style: TextStyle(fontSize: 15)),
                   textColor: Colors.white,
