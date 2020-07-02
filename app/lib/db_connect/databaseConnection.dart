@@ -111,7 +111,6 @@ Future<List<Cadastro>> findAll() {
       final List<Cadastro> cadastros = List();
       for (Map<String, dynamic> map in maps) {
         final Cadastro cadastro = Cadastro(
-          map['idusuario'],
           map['nome'],
           map['email'],
           map['senha'],
