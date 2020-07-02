@@ -1,6 +1,7 @@
 import 'dart:io' show Directory;
 import 'package:path/path.dart' show join;
 import 'package:sqflite/sqflite.dart';
+import 'package:voluntarios/models/cadastro.dart';
 import 'package:path_provider/path_provider.dart'
     show getApplicationDocumentsDirectory;
 
@@ -76,4 +77,49 @@ class DatabaseHelper {
           )
           ''');
   }
+}
+
+Future<Database> createDatabase() {
+  return getDatabasesPath().then((dbPath) {
+    final String path = join(dbPath, 'db_voluntarios.db');
+    return openDatabase(path, onCreate: (db, version) {
+      db.execute('CREATE TABLE tb_perfilusuario ('
+          'idusuario INTEGER PRIMARY KEY, '
+          'nome VARCHAR(60), '
+          'email VARCHAR(45) UNIQUE,'
+          'senha VARCHAR(45),'
+          'nascimento DATETIME,'
+          'regiao VARCHAR(45))');
+    }, version: 1);
+  });
+}
+
+Future<int> save(Cadastro cadastro) {
+  return createDatabase().then((db) {
+    final Map<String, dynamic> cadastroMap = Map();
+    cadastroMap['nome'] = cadastro.name;
+    cadastroMap['email'] = cadastro.email;
+    cadastroMap['senha'] = cadastro.password;
+    cadastroMap['regiao'] = cadastro.location;
+    return db.insert('tb_perfilusuario', cadastroMap);
+  });
+}
+
+Future<List<Cadastro>> findAll() {
+  return createDatabase().then((db) {
+    return db.query('tb_perfilusuario').then((maps) {
+      final List<Cadastro> cadastros = List();
+      for (Map<String, dynamic> map in maps) {
+        final Cadastro cadastro = Cadastro(
+          map['idusuario'],
+          map['nome'],
+          map['email'],
+          map['senha'],
+          map['regiao'],
+        );
+        cadastros.add(cadastro);
+      }
+      return cadastros;
+    });
+  });
 }

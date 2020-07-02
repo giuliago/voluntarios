@@ -139,8 +139,13 @@ class _SignUp extends State<SignUp> {
                     //final String birthday = nascimentoController.text;
                     final String email = emailController.text;
                     final String password = senhaController.text;
-                    final Cadastro novoCadastro = new Cadastro(name, location, email, password);
-                    Navigator.pop(context, novoCadastro);
+                    final Cadastro novoCadastro =
+                        new Cadastro(name, location, email, password);
+                    save(Cadastro(name, email, password, location)).then((id) {
+                      findAll().then(
+                          (cadastros) => debugPrint(cadastros.toString()));
+                    });
+                    //Navigator.pop(context, novoCadastro);
                   },
                   child: Text('Sign Up', style: TextStyle(fontSize: 15)),
                   textColor: Colors.white,
