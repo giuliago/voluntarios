@@ -56,48 +56,25 @@ class _DatePickerState extends State<DatePicker> {
   }
 
   Widget state2(BuildContext context) {
-    return Container(
+    return SizedBox(
         child: ListTile(
-      contentPadding: EdgeInsets.fromLTRB(40.0, 0, 40.0, 0),
+      contentPadding: EdgeInsets.all(0),
       onTap: () => _pickDateDialog(),
       title: Align(
-        child: Text('Data de nascimento'),
-        alignment: Alignment(-1.23, 0),
+        child: Text('Data de nascimento',
+            style: TextStyle(fontSize: 14, color: Colors.grey[700])),
+        alignment: Alignment(-1.5, 0),
       ),
       subtitle: Align(
         child: Text(
-            _selectedDate == null //ternary expression to check if date is null
-                ? 'Não selecionado!'
-                : 'Data: ${DateFormat.yMMMd().format(_selectedDate)}'),
-        alignment: Alignment(-1.18, 0),
+          _selectedDate == null //ternary expression to check if date is null
+              ? 'Não selecionado!'
+              : 'Data: ${DateFormat.yMMMd().format(_selectedDate)}',
+          style: TextStyle(color: Colors.lightGreen),
+        ),
+        alignment: Alignment(-1.4, 0),
       ),
       leading: Icon(Icons.calendar_today),
-    ));
-  }
-
-  Widget state3(BuildContext context) {
-    return Container(
-        child: ListTile(
-      contentPadding: EdgeInsets.fromLTRB(40.0, 0, 40.0, 0),
-      onTap: () => _pickDateDialog(),
-      title: Align(
-        child: Text(
-          'Data de nascimento',
-          style: TextStyle(color: Colors.black),
-        ),
-        alignment: Alignment(-1.23, 0),
-      ),
-      subtitle: Align(
-        child: Text(
-            _selectedDate == null //ternary expression to check if date is null
-                ? 'Não selecionado!'
-                : 'Data: ${DateFormat.yMMMd().format(_selectedDate)}'),
-        alignment: Alignment(-1.18, 0),
-      ),
-      leading: Icon(
-        Icons.calendar_today,
-        color: Colors.black,
-      ),
     ));
   }
 
