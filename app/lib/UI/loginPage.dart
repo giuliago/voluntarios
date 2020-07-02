@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import './navBar.dart';
 import './signUp.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart';
+import 'package:voluntarios/models/cadastro.dart';
 
 class LoginPage extends StatelessWidget {
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController senhaController = new TextEditingController();
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +59,8 @@ class LoginPage extends StatelessWidget {
                                     builder: (context) => SignUp(),
                                   ),
                                 ).then(
-                                  (novoCadastro) => debugPrint(novoCadastro.toString()),
+                                  (novoCadastro) =>
+                                      debugPrint(novoCadastro.toString()),
                                 );
                               },
                             )),
@@ -70,6 +75,7 @@ class LoginPage extends StatelessWidget {
                         padding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).viewInsets.bottom),
                         child: TextField(
+                            controller: emailController,
                             style: TextStyle(
                               fontSize: 15.0,
                             ),
@@ -77,6 +83,7 @@ class LoginPage extends StatelessWidget {
                                 labelText: 'e-mail', icon: Icon(Icons.email))),
                       ),
                       TextField(
+                          controller: senhaController,
                           style: TextStyle(
                             fontSize: 15.0,
                           ),
@@ -90,12 +97,24 @@ class LoginPage extends StatelessWidget {
                             padding: EdgeInsets.fromLTRB(50.0, 0.0, 50.0, 0.0),
                             textColor: Colors.deepOrange,
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => NavBar(),
-                                ),
-                              );
+                              String email = emailController.text;
+                              String senha = senhaController.text;
+                              future:
+                              Future.delayed(Duration(seconds: 1))
+                                  .then((value) => findAll());
+                              builder:
+                              (context, snapshot) {
+                                final List<Cadastro> cadastros = snapshot.data;
+                                if (cadastros.contains(email) &&
+                                    cadastros.contains(senha)) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => NavBar(),
+                                    ),
+                                  );
+                                }
+                              };
                             },
                             child:
                                 Text('Sign In', style: TextStyle(fontSize: 15)),
