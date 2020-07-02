@@ -139,9 +139,9 @@ class _SignUp extends State<SignUp> {
                     //final String birthday = nascimentoController.text;
                     final String email = emailController.text;
                     final String password = senhaController.text;
-                    final Cadastro novoCadastro =
-                        new Cadastro(name, location, email, password);
-                    save(Cadastro('nome', 'email', 'senha', 'regiao'))
+                    //final Cadastro novoCadastro =
+                    // new Cadastro(name, location, email, password);
+                    cadastro(Cadastro(name, email, password, location))
                         .then((id) {
                       findAll().then(
                           (cadastros) => debugPrint(cadastros.toString()));

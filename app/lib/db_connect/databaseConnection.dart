@@ -81,7 +81,7 @@ class DatabaseHelper {
 
 Future<Database> createDatabase() {
   return getDatabasesPath().then((dbPath) {
-    final String path = join(dbPath, 'db_voluntarios.db');
+    final String path = join(dbPath, 'voluntarios/db/db_voluntarios.db');
     return openDatabase(path, onCreate: (db, version) {
       db.execute('CREATE TABLE tb_perfilusuario ('
           'idusuario INTEGER PRIMARY KEY, '
@@ -102,6 +102,26 @@ Future<int> save(Cadastro cadastro) {
     cadastroMap['senha'] = cadastro.password;
     cadastroMap['regiao'] = cadastro.location;
     return db.insert('tb_perfilusuario', cadastroMap);
+  });
+}
+
+Future<int> cadastro(Cadastro cadastro) {
+  //Database db = await DatabaseHelper.instance.database;
+
+  String name = cadastro.name;
+  String email = cadastro.email;
+  String senha = cadastro.password;
+  String regiao = cadastro.location;
+
+  return createDatabase().then((db) async {
+    dynamic id = await db.rawInsert(
+        'INSERT INTO ${DatabaseHelper.tableUser}'
+        '${DatabaseHelper.columnName}, ${DatabaseHelper.columnEmail}, ${DatabaseHelper.columnSenha}, ${DatabaseHelper.columnRegiao}) '
+        'VALUES(?, ?, ?, ?, ?)',
+        [name, email, senha, regiao]);
+    print('Valor do id:' + id);
+    print(await db.query(DatabaseHelper.tableUser));
+    return db.insert(DatabaseHelper.tableUser, id);
   });
 }
 
