@@ -86,7 +86,7 @@ Future<Database> createDatabase() {
       db.execute('CREATE TABLE tb_perfilusuario ('
           'idusuario INTEGER PRIMARY KEY, '
           'nome VARCHAR(60), '
-          'email VARCHAR(45) UNIQUE,'
+          'email VARCHAR(45),'
           'senha VARCHAR(45),'
           'nascimento DATETIME,'
           'regiao VARCHAR(45))');
@@ -116,8 +116,8 @@ Future<int> cadastro(Cadastro cadastro) {
   return createDatabase().then((db) async {
     dynamic id = await db.rawInsert(
         'INSERT INTO ${DatabaseHelper.tableUser}'
-        '${DatabaseHelper.columnName}, ${DatabaseHelper.columnEmail}, ${DatabaseHelper.columnSenha}, ${DatabaseHelper.columnRegiao}) '
-        'VALUES(?, ?, ?, ?, ?)',
+        '(${DatabaseHelper.columnName}, ${DatabaseHelper.columnEmail}, ${DatabaseHelper.columnSenha}, ${DatabaseHelper.columnRegiao}) '
+        'VALUES(?, ?, ?, ?)',
         [name, email, senha, regiao]);
     print('Valor do id:' + id);
     print(await db.query(DatabaseHelper.tableUser));

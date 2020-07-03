@@ -141,7 +141,7 @@ class _SignUp extends State<SignUp> {
                     final String password = senhaController.text;
                     //final Cadastro novoCadastro =
                     // new Cadastro(name, location, email, password);
-                    cadastro(Cadastro(name, email, password, location))
+                    cadastro(Cadastro(name, email, password, 'Brasília'))
                         .then((id) {
                       findAll().then(
                           (cadastros) => debugPrint(cadastros.toString()));
