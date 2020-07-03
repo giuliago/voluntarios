@@ -70,7 +70,7 @@ class DatabaseHelper {
           CREATE TABLE $tableUser (
             $columnIdUser INTEGER PRIMARY KEY,
             $columnName VARCHAR(60),
-            $columnEmail VARCHAR(45) UNIQUE,
+            $columnEmail VARCHAR(45),
             $columnSenha VARCHAR(45),
             $columnNascimento DATETIME,
             $columnRegiao VARCHAR(45)
@@ -83,13 +83,8 @@ Future<Database> createDatabase() {
   return getDatabasesPath().then((dbPath) {
     final String path = join(dbPath, 'voluntarios/db/db_voluntarios.db');
     return openDatabase(path, onCreate: (db, version) {
-      db.execute('CREATE TABLE tb_perfilusuario ('
-          'idusuario INTEGER PRIMARY KEY, '
-          'nome VARCHAR(60), '
-          'email VARCHAR(45) UNIQUE,'
-          'senha VARCHAR(45),'
-          'nascimento DATETIME,'
-          'regiao VARCHAR(45))');
+      db.execute(
+          'CREATE TABLE tb_perfilusuario (idusuario INTEGER PRIMARY KEY, nome VARCHAR(60), uk_email VARCHAR(45), senha VARCHAR(45), nascimento DATETIME, regiao VARCHAR(45)');
     }, version: 1);
   });
 }
@@ -115,9 +110,7 @@ Future<int> cadastro(Cadastro cadastro) {
 
   return createDatabase().then((db) async {
     dynamic id = await db.rawInsert(
-        'INSERT INTO ${DatabaseHelper.tableUser}'
-        '${DatabaseHelper.columnName}, ${DatabaseHelper.columnEmail}, ${DatabaseHelper.columnSenha}, ${DatabaseHelper.columnRegiao}) '
-        'VALUES(?, ?, ?, ?, ?)',
+        'INSERT INTO tb_perfilusuario (nome, uk_email, senha, regiao) VALUES (?, ?, ?, ?)',
         [name, email, senha, regiao]);
     print('Valor do id:' + id);
     print(await db.query(DatabaseHelper.tableUser));
