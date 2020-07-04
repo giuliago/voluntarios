@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:voluntarios/UI/home.dart';
 import './calendar.dart';
 import 'package:intl/intl.dart';
-import 'package:voluntarios/models/cadastro.dart';
+//import 'package:voluntarios/models/cadastro.dart';
 import './navBar.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -134,20 +134,21 @@ class _SignUp extends State<SignUp> {
                 padding: EdgeInsets.all(37.0),
                 child: new RaisedButton(
                   onPressed: () {
-                    final String name = nomeController.text;
-                    final String location = regiaoController.text;
+                    final String nome = nomeController.text;
+                    final String regiao = regiaoController.text;
                     //final String birthday = nascimentoController.text;
                     final String email = emailController.text;
-                    final String password = senhaController.text;
-                    //final Cadastro novoCadastro =
-                    // new Cadastro(name, location, email, password);
-                    cadastro(Cadastro(name, email, password, 'Brasilia'))
-                        .then((id) {
-                      findAll().then(
-                          (cadastros) => debugPrint(cadastros.toString()));
-                    });
-
-                    //Navigator.pop(context, novoCadastro);
+                    final String senha = senhaController.text;
+                    var lista = [nome, regiao, email, senha];
+                    Insere(lista);
+                    //final Cadastro novoCadastro = new Cadastro(nome, email, senha, regiao);
+                    // Navigator.pop(context, novoCadastro);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NavBar(),
+                      ),
+                    );
                   },
                   child: Text('Sign Up', style: TextStyle(fontSize: 15)),
                   textColor: Colors.white,
@@ -159,59 +160,5 @@ class _SignUp extends State<SignUp> {
         ),
       ),
     );
-  }
-
-  _insert() async {
-    Database db = await DatabaseHelper.instance.database;
-
-    //raw insert
-
-    String name = nomeController.text;
-    String regiao = regiaoController.text;
-    String nascimento = nascimentoController.text;
-    String email = emailController.text;
-    String senha = senhaController.text;
-
-    int id = await db.rawInsert(
-        'INSERT INTO ${DatabaseHelper.tableUser}'
-        '${DatabaseHelper.columnName}, ${DatabaseHelper.columnEmail}, ${DatabaseHelper.columnSenha}, ${DatabaseHelper.columnNascimento}, ${DatabaseHelper.columnRegiao}) '
-        'VALUES(?, ?, ?, ?, ?)',
-        [name, email, senha, nascimento, regiao]);
-    print(await db.query(DatabaseHelper.tableUser));
-  }
-
-  Future<String> _confirmarEmail() async {
-    Database db = await DatabaseHelper.instance.database;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    String email = emailController.text;
-
-    List<Map> result =
-        await db.rawQuery('SELECT * FROM tb_perfilusuario GROUP BY uk_email');
-
-    if (result.contains(email)) {
-      prefs.setString('stringValue', "nao");
-    } else {
-      prefs.setString('stringValue', "sim");
-    }
-  }
-
-  getStringValuesSF() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Return String
-    String stringValue = prefs.getString('stringValue');
-    return stringValue;
-  }
-
-  removeValues() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Remove String
-    prefs.remove("stringValue");
-    //Remove bool
-    prefs.remove("boolValue");
-    //Remove int
-    prefs.remove("intValue");
-    //Remove double
-    prefs.remove("doubleValue");
   }
 }

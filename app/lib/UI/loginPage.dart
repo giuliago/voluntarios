@@ -99,22 +99,21 @@ class LoginPage extends StatelessWidget {
                             onPressed: () {
                               String email = emailController.text;
                               String senha = senhaController.text;
-                              future:
-                              Future.delayed(Duration(seconds: 1))
-                                  .then((value) => findAll());
-                              builder:
-                              (context, snapshot) {
-                                final List<Cadastro> cadastros = snapshot.data;
-                                if (cadastros.contains(email) &&
-                                    cadastros.contains(senha)) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => NavBar(),
-                                    ),
-                                  );
-                                }
-                              };
+                              var lista = [email, senha];
+                              // verificaLogin(lista);
+                              if (verificaLogin(lista)
+                                  .toString()
+                                  .contains('true')) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => NavBar(),
+                                  ),
+                                );
+                              } else {
+                                debugPrint('nao deu');
+                                // login wrong
+                              }
                             },
                             child:
                                 Text('Sign In', style: TextStyle(fontSize: 15)),
