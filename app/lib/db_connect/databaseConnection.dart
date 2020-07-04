@@ -4,76 +4,59 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart'
     show getApplicationDocumentsDirectory;
 
-class DatabaseHelper {
-  static final _databaseName = "db_voluntarios.db";
-  static final _databaseVersion = 1;
+Future<void> insertCadastro(Cadastro cadastro) async {
+  final Future<Database> database = openDatabase(
+    join(await getDatabasesPath(), 'db/db_voluntarios.db'),
+    onCreate: (db, version) {
+      return db.execute(
+          "CREATE TABLE tb_perfilusuario(idusuario INTEGER PRIMARY KEY, nome VARCHAR(60), uk_email VARCHAR(45), senha VARCHAR(45), nascimento DATETIME, regiao VARCHAR(45)");
+    },
+    version: 1,
+  );
+  // Get a reference to the database.
+  final Database db = await database;
 
-  static final tableUser = 'tb_perfilusuario';
+  // Insert the Dog into the correct table. You might also specify the
+  // `conflictAlgorithm` to use in case the same dog is inserted twice.
+  //
+  // In this case, replace any previous data.
+  await db.insert(
+    'tb_perfilusuario',
+    cadastro.toMap(),
+    conflictAlgorithm: ConflictAlgorithm.replace,
+  );
+}
 
-  static final columnIdUser = 'pk_idusuario';
-  static final columnName = 'nome';
-  static final columnEmail = 'uk_email';
-  static final columnSenha = 'senha';
-  static final columnNascimento = 'nascimento';
-  static final columnRegiao = 'regiao';
+Future<void> Insere(List lista) async {
+  var fido = Cadastro(
+    nome: lista[0],
+    email: lista[1],
+    senha: lista[2],
+    regiao: lista[3],
+  );
+  await insertCadastro(fido);
+}
 
-  static final tableEvent =
-      'tb_evento'; // uses fk_tb_perfilorganizacao_pk_idorganizacao and fk_tb_perfilorganizacao_tb_perfilusuario_pk_idusuario
+class Cadastro {
+  //final int id;
+  final String nome;
+  final String email;
+  final String senha;
+  //final String nascimento;
+  final String regiao;
 
-  static final columnIdEvent = 'pk_idevento';
-  static final columnDate = 'data';
-  static final columnDescript = 'descricao';
-  static final columnDisponib = 'disponibilidade';
-  static final columnFkEvent1 = 'fk_tb_perfilorganizacao_pk_idorganizacao';
-  static final columnFkEvent2 =
-      'fk_tb_perfilorganizacao_tb_perfilusuario_pk_idusuario';
+  Cadastro(
+      {this.nome, this.email, this.senha, /*this.nascimento,*/ this.regiao});
 
-  static final tableOrganiz =
-      'tb_perfilorganizacao'; //uses columnName and columnDescript, fk_tb_perfilusuario_pk_idusuario
-
-  static final columnIdOrganiz = 'pk_idorganizacao';
-
-  static final tableCompetencia =
-      'td_competencia'; // fk_tb_perfilusuario_pk_idusuario
-
-  static final columnIdCompet =
-      'pk_competencia'; //uses columnName and columnDescript
-
-  static final table =
-      'ta_inscricao'; //uses fk_tb_perfilusuario_pk_idusuario and fk_tb_evento_pk_idevento
-
-  // make this a singleton class
-  DatabaseHelper._privateConstructor();
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
-
-  // only have a single app-wide reference to the database
-  static Database _database;
-  Future<Database> get database async {
-    if (_database != null) return _database;
-    // instantiate the db the first time it is accessed
-    _database = await _initDatabase();
-    return _database;
-  }
-
-  // Iniciar ou abrir banco de dados(ou criar se não existir)
-  _initDatabase() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, _databaseName);
-    return await openDatabase(path,
-        version: _databaseVersion, onCreate: _onCreate);
-  }
-
-  // SQL para criar tabela do banco de dados
-  Future _onCreate(Database db, int version) async {
-    await db.execute('''
-          CREATE TABLE $tableUser (
-            $columnIdUser INTEGER PRIMARY KEY,
-            $columnName VARCHAR(60),
-            $columnEmail VARCHAR(45) UNIQUE,
-            $columnSenha VARCHAR(45),
-            $columnNascimento DATETIME,
-            $columnRegiao VARCHAR(45)
-          )
-          ''');
+  // Convert a Dog into a Map. The keys must correspond to the names of the
+  // columns in the database.
+  Map<String, dynamic> toMap() {
+    return {
+      'nome': nome,
+      'uk_email': email,
+      'senha': senha,
+      //'nascimento': nascimento,
+      'regiao': regiao,
+    };
   }
 }
