@@ -1,80 +1,86 @@
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import './home.dart';
-import './events.dart';
+import 'yourEvents.dart';
 import './profile.dart';
+import 'createEvent.dart';
 
 class NavBar extends StatefulWidget {
+  NavBar({Key key}) : super(key: key);
+
   @override
   _NavBar createState() => _NavBar();
 }
 
-// SingleTickerProviderStateMixin is used for animation
-class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
-  /*
-   *-------------------- Setup Tabs ------------------*
-   */
-  // Create a tab controller
-  TabController controller;
+class _NavBar extends State<NavBar> {
+  PersistentTabController _controller;
 
   @override
   void initState() {
     super.initState();
-
-    // Initialize the Tab Controller
-    controller = TabController(length: 3, vsync: this);
+    _controller = PersistentTabController(initialIndex: 0);
   }
 
-  @override
-  void dispose() {
-    // Dispose of the Tab Controller
-    controller.dispose();
-    super.dispose();
+  List<Widget> _buildScreens() {
+    return [
+      Home(),
+      YourEvents(),
+      Profile(),
+      Profile(),
+    ];
   }
 
-  TabBar getTabBar() {
-    return TabBar(
-      tabs: <Tab>[
-        Tab(
-          // set icon to the tab
-          icon: Icon(Icons.home),
-        ),
-        Tab(
-          icon: Icon(Icons.calendar_today),
-        ),
-        Tab(
-          icon: Icon(Icons.person),
-        ),
-      ],
-      // setup the controller
-      controller: controller,
-    );
-  }
-
-  TabBarView getTabBarView(var tabs) {
-    return TabBarView(
-      // Add tabs as widgets
-      children: tabs,
-      // set the controller
-      controller: controller,
-    );
-  }
-
-  Widget getAppBar(){
-    return AppBar(
-          // Title
-            title: Text("Voluntários"),
-            // Set the background color of the App Bar
-            backgroundColor: Colors.orange,
-            // Set the bottom property of the Appbar to include a Tab Bar
-            bottom: getTabBar());
-        // Set the TabBar view as the body of the Scaffold
+  List<PersistentBottomNavBarItem> _navBarsItems() {
+    return [
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.home),
+        title: ("Home"),
+        activeColor: Colors.lightGreen[300],
+        inactiveColor: Colors.white,
+        isTranslucent: false,
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.event_note),
+        title: ("Eventos"),
+        activeColor: Colors.lightGreen[300],
+        inactiveColor: Colors.white,
+        isTranslucent: false,
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.group),
+        title: ("Organização"),
+        activeColor: Colors.lightGreen[300],
+        inactiveColor: Colors.white,
+        isTranslucent: false,
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.person),
+        title: ("Perfil"),
+        activeColor: Colors.lightGreen[300],
+        inactiveColor: Colors.white,
+        isTranslucent: false,
+      ),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Appbar
-        appBar: getAppBar(),
-        body: getTabBarView(<Widget>[Home(), Events(), Profile()]));
+      body: PersistentTabView(
+        navBarStyle: NavBarStyle.style3,
+        controller: _controller,
+        screens: _buildScreens(),
+        items:
+            _navBarsItems(), // Redundant here but defined to demonstrate for other than custom style
+        confineInSafeArea: true,
+        backgroundColor: Colors.cyan[700],
+        handleAndroidBackButtonPress: true,
+        onItemSelected: (int) {
+          setState(
+              () {}); // This is required to update the nav bar if Android back button is pressed
+        },
+        itemCount: 4, // Choose the nav bar style with this property
+      ),
+    );
   }
 }

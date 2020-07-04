@@ -5,8 +5,10 @@ class DatePicker extends StatefulWidget {
   final int firstDate;
   final int lastDate;
   final int stateVar;
+  final int style;
 
-  DatePicker({Key key, this.firstDate, this.lastDate, this.stateVar})
+  DatePicker(
+      {Key key, this.firstDate, this.lastDate, this.stateVar, this.style})
       : super(key: key);
 
   @override
@@ -20,7 +22,10 @@ class _DatePickerState extends State<DatePicker> {
   void _pickDateDialog() {
     showDatePicker(
             context: context,
-            initialDate: DateTime.now(),
+            initialDatePickerMode:
+                widget.style == 1 ? DatePickerMode.year : DatePickerMode.day,
+            initialDate:
+                widget.style == 1 ? DateTime(widget.firstDate) : DateTime.now(),
             //which date will display when user open the picker
             firstDate: DateTime(widget.firstDate),
             //what will be the previous supported year in picker

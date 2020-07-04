@@ -15,7 +15,6 @@ class SignUp extends StatefulWidget {
 
 class _SignUp extends State<SignUp> {
   DateTime _selectedDate;
-
   String dropdownValue = 'Brasília';
   TextEditingController nomeController = new TextEditingController();
   TextEditingController regiaoController = new TextEditingController();
@@ -74,9 +73,11 @@ class _SignUp extends State<SignUp> {
 
   Widget _formSignUp(BuildContext context) {
     double deviceHeight = MediaQuery.of(context).size.height;
+    MediaQueryData mediaQuery = MediaQuery.of(context);
 
     return Padding(
-        padding: EdgeInsets.fromLTRB(50.0, deviceHeight - 600, 50, 0),
+        padding: EdgeInsets.fromLTRB(
+            50.0, deviceHeight - 590, 50, mediaQuery.viewInsets.bottom),
         child: ListView(children: <Widget>[
           TextField(
               controller: nomeController,
@@ -132,7 +133,7 @@ class _SignUp extends State<SignUp> {
                   ))
             ]),
           ),
-          DatePicker(firstDate: 2020, lastDate: 2050, stateVar: 2),
+          DatePicker(firstDate: 1950, lastDate: 2010, stateVar: 2, style: 1),
           TextField(
               controller: emailController,
               style: TextStyle(
@@ -165,36 +166,6 @@ class _SignUp extends State<SignUp> {
                 )),
           ),
           _buttonSignUp(context),
-          Padding(
-              padding: EdgeInsets.fromLTRB(40, 50, 0, 0),
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    "Já possui cadastro?",
-                    style: TextStyle(fontSize: 14, color: Colors.white),
-                  ),
-                  SizedBox(
-                    width: 80,
-                    child: FlatButton(
-                      child: Text(
-                        'Entrar',
-                        style:
-                            TextStyle(fontSize: 14.0, color: Colors.lightBlue),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginPage(),
-                          ),
-                        ).then(
-                          (novoCadastro) => debugPrint(novoCadastro.toString()),
-                        );
-                      },
-                    ),
-                  )
-                ],
-              ))
         ]));
   }
 
@@ -241,6 +212,39 @@ class _SignUp extends State<SignUp> {
                   width: 70,
                 ))),
         _formSignUp(context),
+        Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+                padding: EdgeInsets.fromLTRB(90, 50, 10, 70),
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      "Já possui cadastro?",
+                      style: TextStyle(fontSize: 14, color: Colors.white),
+                    ),
+                    SizedBox(
+                      width: 80,
+                      child: FlatButton(
+                        child: Text(
+                          'Entrar',
+                          style: TextStyle(
+                              fontSize: 14.0, color: Colors.lightBlue),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(),
+                            ),
+                          ).then(
+                            (novoCadastro) =>
+                                debugPrint(novoCadastro.toString()),
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                )))
       ],
     );
   }

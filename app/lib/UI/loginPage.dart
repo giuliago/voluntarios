@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:splashscreen/splashscreen.dart';
+import 'package:voluntarios/UI/splashScreen.dart';
 import 'navBar.dart';
 import 'signUp.dart';
 
@@ -17,7 +19,7 @@ class LoginPage extends StatelessWidget {
             context,
             MaterialPageRoute(
               //validação pra home
-              builder: (context) => NavBar(),
+              builder: (context) => LoadingScreen(tela: 1),
             ),
           );
         },
@@ -67,6 +69,7 @@ class LoginPage extends StatelessWidget {
             child: TextField(
                 //controller
                 controller: senhaController,
+                obscureText: true,
                 style: TextStyle(
                   fontSize: 15.0,
                 ),

@@ -30,6 +30,9 @@ dependencies:
   shared_preferences: ^0.5.7+3
   splashscreen: ^1.2.0
   simple_animations: ^2.2.1
+  persistent_bottom_nav_bar: any
+  http: any
+  table_calendar: ^2.0.2
   #http: "0.11.3+17"
   #image_picker: ^0.4.10
 
