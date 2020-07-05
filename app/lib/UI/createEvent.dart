@@ -35,7 +35,9 @@ class CreateEvent extends StatelessWidget {
                           fillColor: Colors.white,
                           filled: true,
                         ))),
-                DatePicker(firstDate: 2020, lastDate: 2050, stateVar: 1),
+
+                DatePicker(firstDate: 2020, lastDate: 2022, stateVar: 1),
+
                 Container(
                     padding: EdgeInsets.only(top: 12.0),
                     child: TextField(
@@ -71,25 +73,3 @@ class CreateEvent extends StatelessWidget {
   }
 }
 
-/* Colocar dentro da classe
-  _insert() async {
-    Database db = await DatabaseHelper.instance.database;
-  
-    //raw insert
-    
-      int idevento = //valor obtido pelo botão
-      String date = //valor obtido pelo botão
-      String name = //valor obtido pelo botão
-      String description = //valor obtido pelo botão
-      int disp = //valor obtido pelo botão
-      int idorganizacao = //valor obtido pelo valor estático
-      int idusuario = //valor obtido pelo valor estático
-      int id = await db.rawInsert(
-        'INSERT INTO ${DatabaseHelper.tb_evento}'
-              '(${DatabaseHelper.columnIdEvent}, ${DatabaseHelper.columnDate}, ${DatabaseHelper.columnIdName}
-              , ${DatabaseHelper.columnDescript}, ${DatabaseHelper.columnDisponib}
-              , ${DatabaseHelper.columnFkEvent1}, ${DatabaseHelper.columnFkEvent2}) '
-              'VALUES(?, ?, ?, ?, ?, ?)', [idevento, date, name, description, disp, idorganizacao, idusuario]);
-      print(await db.query(DatabaseHelper.tb_evento))
-  }
-  */

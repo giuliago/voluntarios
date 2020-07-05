@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:voluntarios/UI/loginPage.dart';
+import 'package:splashscreen/splashscreen.dart';
+import 'package:voluntarios/UI/mainPage.dart';
+import 'package:voluntarios/UI/splashScreen.dart';
 import 'UI/navBar.dart';
 import 'UI/eventDetails.dart';
 import 'UI/imageUploader.dart';
-import 'UI/loginPage.dart';
+import 'UI/mainPage.dart';
 
 void main() => runApp(MaterialApp(
-  home: MyApp(),
-));
+      home: MyApp(),
+    ));
 
-class MyApp extends  StatelessWidget {
+class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -25,11 +27,13 @@ class MyApp extends  StatelessWidget {
           // or simply save your changes to "hot reload" in a Flutter IDE).
           // Notice that the counter didn't reset back to zero; the application
           // is not restarted.
-          primarySwatch: Colors.deepOrange),
-      home: LoginPage(),
-      routes: <String, WidgetBuilder> {
-      '/details': (BuildContext context) => EventDetails(),
-      }
+          accentColor: Colors.lightGreen,
+          primaryColor: Colors.lightGreen,
+          scaffoldBackgroundColor: Colors.white,
+          appBarTheme: AppBarTheme(
+            color: Colors.lightBlue,
+          )),
+      home: LoadingScreen(),
     );
   }
 }
