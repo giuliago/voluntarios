@@ -140,7 +140,10 @@ class _Events extends State<Events> with TickerProviderStateMixin {
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           _buildTableCalendarWithBuilders(),
-          Expanded(child: _buildEventList()),
+          Container(
+              color: Colors.cyan[300],
+              height: 274,
+              child: Expanded(child: _buildEventList())),
         ],
       ),
     );
@@ -286,7 +289,7 @@ class _Events extends State<Events> with TickerProviderStateMixin {
                       ),
                     );
                   },
-                  child: _buildCard(true, 200, 220));
+                  child: _buildCard(true, 220, 220));
             }),
       )
     ]);

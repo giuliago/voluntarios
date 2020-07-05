@@ -130,7 +130,7 @@ class _SignUp extends State<SignUp> {
                   ))
             ]),
           ),
-          DatePicker(firstDate: 1950, lastDate: 2010, stateVar: 2, style: 1),
+          DatePicker(firstDate: 1920, lastDate: 2010, stateVar: 2, style: 1),
           TextField(
               controller: emailController,
               style: TextStyle(
@@ -246,7 +246,7 @@ class _SignUp extends State<SignUp> {
     );
   }
 
-  _insert() async {
+  /*_insert() async {
     Database db = await DatabaseHelper.instance.database;
 
     //raw insert
@@ -298,5 +298,5 @@ class _SignUp extends State<SignUp> {
     prefs.remove("intValue");
     //Remove double
     prefs.remove("doubleValue");
-  }
+  }*/
 }
