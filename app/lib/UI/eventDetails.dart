@@ -39,6 +39,7 @@ class EventDetails extends StatelessWidget {
         padding: EdgeInsets.only(right: 5),
         child: CircleAvatar(
           radius: radius,
+          backgroundColor: Colors.cyan,
           child: ClipOval(
             child: new SizedBox(
               width: width,
@@ -106,17 +107,11 @@ class EventDetails extends StatelessWidget {
           fit: BoxFit.fill,
         ),
         Padding(
-            padding: EdgeInsets.fromLTRB(120.0, 120.0, 125.0, 0),
-            child: CircleAvatar(
-              backgroundColor: Colors.cyan,
-              radius: 80,
-            )),
-        Padding(
-            padding: EdgeInsets.fromLTRB(125.0, 140.0, 125.0, 0),
-            child: _buildAvatar(context, 60, 150, 110)),
+            padding: EdgeInsets.fromLTRB(125.0, 100.0, 125.0, 0),
+            child: _buildAvatar(context, 100, 90, 90)),
         Center(
             child: Padding(
-                padding: EdgeInsets.only(top: 255),
+                padding: EdgeInsets.only(top: 250),
                 child: Text(
                   'Federal Music',
                   style: TextStyle(
