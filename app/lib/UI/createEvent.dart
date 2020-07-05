@@ -113,7 +113,7 @@ class _CreateEvent extends State<CreateEvent> {
                     data = _selectedDate;
                     final DateTime dataEvento = data;
                     var lista = [nome, descricao, dataEvento, 'Brasilia'];
-                    print(data);
+                    print(lista);
                     _inserir(lista);
                     _consultarEventos();
                     Navigator.push(
@@ -151,7 +151,7 @@ class _CreateEvent extends State<CreateEvent> {
 
   void _consultarEventos() async {
     final todasLinhas = await dbHelper.queryAllRows();
-    print('Consulta todas as linhas:');
+    print('Consulta todas os eventos:');
     todasLinhas.forEach((row) => print(row));
   }
 }

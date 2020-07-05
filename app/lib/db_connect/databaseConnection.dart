@@ -7,7 +7,8 @@ import 'package:path_provider/path_provider.dart'
 
 class DatabaseHelper {
   static final _databaseName = "db_voluntarios.db";
-  static final _databaseVersion = 1;
+  static final _databaseVersion = 2;
+  //static final newVersion = 2;
   static final tableUser = 'tb_perfilusuario';
   static final columnIdUser = 'idusuario';
   static final columnNome = 'nome';
@@ -27,7 +28,6 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   // tem somente uma referência ao banco de dados
   static Database _database;
-  static Database _databaseEvent;
 
   Future<Database> get database async {
     if (_database != null) return _database;
@@ -36,37 +36,29 @@ class DatabaseHelper {
     return _database;
   }
 
-  Future<Database> get databaseEvent async {
-    if (_databaseEvent != null) return _databaseEvent;
-    // instancia o db na primeira vez que for acessado
-    _databaseEvent = await _initDatabaseEvent();
-    return _databaseEvent;
-  }
-
   // abre o banco de dados e o cria se ele não existir
   _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, _databaseName);
     return await openDatabase(path,
-        version: _databaseVersion, onCreate: _onCreate);
-  }
-
-  _initDatabaseEvent() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, _databaseName);
-    return await openDatabase(path,
-        version: _databaseVersion, onCreate: _onCreateEvent);
+        version: _databaseVersion, onCreate: _onCreate, onUpgrade: _onUpgrade);
   }
 
   // Código SQL para criar o banco de dados e a tabela
   Future _onCreate(Database db, int version) async {
+    Batch batch = db.batch();
     await db.execute(
-        "CREATE TABLE tb_perfilusuario(idusuario INTEGER PRIMARY KEY, nome VARCHAR(60), uk_email VARCHAR(45), senha VARCHAR(45), nascimento DATETIME, regiao VARCHAR(45))");
+        "CREATE TABLE tb_perfilusuario(idusuario INTEGER PRIMARY KEY, nome VARCHAR(60), uk_email VARCHAR(45), senha VARCHAR(45), nascimento DATETIME, regiao VARCHAR(45));");
+    await db.execute(
+        "CREATE TABLE tb_evento(pk_idevento INTEGER PRIMARY KEY, data DATETIME, nome VARCHAR(60), descricao VARCHAR(60), disponibilidade TINYINT, fk_tb_perfilorganizacao_pk_idorganizacao INT,fk_tb_perfilorganizacao_tb_perfilusuario_pk_idusuario INTEGER, FOREIGN KEY(fk_tb_perfilorganizacao_pk_idorganizacao) REFERENCES tb_perfilorganizacao(pk_idorganizacao), FOREIGN KEY(fk_tb_perfilorganizacao_tb_perfilusuario_pk_idusuario) REFERENCES tb_perfilusuario(pk_idusuario));");
+    //batch.commit();
   }
 
-  Future _onCreateEvent(Database db, int version) async {
-    await db.execute(
-        "CREATE TABLE tb_event(pk_idevento INTEGER PRIMARY KEY, data DATETIME, nome VARCHAR(60), descricao VARCHAR(60), disponibilidade TINYINT, fk_tb_perfilorganizacao_pk_idorganizacao INT, fk_tb_perfilorganizacao_tb_perfilusuario_pk_idusuario INTEGER, FOREIGN KEY(fk_tb_perfilorganizacao_pk_idorganizacao) REFERENCES tb_perfilorganizacao(pk_idorganizacao), FOREIGN KEY(fk_tb_perfilorganizacao_tb_perfilusuario_pk_idusuario) REFERENCES tb_perfilusuario(pk_idusuario))");
+  void _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < newVersion) {
+      await db.execute("DROP TABLE IF EXISTS tb_perfilusuario;");
+      _onCreate(db, newVersion);
+    }
   }
 
   Future<int> insert(Map<String, dynamic> row) async {
@@ -79,17 +71,22 @@ class DatabaseHelper {
   }
 
   Future<int> insertEvent(Map<String, dynamic> row) async {
-    Database db = await instance.databaseEvent;
-    /*Batch batch = db.batch();
+    Database db = await instance.database;
+    Batch batch = db.batch();
     batch.insert(tableEvent, row);
     dynamic results = await batch.commit();
-    print(results);*/
+    print(results);
     return await db.insert(tableEvent, row);
   }
 
   Future<List<Map<String, dynamic>>> queryAllRows() async {
     Database db = await instance.database;
     return await db.query(tableUser);
+  }
+
+  Future<List<Map<String, dynamic>>> queryAllEvents() async {
+    Database db = await instance.database;
+    return await db.query(tableEvent);
   }
 
   Future<String> queryLogin(List lista) async {
