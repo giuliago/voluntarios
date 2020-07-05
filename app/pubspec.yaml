@@ -33,8 +33,7 @@ dependencies:
   persistent_bottom_nav_bar: any
   http: any
   table_calendar: ^2.0.2
-  #http: "0.11.3+17"
-  #image_picker: ^0.4.10
+  
 
 
   # The following adds the Cupertino Icons font to your application.

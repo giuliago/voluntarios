@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:voluntarios/UI/home.dart';
+import './calendar.dart';
+import 'package:intl/intl.dart';
+//import 'package:voluntarios/models/cadastro.dart';
+import './navBar.dart';
 import 'package:voluntarios/UI/loginPage.dart';
 import './calendar.dart';
 import 'package:voluntarios/models/cadastro.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class SignUp extends StatefulWidget {
   _SignUp createState() => _SignUp();
@@ -239,64 +244,80 @@ class _SignUp extends State<SignUp> {
                           );
                         },
                       ),
+                    ))
+              ]),
+            ),
+            DatePicker(firstDate: 2020, lastDate: 2050, stateVar: 2),
+            Padding(
+              padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
+              child: TextField(
+                  controller: emailController,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: 'E-mail',
+                    icon: Icon(Icons.email),
+                  )),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
+              child: TextField(
+                  controller: senhaController,
+                  obscureText: true,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: 'Senha',
+                    icon: Icon(Icons.lock),
+                  )),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
+              child: TextField(
+                  controller: confirmaSenhaController,
+                  obscureText: true,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: 'Confirme a senha',
+                  )),
+            ),
+            Padding(
+                padding: EdgeInsets.all(37.0),
+                child: new RaisedButton(
+                  onPressed: () {
+                    final String nome = nomeController.text;
+                    final String regiao = regiaoController.text;
+                    final String nascimento = nascimentoController.text;
+                    final String email = emailController.text;
+                    final String senha = senhaController.text;
+                    var lista = [
+                      nome,
+                      regiao,
+                      email,
+                      senha
+                    ]; //Variável que armazena as informações obtidas do formulário
+                    //Insere(lista);
+                    //final Cadastro novoCadastro = new Cadastro(nome, email, senha, regiao);
+                    // Navigator.pop(context, novoCadastro);
+                  },
+                  child: Text('Sign Up', style: TextStyle(fontSize: 15)),
+                  textColor: Colors.white,
+                  color: Colors.deepOrange,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4.0)),
+                ))
+          ],
+        ),
+      ),
+
                     )
                   ],
                 )))
       ],
     );
-  }
-
-  _insert() async {
-    Database db = await DatabaseHelper.instance.database;
-
-    //raw insert
-
-    String name = nomeController.text;
-    String regiao = regiaoController.text;
-    String nascimento = nascimentoController.text;
-    String email = emailController.text;
-    String senha = senhaController.text;
-
-    int id = await db.rawInsert(
-        'INSERT INTO ${DatabaseHelper.tableUser}'
-        '${DatabaseHelper.columnName}, ${DatabaseHelper.columnEmail}, ${DatabaseHelper.columnSenha}, ${DatabaseHelper.columnNascimento}, ${DatabaseHelper.columnRegiao}) '
-        'VALUES(?, ?, ?, ?, ?)',
-        [name, email, senha, nascimento, regiao]);
-    print(await db.query(DatabaseHelper.tableUser));
-  }
-
-  Future<String> _confirmarEmail() async {
-    Database db = await DatabaseHelper.instance.database;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    String email = emailController.text;
-
-    List<Map> result =
-        await db.rawQuery('SELECT * FROM tb_perfilusuario GROUP BY uk_email');
-
-    if (result.contains(email)) {
-      prefs.setString('stringValue', "nao");
-    } else {
-      prefs.setString('stringValue', "sim");
-    }
-  }
-
-  getStringValuesSF() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Return String
-    String stringValue = prefs.getString('stringValue');
-    return stringValue;
-  }
-
-  removeValues() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Remove String
-    prefs.remove("stringValue");
-    //Remove bool
-    prefs.remove("boolValue");
-    //Remove int
-    prefs.remove("intValue");
-    //Remove double
-    prefs.remove("doubleValue");
   }
 }
