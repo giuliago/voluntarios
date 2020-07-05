@@ -1,13 +1,18 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:voluntarios/UI/eventDetails.dart';
 import 'package:voluntarios/UI/imageUploader.dart';
-import 'package:voluntarios/db_connect/databaseConnection.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'calendar.dart';
 //import 'package:sqflite/sqflite.dart'
 
 class CreateEvent extends StatelessWidget {
   final maxLines = 8;
+  final dbHelper = database.DatabaseHelper.instance;
+  TextEditingController nomeController = new TextEditingController();
+  TextEditingController descriptionController = new TextEditingController();
+  DateTime data;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +22,7 @@ class CreateEvent extends StatelessWidget {
             child: ListView(
               children: <Widget>[
                 TextField(
+                    controller: nomeController,
                     style: TextStyle(
                       fontSize: 18.0,
                     ),
@@ -27,6 +33,7 @@ class CreateEvent extends StatelessWidget {
                     height: maxLines * 24.0,
                     padding: EdgeInsets.only(top: 12.0),
                     child: TextField(
+                        controller: descriptionController,
                         maxLines: maxLines,
                         style: TextStyle(
                           fontSize: 18.0,
@@ -36,7 +43,8 @@ class CreateEvent extends StatelessWidget {
                           fillColor: Colors.white,
                           filled: true,
                         ))),
-                DatePicker(firstDate: 2020, lastDate: 2022, stateVar: 1),
+                DatePicker(
+                    firstDate: 1920, lastDate: 2010, stateVar: 2, style: 1),
                 Container(
                     padding: EdgeInsets.only(top: 12.0),
                     child: TextField(
@@ -54,6 +62,16 @@ class CreateEvent extends StatelessWidget {
                   color: Colors.orange[700],
                   textColor: Colors.white,
                   onPressed: () {
+                    data = DatePicker(
+                        firstDate: 1920,
+                        lastDate: 2010,
+                        stateVar: 2,
+                        style: 1) as DateTime;
+                    String nome = nomeController.text;
+                    String descricao = descriptionController.text;
+                    var lista = [nome, descricao, data, 'Brasilia'];
+                    print(data);
+                    _inserir(lista);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -70,27 +88,20 @@ class CreateEvent extends StatelessWidget {
           backgroundColor: Colors.orange,
         ));
   }
-}
 
-/* Colocar dentro da classe
-  _insert() async {
-    Database db = await DatabaseHelper.instance.database;
-  
-    //raw insert
-    
-      int idevento = //valor obtido pelo botão
-      String date = //valor obtido pelo botão
-      String name = //valor obtido pelo botão
-      String description = //valor obtido pelo botão
-      int disp = //valor obtido pelo botão
-      int idorganizacao = //valor obtido pelo valor estático
-      int idusuario = //valor obtido pelo valor estático
-      int id = await db.rawInsert(
-        'INSERT INTO ${DatabaseHelper.tb_evento}'
-              '(${DatabaseHelper.columnIdEvent}, ${DatabaseHelper.columnDate}, ${DatabaseHelper.columnIdName}
-              , ${DatabaseHelper.columnDescript}, ${DatabaseHelper.columnDisponib}
-              , ${DatabaseHelper.columnFkEvent1}, ${DatabaseHelper.columnFkEvent2}) '
-              'VALUES(?, ?, ?, ?, ?, ?)', [idevento, date, name, description, disp, idorganizacao, idusuario]);
-      print(await db.query(DatabaseHelper.tb_evento))
+  void _inserir(List lista) async {
+    String nome = lista[0];
+    String descricao = lista[1];
+    String data = lista[2];
+    //String regiao = lista[3];
+    // linha para incluir
+    Map<String, dynamic> row = {
+      database.DatabaseHelper.eventName: nome,
+      database.DatabaseHelper.eventDescription: descricao,
+      database.DatabaseHelper.eventDate: data
+      //database.DatabaseHelper.eventRegion: regiao
+    };
+    final id = await dbHelper.insertEvent(row);
+    print('linha inserida id: $id');
   }
-  */
+}

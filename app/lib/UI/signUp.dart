@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:voluntarios/UI/loginPage.dart';
 import './calendar.dart';
 import 'package:voluntarios/models/cadastro.dart';
-import 'package:voluntarios/db_connect/databaseConnection.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
@@ -19,6 +19,8 @@ class _SignUp extends State<SignUp> {
   TextEditingController emailController = new TextEditingController();
   TextEditingController senhaController = new TextEditingController();
   TextEditingController confirmaSenhaController = new TextEditingController();
+  String data;
+  final dbHelper = database.DatabaseHelper.instance;
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,15 +34,20 @@ class _SignUp extends State<SignUp> {
       height: 40.0,
       child: RaisedButton(
         onPressed: () {
-          final String name = nomeController.text;
+          final String nome = nomeController.text;
           //precisa fazer o list de localizações
-          final String location = regiaoController.text;
+          final String regiao = regiaoController.text;
           //precisa formatar a string
           //final String birthday = nascimentoController.text;
           final String email = emailController.text;
-          final String password = senhaController.text;
+          final String senha = senhaController.text;
+          final String nascimento = data;
+          var lista = [nome, regiao, email, senha, nascimento];
+          _inserir(lista);
+          _consultar();
+
           final Cadastro novoCadastro =
-              new Cadastro(name, location, email, password);
+              new Cadastro(nome, regiao, email, senha);
           Navigator.pop(context, novoCadastro);
         },
         shape:
@@ -130,7 +137,13 @@ class _SignUp extends State<SignUp> {
                   ))
             ]),
           ),
-          DatePicker(firstDate: 1920, lastDate: 2010, stateVar: 2, style: 1),
+          GestureDetector(onTap: () {
+            data = DatePicker(
+                firstDate: 1920,
+                lastDate: 2010,
+                stateVar: 2,
+                style: 1) as String;
+          }),
           TextField(
               controller: emailController,
               style: TextStyle(
@@ -246,57 +259,21 @@ class _SignUp extends State<SignUp> {
     );
   }
 
-  /*_insert() async {
-    Database db = await DatabaseHelper.instance.database;
-
-    //raw insert
-
-    String name = nomeController.text;
-    String regiao = regiaoController.text;
-    String nascimento = nascimentoController.text;
-    String email = emailController.text;
-    String senha = senhaController.text;
-
-    int id = await db.rawInsert(
-        'INSERT INTO ${DatabaseHelper.tableUser}'
-        '${DatabaseHelper.columnName}, ${DatabaseHelper.columnEmail}, ${DatabaseHelper.columnSenha}, ${DatabaseHelper.columnNascimento}, ${DatabaseHelper.columnRegiao}) '
-        'VALUES(?, ?, ?, ?, ?)',
-        [name, email, senha, nascimento, regiao]);
-    print(await db.query(DatabaseHelper.tableUser));
+  void _inserir(List lista) async {
+    String email = lista[2];
+    String senha = lista[3];
+    // linha para incluir
+    Map<String, dynamic> row = {
+      database.DatabaseHelper.columnEmail: email,
+      database.DatabaseHelper.columnSenha: senha
+    };
+    final id = await dbHelper.insert(row);
+    print('linha inserida id: $id');
   }
 
-  Future<String> _confirmarEmail() async {
-    Database db = await DatabaseHelper.instance.database;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    String email = emailController.text;
-
-    List<Map> result =
-        await db.rawQuery('SELECT * FROM tb_perfilusuario GROUP BY uk_email');
-
-    if (result.contains(email)) {
-      prefs.setString('stringValue', "nao");
-    } else {
-      prefs.setString('stringValue', "sim");
-    }
+  void _consultar() async {
+    final todasLinhas = await dbHelper.queryAllRows();
+    print('Consulta todas as linhas:');
+    todasLinhas.forEach((row) => print(row));
   }
-
-  getStringValuesSF() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Return String
-    String stringValue = prefs.getString('stringValue');
-    return stringValue;
-  }
-
-  removeValues() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Remove String
-    prefs.remove("stringValue");
-    //Remove bool
-    prefs.remove("boolValue");
-    //Remove int
-    prefs.remove("intValue");
-    //Remove double
-    prefs.remove("doubleValue");
-  }*/
 }
