@@ -1,40 +1,8 @@
-import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:voluntarios/UI/signUp.dart';
 
-//Enviar os dados para cá e mandar via HTTP para o arquivo recebeUser.php
-
-class SendToBd {
-  SendToBd({
-    this.nome,
-    this.email,
-    this.senha,
-    this.genero,
-    this.regiao,
-  });
-
-  String nome;
-  String email;
-  String senha;
-  String genero;
-  String regiao;
-
-  factory SendToBd.fromRawJson(String str) =>
-      SendToBd.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
-  factory SendToBd.fromJson(Map<String, dynamic> json) => SendToBd(
-        nome: json["nome"],
-        email: json["email"],
-        senha: json["senha"],
-        genero: json["genero"],
-        regiao: json["regiao"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "nome": nome,
-        "email": email,
-        "senha": senha,
-        "genero": genero,
-        "regiao": regiao,
-      };
+void criaUser() {
+  var url = "http://127.0.0.1/api/criaUser.php";
+  var response =
+      http.post(url, body: {'nome': name, 'email': email, 'senha': password});
 }
