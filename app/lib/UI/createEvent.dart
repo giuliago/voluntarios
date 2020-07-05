@@ -5,14 +5,61 @@ import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'calendar.dart';
+import 'package:intl/intl.dart';
 //import 'package:sqflite/sqflite.dart'
 
-class CreateEvent extends StatelessWidget {
+class CreateEvent extends StatefulWidget {
+  _CreateEvent createState() => _CreateEvent();
+}
+
+class _CreateEvent extends State<CreateEvent> {
+  DateTime _selectedDate;
+  int firstDate;
+  int lastDate;
+  int stateVar;
   final maxLines = 8;
   final dbHelper = database.DatabaseHelper.instance;
   TextEditingController nomeController = new TextEditingController();
   TextEditingController descriptionController = new TextEditingController();
   DateTime data;
+
+  void _pickDateDialog(BuildContext context) {
+    showDatePicker(
+            context: context,
+            initialDatePickerMode: DatePickerMode.day,
+            initialDate: DateTime.now(),
+            //which date will display when user open the picker
+            firstDate: DateTime(2020),
+            //what will be the previous supported year in picker
+            lastDate: DateTime(
+                2022)) //what will be the up to supported date in picker
+        .then((pickedDate) {
+      if (pickedDate == null) {
+        //if user tap cancel then this function will stop
+        return;
+      }
+      setState(() {
+        //for rebuilding the ui
+        _selectedDate = pickedDate;
+      });
+    });
+  }
+
+  Widget calendar(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.only(top: 10.0),
+      child: ListTile(
+        contentPadding: EdgeInsets.all(8.0),
+        title: Text('Data do evento'),
+        subtitle: Text(
+            _selectedDate == null //ternary expression to check if date is null
+                ? 'Nenhuma data selecionada!'
+                : 'Data: ${DateFormat.yMMMd().format(_selectedDate)}'),
+        leading: Icon(Icons.calendar_today),
+        onTap: () => _pickDateDialog(context),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +90,7 @@ class CreateEvent extends StatelessWidget {
                           fillColor: Colors.white,
                           filled: true,
                         ))),
-                DatePicker(
-                    firstDate: 1920, lastDate: 2010, stateVar: 2, style: 1),
+                calendar(context),
                 Container(
                     padding: EdgeInsets.only(top: 12.0),
                     child: TextField(
@@ -62,16 +108,14 @@ class CreateEvent extends StatelessWidget {
                   color: Colors.orange[700],
                   textColor: Colors.white,
                   onPressed: () {
-                    data = DatePicker(
-                        firstDate: 1920,
-                        lastDate: 2010,
-                        stateVar: 2,
-                        style: 1) as DateTime;
                     String nome = nomeController.text;
                     String descricao = descriptionController.text;
-                    var lista = [nome, descricao, data, 'Brasilia'];
+                    data = _selectedDate;
+                    final DateTime dataEvento = data;
+                    var lista = [nome, descricao, dataEvento, 'Brasilia'];
                     print(data);
                     _inserir(lista);
+                    _consultarEventos();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -92,7 +136,7 @@ class CreateEvent extends StatelessWidget {
   void _inserir(List lista) async {
     String nome = lista[0];
     String descricao = lista[1];
-    String data = lista[2];
+    String data = lista[2].toIso8601String();
     //String regiao = lista[3];
     // linha para incluir
     Map<String, dynamic> row = {
@@ -103,5 +147,11 @@ class CreateEvent extends StatelessWidget {
     };
     final id = await dbHelper.insertEvent(row);
     print('linha inserida id: $id');
+  }
+
+  void _consultarEventos() async {
+    final todasLinhas = await dbHelper.queryAllRows();
+    print('Consulta todas as linhas:');
+    todasLinhas.forEach((row) => print(row));
   }
 }

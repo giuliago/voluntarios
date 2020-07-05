@@ -9,14 +9,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
   _SignUp createState() => _SignUp();
-  DateTime selectedDate;
 }
 
 class _SignUp extends State<SignUp> {
   int firstDate;
   int lastDate;
   int stateVar;
-  int style;
   DateTime _selectedDate;
   String dropdownValue = 'Brasília';
   TextEditingController nomeController = new TextEditingController();
@@ -39,16 +37,16 @@ class _SignUp extends State<SignUp> {
                 ? 'Nenhuma data selecionada!'
                 : 'Data: ${DateFormat.yMMMd().format(_selectedDate)}'),
         leading: Icon(Icons.calendar_today),
-        onTap: () => _pickDateDialog(1920, 2000, 1),
+        onTap: () => _pickDateDialog(1920, 2000),
       ),
     );
   }
 
-  Widget state2(BuildContext context) {
+  Widget calendar(BuildContext context) {
     return SizedBox(
         child: ListTile(
       contentPadding: EdgeInsets.all(0),
-      onTap: () => _pickDateDialog(1920, 2000, 1),
+      onTap: () => _pickDateDialog(1930, 2010),
       title: Align(
         child: Text('Data de nascimento',
             style: TextStyle(fontSize: 14, color: Colors.grey[700])),
@@ -68,12 +66,11 @@ class _SignUp extends State<SignUp> {
   }
 
   //Method for showing the date picker
-  void _pickDateDialog(int firstDate, int lastDate, int style) {
+  void _pickDateDialog(int firstDate, int lastDate) {
     showDatePicker(
             context: context,
-            initialDatePickerMode:
-                style == 1 ? DatePickerMode.year : DatePickerMode.day,
-            initialDate: style == 1 ? DateTime(firstDate) : DateTime.now(),
+            initialDatePickerMode: DatePickerMode.year,
+            initialDate: DateTime(firstDate),
             //which date will display when user open the picker
             firstDate: DateTime(firstDate),
             //what will be the previous supported year in picker
@@ -208,7 +205,7 @@ class _SignUp extends State<SignUp> {
                   ))
             ]),
           ),
-          Container(child: state1(context)),
+          Container(child: calendar(context)),
           TextField(
               controller: emailController,
               style: TextStyle(
