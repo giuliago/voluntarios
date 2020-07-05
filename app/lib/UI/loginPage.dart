@@ -2,19 +2,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:voluntarios/UI/splashScreen.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'navBar.dart';
 import 'signUp.dart';
 
 class LoginPage extends StatelessWidget {
   //mudar para stateful e verificar se há login
-  final TextEditingController emailController = new TextEditingController();
-  final TextEditingController senhaController = new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController senhaController = new TextEditingController();
+  final dbHelper = database.DatabaseHelper.instance;
 
   Widget _buttonLogin(BuildContext context) {
     return Container(
       height: 40.0,
       child: RaisedButton(
-        onPressed: () {
+        onPressed: () async {
+          String email = emailController.text;
+          String senha = senhaController.text;
+          var lista = [email, senha];
+          final validacao = await database.verificaLogin(lista) as String;
+          print("Valida?????:" + validacao);
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -22,6 +29,17 @@ class LoginPage extends StatelessWidget {
               builder: (context) => LoadingScreen(tela: 1),
             ),
           );
+          if (validacao.contains('true')) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NavBar(),
+              ),
+            );
+          } else {
+            debugPrint('nao deu');
+            // login wrong
+          }
         },
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(40.0)),

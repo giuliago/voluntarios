@@ -1,8 +1,9 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:voluntarios/UI/eventDetails.dart';
 import 'package:voluntarios/UI/imageUploader.dart';
-import 'package:voluntarios/db_connect/databaseConnection.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'calendar.dart';
 import 'package:intl/intl.dart';
 //import 'package:sqflite/sqflite.dart'
@@ -17,6 +18,10 @@ class _CreateEvent extends State<CreateEvent> {
   int lastDate;
   int stateVar;
   final maxLines = 8;
+  final dbHelper = database.DatabaseHelper.instance;
+  TextEditingController nomeController = new TextEditingController();
+  TextEditingController descriptionController = new TextEditingController();
+  DateTime data;
 
   void _pickDateDialog(BuildContext context) {
     showDatePicker(
@@ -64,6 +69,7 @@ class _CreateEvent extends State<CreateEvent> {
             child: ListView(
               children: <Widget>[
                 TextField(
+                    controller: nomeController,
                     style: TextStyle(
                       fontSize: 18.0,
                     ),
@@ -74,6 +80,7 @@ class _CreateEvent extends State<CreateEvent> {
                     height: maxLines * 24.0,
                     padding: EdgeInsets.only(top: 12.0),
                     child: TextField(
+                        controller: descriptionController,
                         maxLines: maxLines,
                         style: TextStyle(
                           fontSize: 18.0,
@@ -101,6 +108,14 @@ class _CreateEvent extends State<CreateEvent> {
                   color: Colors.orange[700],
                   textColor: Colors.white,
                   onPressed: () {
+                    String nome = nomeController.text;
+                    String descricao = descriptionController.text;
+                    data = _selectedDate;
+                    final DateTime dataEvento = data;
+                    var lista = [nome, descricao, dataEvento, 'Brasilia'];
+                    print(lista);
+                    _inserir(lista);
+                    _consultarEventos();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -117,27 +132,26 @@ class _CreateEvent extends State<CreateEvent> {
           backgroundColor: Colors.orange,
         ));
   }
-}
 
-/* Colocar dentro da classe
-  _insert() async {
-    Database db = await DatabaseHelper.instance.database;
-  
-    //raw insert
-    
-      int idevento = //valor obtido pelo botão
-      String date = //valor obtido pelo botão
-      String name = //valor obtido pelo botão
-      String description = //valor obtido pelo botão
-      int disp = //valor obtido pelo botão
-      int idorganizacao = //valor obtido pelo valor estático
-      int idusuario = //valor obtido pelo valor estático
-      int id = await db.rawInsert(
-        'INSERT INTO ${DatabaseHelper.tb_evento}'
-              '(${DatabaseHelper.columnIdEvent}, ${DatabaseHelper.columnDate}, ${DatabaseHelper.columnIdName}
-              , ${DatabaseHelper.columnDescript}, ${DatabaseHelper.columnDisponib}
-              , ${DatabaseHelper.columnFkEvent1}, ${DatabaseHelper.columnFkEvent2}) '
-              'VALUES(?, ?, ?, ?, ?, ?)', [idevento, date, name, description, disp, idorganizacao, idusuario]);
-      print(await db.query(DatabaseHelper.tb_evento))
+  void _inserir(List lista) async {
+    String nome = lista[0];
+    String descricao = lista[1];
+    String data = lista[2].toIso8601String();
+    //String regiao = lista[3];
+    // linha para incluir
+    Map<String, dynamic> row = {
+      database.DatabaseHelper.eventName: nome,
+      database.DatabaseHelper.eventDescription: descricao,
+      database.DatabaseHelper.eventDate: data
+      //database.DatabaseHelper.eventRegion: regiao
+    };
+    final id = await dbHelper.insertEvent(row);
+    print('linha inserida id: $id');
   }
-  */
+
+  void _consultarEventos() async {
+    final todasLinhas = await dbHelper.queryAllRows();
+    print('Consulta todas os eventos:');
+    todasLinhas.forEach((row) => print(row));
+  }
+}

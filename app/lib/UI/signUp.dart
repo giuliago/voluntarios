@@ -4,7 +4,7 @@ import 'package:voluntarios/UI/loginPage.dart';
 import './calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:voluntarios/models/cadastro.dart';
-import 'package:voluntarios/db_connect/databaseConnection.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
@@ -23,6 +23,24 @@ class _SignUp extends State<SignUp> {
   TextEditingController emailController = new TextEditingController();
   TextEditingController senhaController = new TextEditingController();
   TextEditingController confirmaSenhaController = new TextEditingController();
+  DateTime data;
+  final dbHelper = database.DatabaseHelper.instance;
+
+  Widget state1(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.only(top: 10.0),
+      child: ListTile(
+        contentPadding: EdgeInsets.all(8.0),
+        title: Text('Data do evento'),
+        subtitle: Text(
+            _selectedDate == null //ternary expression to check if date is null
+                ? 'Nenhuma data selecionada!'
+                : 'Data: ${DateFormat.yMMMd().format(_selectedDate)}'),
+        leading: Icon(Icons.calendar_today),
+        onTap: () => _pickDateDialog(1920, 2000),
+      ),
+    );
+  }
 
   Widget calendar(BuildContext context) {
     return SizedBox(
@@ -82,16 +100,22 @@ class _SignUp extends State<SignUp> {
       height: 40.0,
       child: RaisedButton(
         onPressed: () {
-          final String name = nomeController.text;
+          final String nome = nomeController.text;
           //precisa fazer o list de localizações
-          final String location = regiaoController.text;
+          final String regiao = regiaoController.text;
           //precisa formatar a string
           //final String birthday = nascimentoController.text;
           final String email = emailController.text;
-          final String password = senhaController.text;
-          final DateTime date = _selectedDate;
+          final String senha = senhaController.text;
+          data = _selectedDate;
+          final DateTime nascimento = data;
+          print(data);
+          var lista = [nome, regiao, email, senha, nascimento];
+          _inserir(lista);
+          _consultar();
+
           final Cadastro novoCadastro =
-              new Cadastro(name, location, email, password, date);
+              new Cadastro(nome, regiao, email, senha, nascimento);
           Navigator.pop(context, novoCadastro);
         },
         shape:
@@ -297,57 +321,29 @@ class _SignUp extends State<SignUp> {
     );
   }
 
-  /*_insert() async {
-    Database db = await DatabaseHelper.instance.database;
-
-    //raw insert
-
-    String name = nomeController.text;
-    String regiao = regiaoController.text;
-    String nascimento = nascimentoController.text;
-    String email = emailController.text;
-    String senha = senhaController.text;
-
-    int id = await db.rawInsert(
-        'INSERT INTO ${DatabaseHelper.tableUser}'
-        '${DatabaseHelper.columnName}, ${DatabaseHelper.columnEmail}, ${DatabaseHelper.columnSenha}, ${DatabaseHelper.columnNascimento}, ${DatabaseHelper.columnRegiao}) '
-        'VALUES(?, ?, ?, ?, ?)',
-        [name, email, senha, nascimento, regiao]);
-    print(await db.query(DatabaseHelper.tableUser));
+  void _inserir(List lista) async {
+    //[nome, regiao, email, senha, nascimento];
+    String nome = lista[0];
+    String regiao = 'Brasília';
+    String email = lista[2];
+    String senha = lista[3];
+    String nascimento = lista[4].toIso8601String();
+    print("Nascimento????: " + nascimento);
+    // linha para incluir
+    Map<String, dynamic> row = {
+      database.DatabaseHelper.columnEmail: email,
+      database.DatabaseHelper.columnSenha: senha,
+      database.DatabaseHelper.columnRegiao: regiao,
+      database.DatabaseHelper.columnNome: nome,
+      database.DatabaseHelper.columnNascimento: nascimento
+    };
+    final id = await dbHelper.insert(row);
+    print('linha inserida id: $id');
   }
 
-  Future<String> _confirmarEmail() async {
-    Database db = await DatabaseHelper.instance.database;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    String email = emailController.text;
-
-    List<Map> result =
-        await db.rawQuery('SELECT * FROM tb_perfilusuario GROUP BY uk_email');
-
-    if (result.contains(email)) {
-      prefs.setString('stringValue', "nao");
-    } else {
-      prefs.setString('stringValue', "sim");
-    }
+  void _consultar() async {
+    final todasLinhas = await dbHelper.queryAllRows();
+    print('Consulta todas as linhas:');
+    todasLinhas.forEach((row) => print(row));
   }
-
-  getStringValuesSF() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Return String
-    String stringValue = prefs.getString('stringValue');
-    return stringValue;
-  }
-
-  removeValues() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Remove String
-    prefs.remove("stringValue");
-    //Remove bool
-    prefs.remove("boolValue");
-    //Remove int
-    prefs.remove("intValue");
-    //Remove double
-    prefs.remove("doubleValue");
-  }*/
 }
