@@ -16,6 +16,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUp extends State<SignUp> {
+  final dbHelper = DatabaseHelper.instance;
   String dropdownValue = 'Brasília';
   TextEditingController nomeController = new TextEditingController();
   TextEditingController regiaoController = new TextEditingController();
@@ -140,7 +141,9 @@ class _SignUp extends State<SignUp> {
                     final String email = emailController.text;
                     final String senha = senhaController.text;
                     var lista = [nome, regiao, email, senha];
-                    Insere(lista);
+                    _inserir(lista);
+                    _consultar();
+                    //insere(lista);
                     //final Cadastro novoCadastro = new Cadastro(nome, email, senha, regiao);
                     // Navigator.pop(context, novoCadastro);
                     Navigator.push(
@@ -160,5 +163,23 @@ class _SignUp extends State<SignUp> {
         ),
       ),
     );
+  }
+
+  void _inserir(List lista) async {
+    String email = lista[2];
+    String senha = lista[3];
+    // linha para incluir
+    Map<String, dynamic> row = {
+      DatabaseHelper.columnEmail: email,
+      DatabaseHelper.columnSenha: senha
+    };
+    final id = await dbHelper.insert(row);
+    print('linha inserida id: $id');
+  }
+
+  void _consultar() async {
+    final todasLinhas = await dbHelper.queryAllRows();
+    print('Consulta todas as linhas:');
+    todasLinhas.forEach((row) => print(row));
   }
 }

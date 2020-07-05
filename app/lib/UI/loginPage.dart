@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import './navBar.dart';
 import './signUp.dart';
-import 'package:voluntarios/db_connect/databaseConnection.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'package:voluntarios/models/cadastro.dart';
 
 class LoginPage extends StatelessWidget {
   TextEditingController emailController = new TextEditingController();
   TextEditingController senhaController = new TextEditingController();
+  final dbHelper = database.DatabaseHelper.instance;
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,14 +97,15 @@ class LoginPage extends StatelessWidget {
                             color: Colors.white,
                             padding: EdgeInsets.fromLTRB(50.0, 0.0, 50.0, 0.0),
                             textColor: Colors.deepOrange,
-                            onPressed: () {
+                            onPressed: () async {
                               String email = emailController.text;
                               String senha = senhaController.text;
                               var lista = [email, senha];
-                              // verificaLogin(lista);
-                              if (verificaLogin(lista)
-                                  .toString()
-                                  .contains('true')) {
+                              //String validacao;
+                              final validacao =
+                                  await database.verificaLogin(lista) as String;
+                              print("Valida?????:" + validacao);
+                              if (validacao.contains('true')) {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

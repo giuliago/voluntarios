@@ -1,33 +1,104 @@
 import 'dart:io' show Directory;
 import 'package:path/path.dart' show join;
 import 'package:sqflite/sqflite.dart';
+import 'dart:developer';
 import 'package:path_provider/path_provider.dart'
     show getApplicationDocumentsDirectory;
 
-Future<void> insertCadastro(Cadastro cadastro) async {
+class DatabaseHelper {
+  static final _databaseName = "db_voluntarios.db";
+  static final _databaseVersion = 1;
+  static final tableUser = 'tb_perfilusuario';
+  static final columnIdUser = 'idusuario';
+  static final columnNome = 'nome';
+  static final columnEmail = 'email';
+  static final columnSenha = 'senha';
+  static final columnNascimento = 'nascimento';
+  static final columnRegiao = 'regiao';
+  // torna esta classe singleton
+  DatabaseHelper._privateConstructor();
+  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
+  // tem somente uma referência ao banco de dados
+  static Database _database;
+
+  Future<Database> get database async {
+    if (_database != null) return _database;
+    // instancia o db na primeira vez que for acessado
+    _database = await _initDatabase();
+    return _database;
+  }
+
+  // abre o banco de dados e o cria se ele não existir
+  _initDatabase() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, _databaseName);
+    return await openDatabase(path,
+        version: _databaseVersion, onCreate: _onCreate);
+  }
+
+  // Código SQL para criar o banco de dados e a tabela
+  Future _onCreate(Database db, int version) async {
+    await db.execute(
+        "CREATE TABLE tb_perfilusuario(idusuario INTEGER PRIMARY KEY, nome VARCHAR(60), uk_email VARCHAR(45), senha VARCHAR(45), nascimento DATETIME, regiao VARCHAR(45))");
+  }
+
+  Future<int> insert(Map<String, dynamic> row) async {
+    Database db = await instance.database;
+    Batch batch = db.batch();
+    batch.insert(tableUser, row);
+    dynamic results = await batch.commit();
+    print(results);
+    return await db.insert(tableUser, row);
+  }
+
+  Future<List<Map<String, dynamic>>> queryAllRows() async {
+    Database db = await instance.database;
+    return await db.query(tableUser);
+  }
+
+  Future<String> queryLogin(List lista) async {
+    String emailLogin = lista[0];
+    String senhaLogin = lista[1];
+    String validation = "";
+    Database db = await instance.database;
+    Batch btc = db.batch();
+    List<Map> result = await db.query(tableUser);
+    if (result.length == 0) {
+      print("result == 0");
+    } else {
+      if (result.contains(emailLogin) && result.contains(senhaLogin)) {
+        print("contains email and password");
+        return validation = "true";
+      } else {
+        return validation = "false";
+      }
+    }
+    //return await db.query(tableUser);
+  }
+}
+
+/*Future<void> insertCadastro(Cadastro cadastro) async {
   final Future<Database> database = openDatabase(
     join(await getDatabasesPath(), 'db/db_voluntarios.db'),
     onCreate: (db, version) {
       return db.execute(
-          "CREATE TABLE tb_perfilusuario(idusuario INTEGER PRIMARY KEY, nome VARCHAR(60), uk_email VARCHAR(45), senha VARCHAR(45), nascimento DATETIME, regiao VARCHAR(45))");
+          "CREATE TABLE tb_perfilusuario(idusuario INTEGER PRIMARY KEY, nome VARCHAR(60), uk_email VARCHAR(45), senha VARCHAR(45), nascimento DATETIME, regiao VARCHAR(45));");
     },
     version: 1,
   );
   // Get a reference to the database.
   final Database db = await database;
 
-  // Insert the Dog into the correct table. You might also specify the
-  // `conflictAlgorithm` to use in case the same dog is inserted twice.
-  //
-  // In this case, replace any previous data.
   await db.insert(
     'tb_perfilusuario',
     cadastro.toMap(),
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
+  db.close();
+  //print("something");
 }
 
-Future<void> Insere(List lista) async {
+Future<void> insere(List lista) async {
   var listaInsert = Cadastro(
     nome: lista[0],
     email: lista[1],
@@ -35,8 +106,9 @@ Future<void> Insere(List lista) async {
     regiao: lista[3],
   );
   await insertCadastro(listaInsert);
+  //db.close();
 }
-
+*/
 Future<void> verificaLogin(List lista) async {
   String emailLogin = lista[0];
   String senhaLogin = lista[1];
@@ -46,33 +118,35 @@ Future<void> verificaLogin(List lista) async {
     join(await getDatabasesPath(), 'db/db_voluntarios.db'),
     onCreate: (db, version) {
       return db.execute(
-          "CREATE TABLE tb_perfilusuario(idusuario INTEGER PRIMARY KEY, nome VARCHAR(60), uk_email VARCHAR(45), senha VARCHAR(45), nascimento DATETIME, regiao VARCHAR(45))");
+          "CREATE TABLE tb_perfilusuario(idusuario INTEGER PRIMARY KEY, nome VARCHAR(60), uk_email VARCHAR(45), senha VARCHAR(45), nascimento DATETIME, regiao VARCHAR(45));");
     },
     version: 1,
   );
   final Database db = await database;
 
-  //final List<Map<String, dynamic>> maps = await db.query('tb_perfilusuario');
+  print("entrou verifica");
 
-  List<String> columnsToSelect = [
-    'uk_email',
-    'senha',
-  ];
-
-  String whereString = 'uk_email = ?';
-  String rowEmail = emailLogin;
-  List<dynamic> whereArguments = [rowEmail];
-  List<Map> result = await db.query('tb_perfilusuario',
-      columns: columnsToSelect, where: whereString, whereArgs: whereArguments);
-  if (result.length == 0) {
-    return validation = "true";
-  } else {
-    if (result[1].toString().contains(senhaLogin)) {
-      return validation = "false";
+  List<Map> result = await db.query('tb_perfilusuario');
+  if (result.length > 0) {
+    print("result > 0");
+    for (var map in result) {
+      print("map v:");
+      print(map);
+      if (map.containsValue(emailLogin) && map.containsValue(senhaLogin)) {
+        print("contains email and password");
+        return validation = "true";
+      } else {
+        print("login incorrect");
+        //return validation = "false";
+      }
     }
+  } else {
+    print("result == 0");
   }
-}
 
+  //final List<Map<String, dynamic>> maps = await db.query('tb_perfilusuario');
+}
+/*
 class Cadastro {
   //final int id;
   final String nome;
@@ -113,5 +187,4 @@ class Login {
       'senha': senhaLogin,
       //'nascimento': nascimento,
     };
-  }
-}
+  } */
