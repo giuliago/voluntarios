@@ -4,17 +4,15 @@ import 'dart:convert';
 
 class SendToBd {
   SendToBd({
-    this.pkIdusuario,
     this.nome,
-    this.ukEmail,
+    this.email,
     this.senha,
     this.genero,
     this.regiao,
   });
 
-  String pkIdusuario;
   String nome;
-  String ukEmail;
+  String email;
   String senha;
   String genero;
   String regiao;
@@ -25,18 +23,16 @@ class SendToBd {
   String toRawJson() => json.encode(toJson());
 
   factory SendToBd.fromJson(Map<String, dynamic> json) => SendToBd(
-        pkIdusuario: json["pk_idusuario"],
         nome: json["nome"],
-        ukEmail: json["uk_email"],
+        email: json["email"],
         senha: json["senha"],
         genero: json["genero"],
         regiao: json["regiao"],
       );
 
   Map<String, dynamic> toJson() => {
-        "pk_idusuario": pkIdusuario,
         "nome": nome,
-        "uk_email": ukEmail,
+        "email": email,
         "senha": senha,
         "genero": genero,
         "regiao": regiao,

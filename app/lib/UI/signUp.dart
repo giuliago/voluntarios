@@ -7,9 +7,7 @@ import './navBar.dart';
 import 'package:voluntarios/UI/loginPage.dart';
 import './calendar.dart';
 import 'package:voluntarios/models/cadastro.dart';
-import 'package:voluntarios/db_connect/databaseConnection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class SignUp extends StatefulWidget {
   _SignUp createState() => _SignUp();
@@ -175,149 +173,136 @@ class _SignUp extends State<SignUp> {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
 
-    return Stack(
-      children: <Widget>[
-        Container(
-          width: deviceWidth,
-          alignment: Alignment.bottomCenter,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("images/signup.png"), fit: BoxFit.fill)),
-        ),
-        Center(
-            child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-                bottomLeft: Radius.circular(10),
-                bottomRight: Radius.circular(10)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
-          width: deviceWidth - 60,
-          height: deviceHeight - 250,
-        )),
-        Center(
-            child: Padding(
-                padding: EdgeInsets.only(bottom: deviceHeight - 240),
-                child: SizedBox(
-                  child: Image.asset("images/icon.png"),
-                  height: 70,
-                  width: 70,
-                ))),
-        _formSignUp(context),
-        Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-                padding: EdgeInsets.fromLTRB(90, 50, 10, 70),
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      "Já possui cadastro?",
-                      style: TextStyle(fontSize: 14, color: Colors.white),
-                    ),
-                    SizedBox(
-                      width: 80,
-                      child: FlatButton(
-                        child: Text(
-                          'Entrar',
-                          style: TextStyle(
-                              fontSize: 14.0, color: Colors.lightBlue),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginPage(),
-                            ),
-                          ).then(
-                            (novoCadastro) =>
-                                debugPrint(novoCadastro.toString()),
-                          );
-                        },
-                      ),
-                    ))
-              ]),
+    return Stack(children: <Widget>[
+      Container(
+        width: deviceWidth,
+        alignment: Alignment.bottomCenter,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("images/signup.png"), fit: BoxFit.fill)),
+      ),
+      Center(
+          child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
             ),
-            DatePicker(firstDate: 2020, lastDate: 2050, stateVar: 2),
-            Padding(
-              padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
-              child: TextField(
-                  controller: emailController,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                  ),
-                  decoration: InputDecoration(
-                    labelText: 'E-mail',
-                    icon: Icon(Icons.email),
-                  )),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
-              child: TextField(
-                  controller: senhaController,
-                  obscureText: true,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                  ),
-                  decoration: InputDecoration(
-                    labelText: 'Senha',
-                    icon: Icon(Icons.lock),
-                  )),
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
-              child: TextField(
-                  controller: confirmaSenhaController,
-                  obscureText: true,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                  ),
-                  decoration: InputDecoration(
-                    labelText: 'Confirme a senha',
-                  )),
-            ),
-            Padding(
-                padding: EdgeInsets.all(37.0),
-                child: new RaisedButton(
-                  onPressed: () {
-                    final String nome = nomeController.text;
-                    final String regiao = regiaoController.text;
-                    final String nascimento = nascimentoController.text;
-                    final String email = emailController.text;
-                    final String senha = senhaController.text;
-                    var lista = [
-                      nome,
-                      regiao,
-                      email,
-                      senha
-                    ]; //Variável que armazena as informações obtidas do formulário
-                    //Insere(lista);
-                    //final Cadastro novoCadastro = new Cadastro(nome, email, senha, regiao);
-                    // Navigator.pop(context, novoCadastro);
-                  },
-                  child: Text('Sign Up', style: TextStyle(fontSize: 15)),
-                  textColor: Colors.white,
-                  color: Colors.deepOrange,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.0)),
-                ))
           ],
         ),
+        width: deviceWidth - 60,
+        height: deviceHeight - 250,
+      )),
+      Center(
+          child: Padding(
+              padding: EdgeInsets.only(bottom: deviceHeight - 240),
+              child: SizedBox(
+                child: Image.asset("images/icon.png"),
+                height: 70,
+                width: 70,
+              ))),
+      _formSignUp(context),
+      Align(
+          alignment: Alignment.bottomRight,
+          child: Padding(
+              padding: EdgeInsets.fromLTRB(90, 50, 10, 70),
+              child: Row(children: <Widget>[
+                Text(
+                  "Já possui cadastro?",
+                  style: TextStyle(fontSize: 14, color: Colors.white),
+                ),
+                SizedBox(
+                  width: 80,
+                  child: FlatButton(
+                    child: Text(
+                      'Entrar',
+                      style: TextStyle(fontSize: 14.0, color: Colors.lightBlue),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ),
+                      ).then(
+                        (novoCadastro) => debugPrint(novoCadastro.toString()),
+                      );
+                    },
+                  ),
+                )
+              ]))),
+      DatePicker(firstDate: 1920, lastDate: 2010, stateVar: 2),
+      Padding(
+        padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
+        child: TextField(
+            controller: emailController,
+            style: TextStyle(
+              fontSize: 18.0,
+            ),
+            decoration: InputDecoration(
+              labelText: 'E-mail',
+              icon: Icon(Icons.email),
+            )),
       ),
-
-                    )
-                  ],
-                )))
-      ],
-    );
+      Padding(
+        padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
+        child: TextField(
+            controller: senhaController,
+            obscureText: true,
+            style: TextStyle(
+              fontSize: 18.0,
+            ),
+            decoration: InputDecoration(
+              labelText: 'Senha',
+              icon: Icon(Icons.lock),
+            )),
+      ),
+      Container(
+        padding: EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
+        child: TextField(
+            controller: confirmaSenhaController,
+            obscureText: true,
+            style: TextStyle(
+              fontSize: 18.0,
+            ),
+            decoration: InputDecoration(
+              labelText: 'Confirme a senha',
+            )),
+      ),
+      Padding(
+          padding: EdgeInsets.all(37.0),
+          child: new RaisedButton(
+            onPressed: () {
+              final String nome = nomeController.text;
+              final String regiao = regiaoController.text;
+              final String nascimento = nascimentoController.text;
+              final String email = emailController.text;
+              final String senha = senhaController.text;
+              var lista = [
+                nome,
+                regiao,
+                email,
+                senha
+              ]; //Variável que armazena as informações obtidas do formulário
+              //Insere(lista);
+              //final Cadastro novoCadastro = new Cadastro(nome, email, senha, regiao);
+              // Navigator.pop(context, novoCadastro);
+            },
+            child: Text('Sign Up', style: TextStyle(fontSize: 15)),
+            textColor: Colors.white,
+            color: Colors.deepOrange,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0)),
+          ))
+    ]);
   }
 }
