@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:voluntarios/UI/home.dart';
 import './calendar.dart';
 import 'package:intl/intl.dart';
 //import 'package:voluntarios/models/cadastro.dart';
 import './navBar.dart';
-import 'package:voluntarios/db_connect/databaseConnection.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
   SignUp({Key key}) : super(key: key);
@@ -136,11 +133,16 @@ class _SignUp extends State<SignUp> {
                   onPressed: () {
                     final String nome = nomeController.text;
                     final String regiao = regiaoController.text;
-                    //final String birthday = nascimentoController.text;
+                    final String nascimento = nascimentoController.text;
                     final String email = emailController.text;
                     final String senha = senhaController.text;
-                    var lista = [nome, regiao, email, senha];
-                    Insere(lista);
+                    var lista = [
+                      nome,
+                      regiao,
+                      email,
+                      senha
+                    ]; //Variável que armazena as informações obtidas do formulário
+                    //Insere(lista);
                     //final Cadastro novoCadastro = new Cadastro(nome, email, senha, regiao);
                     // Navigator.pop(context, novoCadastro);
                   },
