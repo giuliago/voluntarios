@@ -2,15 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:voluntarios/UI/loginPage.dart';
 import './calendar.dart';
+import 'package:intl/intl.dart';
 import 'package:voluntarios/models/cadastro.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
   _SignUp createState() => _SignUp();
+  DateTime selectedDate;
 }
 
 class _SignUp extends State<SignUp> {
+  int firstDate;
+  int lastDate;
+  int stateVar;
+  int style;
   DateTime _selectedDate;
   String dropdownValue = 'Brasília';
   TextEditingController nomeController = new TextEditingController();
@@ -19,6 +25,69 @@ class _SignUp extends State<SignUp> {
   TextEditingController emailController = new TextEditingController();
   TextEditingController senhaController = new TextEditingController();
   TextEditingController confirmaSenhaController = new TextEditingController();
+
+  Widget state1(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.only(top: 10.0),
+      child: ListTile(
+        contentPadding: EdgeInsets.all(8.0),
+        title: Text('Data do evento'),
+        subtitle: Text(
+            _selectedDate == null //ternary expression to check if date is null
+                ? 'Nenhuma data selecionada!'
+                : 'Data: ${DateFormat.yMMMd().format(_selectedDate)}'),
+        leading: Icon(Icons.calendar_today),
+        onTap: () => _pickDateDialog(2020, 2050, 1),
+      ),
+    );
+  }
+
+  Widget state2(BuildContext context) {
+    return SizedBox(
+        child: ListTile(
+      contentPadding: EdgeInsets.all(0),
+      onTap: () => _pickDateDialog(2020, 2050, 1),
+      title: Align(
+        child: Text('Data de nascimento',
+            style: TextStyle(fontSize: 14, color: Colors.grey[700])),
+        alignment: Alignment(-1.5, 0),
+      ),
+      subtitle: Align(
+        child: Text(
+          _selectedDate == null //ternary expression to check if date is null
+              ? 'Não selecionado!'
+              : 'Data: ${DateFormat.yMMMd().format(_selectedDate)}',
+          style: TextStyle(color: Colors.lightGreen),
+        ),
+        alignment: Alignment(-1.4, 0),
+      ),
+      leading: Icon(Icons.calendar_today),
+    ));
+  }
+
+  //Method for showing the date picker
+  void _pickDateDialog(int firstDate, int lastDate, int style) {
+    showDatePicker(
+            context: context,
+            initialDatePickerMode:
+                style == 1 ? DatePickerMode.year : DatePickerMode.day,
+            initialDate: style == 1 ? DateTime(firstDate) : DateTime.now(),
+            //which date will display when user open the picker
+            firstDate: DateTime(firstDate),
+            //what will be the previous supported year in picker
+            lastDate: DateTime(
+                lastDate)) //what will be the up to supported date in picker
+        .then((pickedDate) {
+      if (pickedDate == null) {
+        //if user tap cancel then this function will stop
+        return;
+      }
+      setState(() {
+        //for rebuilding the ui
+        _selectedDate = pickedDate;
+      });
+    });
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,8 +108,9 @@ class _SignUp extends State<SignUp> {
           //final String birthday = nascimentoController.text;
           final String email = emailController.text;
           final String password = senhaController.text;
+          final DateTime date = _selectedDate;
           final Cadastro novoCadastro =
-              new Cadastro(name, location, email, password);
+              new Cadastro(name, location, email, password, date);
           Navigator.pop(context, novoCadastro);
         },
         shape:
@@ -130,7 +200,7 @@ class _SignUp extends State<SignUp> {
                   ))
             ]),
           ),
-          DatePicker(firstDate: 1920, lastDate: 2010, stateVar: 2, style: 1),
+          Container(child: state1(context)),
           TextField(
               controller: emailController,
               style: TextStyle(

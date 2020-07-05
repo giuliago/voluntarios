@@ -8,11 +8,36 @@ import './calendar.dart';
 class Profile extends StatelessWidget {
   Widget _buildProfile(BuildContext context) {
     return Column(
-      children: <Widget>[
-        _buildAvatar(context),
-      ],
+      children: <Widget>[_buildAvatar(context), _description(context)],
     );
   }
+
+  Widget _description(BuildContext context) {
+    return Container(
+        width: 320,
+        height: 180,
+        color: Colors.blue,
+        child: Column(
+          children: <Widget>[
+            Padding(
+                padding: EdgeInsets.fromLTRB(0, 40, 220, 0),
+                child: Text(
+                  'Descrição',
+                  style: TextStyle(fontSize: 20, color: Colors.lightGreen[700]),
+                )),
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Text(
+                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Widget _organizations(BuildContext context) {}
 
   Widget _buildAvatar(BuildContext context) {
     return Stack(children: <Widget>[

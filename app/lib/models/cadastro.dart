@@ -1,11 +1,12 @@
 import 'package:intl/intl.dart';
 
-class Cadastro{
+class Cadastro {
   final String name;
   final String location;
   //final DateTime birthday;
   final String email;
   final String password;
+  final DateTime date;
 
   Cadastro(
     this.name,
@@ -13,11 +14,11 @@ class Cadastro{
     //this.birthday,
     this.email,
     this.password,
+    this.date,
   );
 
   @override
   String toString() {
-    return 'Cadastro{name: $name, location: $location, email: $email, password: $password}';
+    return 'Cadastro{name: $name, location: $location, email: $email, password: $password, date: $date}';
   }
-
 }
