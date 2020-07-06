@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './home.dart';
 import 'editProfile.dart';
 //import 'DB/database_helper.dart';
@@ -11,6 +12,10 @@ class Profile extends StatefulWidget {
 }
 
 class _Profile extends State<Profile> {
+  String nomeCookie = "";
+  String regiaoCookie = "";
+  String emailCookie = "";
+
   Widget _buildProfile(BuildContext context) {
     return Column(
       children: <Widget>[
@@ -21,6 +26,42 @@ class _Profile extends State<Profile> {
         //convidar(context)
       ],
     );
+  }
+
+  setNomeCookie() async {
+    getNomeCookie().then((val) => setState(() {
+          nomeCookie = val;
+        }));
+  }
+
+  getNomeCookie() async {
+    final prefs = await SharedPreferences.getInstance();
+    final nomeCookie = prefs.getString('nomeCookie') ?? 0;
+    return nomeCookie;
+  }
+
+  setRegiaoCookie() async {
+    getRegiaoCookie().then((val2) => setState(() {
+          regiaoCookie = val2;
+        }));
+  }
+
+  getRegiaoCookie() async {
+    final prefs = await SharedPreferences.getInstance();
+    final regiaoCookie = prefs.getString('regiaoCookie') ?? 0;
+    return regiaoCookie;
+  }
+
+  setEmailCookie() async {
+    getEmailCookie().then((val3) => setState(() {
+          emailCookie = val3;
+        }));
+  }
+
+  getEmailCookie() async {
+    final prefs = await SharedPreferences.getInstance();
+    final emailCookie = prefs.getString('emailCookie') ?? 0;
+    return emailCookie;
   }
 
   Widget _description(BuildContext context) {
@@ -48,6 +89,7 @@ class _Profile extends State<Profile> {
   }
 
   Widget _info(BuildContext context) {
+    setEmailCookie();
     return Expanded(
         child: Container(
       decoration: BoxDecoration(
@@ -81,7 +123,7 @@ class _Profile extends State<Profile> {
               Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Text(
-                    'giu@hotmail.com',
+                    '$emailCookie',
                     style: TextStyle(color: Colors.grey[500]),
                   )),
             ],
@@ -234,6 +276,8 @@ class _Profile extends State<Profile> {
   }*/
 
   Widget _buildAvatar(BuildContext context) {
+    setRegiaoCookie();
+    setNomeCookie();
     return Stack(children: <Widget>[
       Container(
         width: 400,
@@ -263,7 +307,7 @@ class _Profile extends State<Profile> {
               Padding(
                   padding: EdgeInsets.only(top: 10),
                   child: Text(
-                    'Giulianna Gonçalves',
+                    '$nomeCookie',
                     style: TextStyle(
                         fontSize: 24, color: Colors.white70.withOpacity(0.8)),
                   )),
@@ -276,7 +320,7 @@ class _Profile extends State<Profile> {
                         size: 20,
                         color: Colors.white70,
                       )),
-                  Text('Brasília', style: TextStyle(color: Colors.white60))
+                  Text('$regiaoCookie', style: TextStyle(color: Colors.white60))
                 ],
               )
             ],
@@ -317,24 +361,3 @@ class _Profile extends State<Profile> {
     );
   }
 }
-
-/* place code inside a class
-
-  _query() async {
-
-    // get a reference to the database
-    Database db = await DatabaseHelper.instance.database;
-
-    // raw query
-    List<Map> result = await db.rawQuery('SELECT * FROM tb_perfilusuario');
-
-    // print the results
-    result.forEach((row) =>  {
-      element = {
-        'nome' : row.ColumnName,
-        'email' : row.ColumnEmail,
-        'regiao' : row.ColumnRegiao}
-    });
-    // .then((_) => element); (?)
-  }
-*/
