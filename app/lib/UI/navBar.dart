@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import './home.dart';
 import 'yourEvents.dart';
 import './profile.dart';
@@ -7,12 +8,12 @@ import 'createEvent.dart';
 
 class NavBar extends StatefulWidget {
   NavBar({Key key}) : super(key: key);
-
   @override
   _NavBar createState() => _NavBar();
 }
 
 class _NavBar extends State<NavBar> {
+  final dbHelper = database.DatabaseHelper.instance;
   PersistentTabController _controller;
 
   @override
@@ -31,6 +32,7 @@ class _NavBar extends State<NavBar> {
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
+    _consultarEventos();
     return [
       PersistentBottomNavBarItem(
         icon: Icon(Icons.home),
@@ -82,5 +84,11 @@ class _NavBar extends State<NavBar> {
         itemCount: 4, // Choose the nav bar style with this property
       ),
     );
+  }
+
+  void _consultarEventos() async {
+    final todasEventos = await dbHelper.queryAllRows();
+    print('Consulta todos os eventos:');
+    todasEventos.forEach((row) => print(row));
   }
 }

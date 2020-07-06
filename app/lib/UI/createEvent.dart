@@ -114,8 +114,8 @@ class _CreateEvent extends State<CreateEvent> {
                     final DateTime dataEvento = data;
                     var lista = [nome, descricao, dataEvento, 'Brasilia'];
                     print(lista);
-                    _inserir(lista);
                     _consultarEventos();
+                    _inserir(lista);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -137,12 +137,16 @@ class _CreateEvent extends State<CreateEvent> {
     String nome = lista[0];
     String descricao = lista[1];
     String data = lista[2].toIso8601String();
+    String fk = 'NULL';
+    String fk1 = 'NULL';
     //String regiao = lista[3];
     // linha para incluir
     Map<String, dynamic> row = {
       database.DatabaseHelper.eventName: nome,
       database.DatabaseHelper.eventDescription: descricao,
-      database.DatabaseHelper.eventDate: data
+      database.DatabaseHelper.eventDate: data,
+      database.DatabaseHelper.eventFK1: fk,
+      database.DatabaseHelper.eventFK2: fk1
       //database.DatabaseHelper.eventRegion: regiao
     };
     final id = await dbHelper.insertEvent(row);
@@ -150,8 +154,8 @@ class _CreateEvent extends State<CreateEvent> {
   }
 
   void _consultarEventos() async {
-    final todasLinhas = await dbHelper.queryAllRows();
-    print('Consulta todas os eventos:');
-    todasLinhas.forEach((row) => print(row));
+    final todasEventos = await dbHelper.queryAllRows();
+    print('Consulta todos os eventos:');
+    todasEventos.forEach((row) => print(row));
   }
 }

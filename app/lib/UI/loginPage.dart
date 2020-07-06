@@ -20,7 +20,8 @@ class LoginPage extends StatelessWidget {
           String email = emailController.text;
           String senha = senhaController.text;
           var lista = [email, senha];
-          final validacao = await database.verificaLogin(lista) as String;
+          print(lista);
+          final validacao = await verificaLogin(lista);
           print("Valida?????:" + validacao);
           Navigator.push(
             context,
@@ -183,5 +184,10 @@ class LoginPage extends StatelessWidget {
       resizeToAvoidBottomPadding: false,
       body: _buildLogin(context),
     );
+  }
+
+  dynamic verificaLogin(List lista) async {
+    final verifica = await dbHelper.queryLogin(lista);
+    return verifica;
   }
 }
