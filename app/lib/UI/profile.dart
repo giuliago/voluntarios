@@ -83,12 +83,40 @@ class _Profile extends State<Profile> {
                   child: Text(
                     'giu@hotmail.com',
                     style: TextStyle(color: Colors.grey[500]),
-                  ))
+                  )),
             ],
-          )
+          ),
+          _buttonLogout(context)
         ],
       ),
     ));
+  }
+
+  Widget _buttonLogout(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(20),
+      height: 30.0,
+      width: 120,
+      child: RaisedButton(
+        color: Colors.red,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              //validação pra home
+              builder: (context) => Home(),
+            ),
+          );
+        },
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
+        child: Text(
+          "Sair",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
   }
 
   Widget _convidar(BuildContext context) {

@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:voluntarios/UI/createEvent.dart';
 import 'eventDetails.dart';
 //import 'DB/database_helper.dart';
 //import 'package:sqflite/sqflite.dart'
@@ -13,68 +14,99 @@ class YourEvents extends StatefulWidget {
 class _Events extends State<YourEvents> {
   int flag = 0;
 
-  Widget _noEvents(BuildContext context) {
-    return Stack(children: <Widget>[
-      Container(
-          decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.lightGreen.withOpacity(0.8),
-            Colors.lightBlue.withOpacity(0.8)
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+  Widget _buildEventPage(BuildContext context) {
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          backgroundColor: Colors.cyan,
+          bottom: PreferredSize(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 280, 20),
+                child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CreateEvent()));
+                    },
+                    child: Icon(
+                      Icons.add_circle,
+                      color: Colors.white70,
+                      size: 40.0,
+                    )),
+              ),
+              preferredSize: Size.fromHeight(0.0)),
+          pinned: false,
+          expandedHeight: 140.0,
+          flexibleSpace: FlexibleSpaceBar(
+            title: Text('Criar evento', style: TextStyle(color: Colors.white)),
+          ),
         ),
-      )),
-      Text(
-        'Você ainda não criou nenhum evento, comece agora a liderar seus próprios eventos',
-        style: TextStyle(color: Colors.black, fontSize: 20),
-      )
-    ]);
+        SliverList(
+            delegate: SliverChildListDelegate(
+          [
+            Container(
+              width: 400,
+              height: 100,
+              child: Center(
+                  child: Text('Veja seus eventos criados!',
+                      style: TextStyle(fontSize: 20))),
+            ),
+            Container(width: 400, height: 220, child: _buildEvents(context)),
+          ],
+        )),
+      ],
+    );
   }
 
   Widget _buildEvents(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.all(8.0),
-          child: Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(8.0))),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EventDetails(),
-                  ),
-                );
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8.0),
-                      topRight: Radius.circular(8.0),
-                    ),
-                    child: Image.network('https://placeimg.com/640/480/any',
-                        // width: 300,
-                        height: 200,
-                        fit: BoxFit.fill),
-                  ),
-                  ListTile(
-                    title: Text('Evento Beneficiário'),
-                    trailing: Icon(Icons.calendar_today),
-                    subtitle: Text('24/04/2019'),
-                  ),
-                ],
+    return Row(children: <Widget>[
+      Expanded(
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemCount: 10,
+              itemBuilder: (BuildContext context, int index) {
+                return new GestureDetector(
+                    //You need to make my child interactive
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EventDetails(),
+                        ),
+                      );
+                    },
+                    child: _buildCard(context));
+              }))
+    ]);
+  }
+
+  Widget _buildCard(BuildContext context) {
+    return SizedBox(
+        width: 240,
+        child: Card(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  topRight: Radius.circular(8.0),
+                ),
+                child: Image.network('https://placeimg.com/640/480/any',
+                    height: 120, fit: BoxFit.fill),
               ),
-            ),
+              ListTile(
+                title: Text('Evento Beneficente'),
+                trailing: Icon(Icons.calendar_today),
+                subtitle: Text('24/04/2019'),
+              ),
+            ],
           ),
-        ),
-      ],
-    );
+        ));
   }
 
   @override
@@ -92,7 +124,7 @@ class _Events extends State<YourEvents> {
                 ))
           ],
           leading: Icon(
-            Icons.arrow_back,
+            Icons.help,
             color: Colors.white70,
           ),
           backgroundColor: Colors.cyan[700],
@@ -101,7 +133,7 @@ class _Events extends State<YourEvents> {
             style: TextStyle(color: Colors.white),
           ),
         ),
-        body: flag == 0 ? _noEvents(context) : _buildEvents(context));
+        body: _buildEventPage(context));
   }
 }
 /* place code inside a class

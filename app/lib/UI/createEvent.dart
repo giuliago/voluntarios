@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:voluntarios/UI/eventDetails.dart';
 import 'package:voluntarios/UI/imageUploader.dart';
+import 'package:voluntarios/UI/yourEvents.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
@@ -64,74 +65,109 @@ class _CreateEvent extends State<CreateEvent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            margin: EdgeInsets.all(15.0),
-            child: ListView(
-              children: <Widget>[
-                TextField(
-                    controller: nomeController,
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
-                    decoration: InputDecoration(
-                      labelText: 'Nome do evento',
-                    )),
-                Container(
-                    height: maxLines * 24.0,
-                    padding: EdgeInsets.only(top: 12.0),
-                    child: TextField(
-                        controller: descriptionController,
-                        maxLines: maxLines,
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),
-                        decoration: InputDecoration(
-                          labelText: 'Descrição do evento',
-                          fillColor: Colors.white,
-                          filled: true,
-                        ))),
-                calendar(context),
-                Container(
-                    padding: EdgeInsets.only(top: 12.0),
-                    child: TextField(
+      body: Padding(
+          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+          child: Container(
+              child: ListView(
+            children: <Widget>[
+              TextField(
+                  controller: nomeController,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: 'Nome do evento',
+                  )),
+              Container(
+                  height: maxLines * 24.0,
+                  padding: EdgeInsets.only(top: 12.0),
+                  child: TextField(
+                      controller: descriptionController,
+                      maxLines: maxLines,
                       style: TextStyle(
                         fontSize: 18.0,
                       ),
                       decoration: InputDecoration(
-                        labelText: 'Localização',
-                        icon: Icon(Icons.location_on),
+                        labelText: 'Descrição do evento',
+                        fillColor: Colors.white,
+                        filled: true,
+                      ))),
+              calendar(context),
+              Container(
+                  width: 400,
+                  padding: EdgeInsets.only(top: 12.0),
+                  child: TextField(
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Localização',
+                      icon: Icon(Icons.location_on),
+                    ),
+                  )),
+              UploadImage(),
+              Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  child: Container(
+                    height: 40.0,
+                    width: 180,
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            //validação pra home
+                            builder: (context) => YourEvents(),
+                          ),
+                        );
+                      },
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0.0)),
+                      padding: EdgeInsets.all(0.0),
+                      child: Ink(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Colors.lightGreen, Colors.lightBlue],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ),
+                            borderRadius: BorderRadius.circular(0.0)),
+                        child: Container(
+                          constraints:
+                              BoxConstraints(maxWidth: 350.0, minHeight: 50.0),
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Criar",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ),
-                    )),
-                UploadImage(),
-                RaisedButton(
-                  padding: EdgeInsets.all(12.0),
-                  color: Colors.orange[700],
-                  textColor: Colors.white,
-                  onPressed: () {
-                    String nome = nomeController.text;
-                    String descricao = descriptionController.text;
-                    data = _selectedDate;
-                    //String regiao = dropdownValue;
-                    final DateTime dataEvento = data;
-                    var lista = [nome, descricao, dataEvento, 'Brasilia'];
-                    print(lista);
-                    _consultarEventos();
-                    _inserir(lista);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EventDetails(),
-                      ),
-                    );
-                  },
-                  child: Text('Criar Evento'),
-                )
-              ],
-            )),
-        appBar: AppBar(
-          title: Text("Voluntários"),
-          backgroundColor: Colors.orange,
-        ));
+                    ),
+                  ))
+            ],
+          ))),
+      appBar: AppBar(
+        centerTitle: true,
+        actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20),
+              child: Icon(
+                Icons.message,
+                color: Colors.white70,
+              ))
+        ],
+        leading: Icon(
+          Icons.arrow_back,
+          color: Colors.white70,
+        ),
+        backgroundColor: Colors.cyan[700],
+        title: Text(
+          'Voluntários',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
   }
 
   void _inserir(List lista) async {

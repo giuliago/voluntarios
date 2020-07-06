@@ -26,7 +26,7 @@ class _NavBar extends State<NavBar> {
   List<Widget> _buildScreens() {
     return [
       Home(),
-      CreateEvent(),
+      YourEvents(),
       OrganizationTab(),
       Profile(),
     ];
