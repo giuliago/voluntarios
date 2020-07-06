@@ -48,9 +48,8 @@ class _Profile extends State<Profile> {
   }
 
   Widget _info(BuildContext context) {
-    return Container(
-      width: 400,
-      height: 200,
+    return Expanded(
+        child: Container(
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -89,7 +88,7 @@ class _Profile extends State<Profile> {
           )
         ],
       ),
-    );
+    ));
   }
 
   Widget _convidar(BuildContext context) {
