@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'package:path/path.dart';
 import './home.dart';
+import 'editProfile.dart';
 //import 'DB/database_helper.dart';
 //import 'package:sqflite/sqflite.dart'
 
@@ -16,11 +17,10 @@ class Profile extends StatelessWidget {
     return Container(
         width: 320,
         height: 180,
-        color: Colors.blue,
         child: Column(
           children: <Widget>[
             Padding(
-                padding: EdgeInsets.fromLTRB(0, 40, 220, 0),
+                padding: EdgeInsets.fromLTRB(0, 20, 220, 0),
                 child: Text(
                   'Descrição',
                   style: TextStyle(fontSize: 20, color: Colors.lightGreen[700]),
@@ -37,7 +37,7 @@ class Profile extends StatelessWidget {
         ));
   }
 
-  Widget _buildList(BuildContext context) {
+/*  Widget _buildList(BuildContext context) {
     return GestureDetector(
         onTap: () {
           Navigator.push(
@@ -57,9 +57,9 @@ class Profile extends StatelessWidget {
                         return _buildAvatarOrg(context, 20, 400, 40);
                       }))
             ]))));
-  }
+  }*/
 
-  Widget _organizations(BuildContext context) {
+/*  Widget _organizations(BuildContext context) {
     return SizedBox(
         width: 320,
         height: 180,
@@ -81,9 +81,9 @@ class Profile extends StatelessWidget {
             ),
           ],
         ));
-  }
+  }*/
 
-  Widget _buildAvatarOrg(
+  /*Widget _buildAvatarOrg(
       BuildContext context, double radius, double width, double height) {
     return Padding(
         padding: EdgeInsets.only(right: 5),
@@ -101,13 +101,13 @@ class Profile extends StatelessWidget {
             ),
           ),
         ));
-  }
+  }*/
 
   Widget _buildAvatar(BuildContext context) {
     return Stack(children: <Widget>[
       Container(
         width: 400,
-        height: 240,
+        height: 220,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.teal, Colors.lightBlue],
@@ -161,15 +161,20 @@ class Profile extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         actions: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(right: 20),
-              child: Icon(
-                Icons.edit,
-                color: Colors.white70,
-              ))
+          GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => EditProfile()));
+              },
+              child: Padding(
+                  padding: EdgeInsets.only(right: 20),
+                  child: Icon(
+                    Icons.edit,
+                    color: Colors.white70,
+                  )))
         ],
         leading: Icon(
-          Icons.message,
+          Icons.arrow_back,
           color: Colors.white70,
         ),
         backgroundColor: Colors.cyan[700],
