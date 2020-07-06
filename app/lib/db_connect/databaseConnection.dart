@@ -121,6 +121,27 @@ class DatabaseHelper {
     return await db.query('tb_evento');
   }
 
+  Future<List<Map<String, dynamic>>> queryCookie(List lista) async {
+    String email = lista[0];
+    Database db = await instance.database;
+    String whereString = 'uk_email = ?';
+    List<dynamic> whereArguments = [email];
+    return await db.query(tableUser,
+        where: whereString, whereArgs: whereArguments);
+  }
+
+  Future<List<Map<String, dynamic>>> queryEventos() async {
+    Database db = await instance.database;
+    String whereString = 'disponibilidade = ?';
+    List<dynamic> whereArguments = [1];
+    return await db.query(tableEvent,
+        where: whereString, whereArgs: whereArguments);
+  }
+
+  Future<List<Map<String, dynamic>>> queryEventosInscritos() async {
+    Database db = await instance.database;
+  }
+
   Future<String> queryLogin(List lista) async {
     String emailLogin = lista[0];
     String senhaLogin = lista[1];

@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'package:voluntarios/UI/yourEvents.dart';
 import './eventDetails.dart';
 import 'package:path/path.dart';
@@ -16,10 +18,40 @@ class Home extends StatefulWidget {
 }
 
 class _Home extends State<Home> {
+  final dbHelper = database.DatabaseHelper.instance;
+  String nomeCookie = "";
+  String regiaoCookie = "";
+
+  setNomeCookie() async {
+    getNomeCookie().then((val) => setState(() {
+          nomeCookie = val;
+        }));
+  }
+
+  getNomeCookie() async {
+    final prefs = await SharedPreferences.getInstance();
+    final nomeCookie = prefs.getString('nomeCookie') ?? 0;
+    return nomeCookie;
+  }
+
+  setRegiaoCookie() async {
+    getRegiaoCookie().then((val2) => setState(() {
+          regiaoCookie = val2;
+        }));
+  }
+
+  getRegiaoCookie() async {
+    final prefs = await SharedPreferences.getInstance();
+    final regiaoCookie = prefs.getString('regiaoCookie') ?? 0;
+    return regiaoCookie;
+  }
+
   Widget _buildHome(BuildContext context) {
+    setRegiaoCookie();
+    setNomeCookie();
     return CustomScrollView(
       slivers: <Widget>[
-        const SliverAppBar(
+        SliverAppBar(
           backgroundColor: Colors.cyan,
           bottom: PreferredSize(
               child: Padding(
@@ -33,7 +65,7 @@ class _Home extends State<Home> {
           pinned: false,
           expandedHeight: 180.0,
           flexibleSpace: FlexibleSpaceBar(
-            title: Text('Olá Fulano, veja os eventos em Brasília',
+            title: Text('Olá $nomeCookie, veja os eventos em $regiaoCookie',
                 style: TextStyle(color: Colors.white)),
           ),
         ),
@@ -262,4 +294,15 @@ class _Home extends State<Home> {
       ),
     );
   }*/
+  void _consultarEventos() async {
+    final todasLinhas = await dbHelper.queryEventos();
+    print('Consulta todas os eventos:');
+    todasLinhas.forEach((row) => print(row));
+  }
+
+  void _consultarEventosInscritos() async {
+    final todasLinhas = await dbHelper.queryEventosInscritos();
+    print('Consulta todas as linhas:');
+    todasLinhas.forEach((row) => print(row));
+  }
 }

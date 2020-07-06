@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:voluntarios/UI/splashScreen.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
@@ -31,6 +32,7 @@ class LoginPage extends StatelessWidget {
             ),
           );
           if (validacao.contains('true')) {
+            cookiesLogin(lista);
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -184,6 +186,22 @@ class LoginPage extends StatelessWidget {
       resizeToAvoidBottomPadding: false,
       body: _buildLogin(context),
     );
+  }
+
+  dynamic cookiesLogin(List lista) async {
+    final prefs = await SharedPreferences.getInstance();
+    print("Entra?");
+    final cookie = await dbHelper.queryCookie(lista);
+    String idusuarioCookie = cookie[0]['idusuario'];
+    String nomeCookie = cookie[0]['nome'];
+    String emailCookie = cookie[0]['uk_email'];
+    String regiaoCookie = cookie[0]['regiao'];
+    prefs.setString('idusuarioCookie', idusuarioCookie);
+    prefs.setString('nomeCookie', nomeCookie);
+    prefs.setString('emailCookie', emailCookie);
+    prefs.setString('regiaoCookie', regiaoCookie);
+    print("cookies v:");
+    //print(nomeCookie);
   }
 
   dynamic verificaLogin(List lista) async {

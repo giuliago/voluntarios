@@ -102,7 +102,7 @@ class _SignUp extends State<SignUp> {
         onPressed: () {
           final String nome = nomeController.text;
           //precisa fazer o list de localizações
-          final String regiao = regiaoController.text;
+          final String regiao = dropdownValue;
           //precisa formatar a string
           //final String birthday = nascimentoController.text;
           final String email = emailController.text;
@@ -324,7 +324,7 @@ class _SignUp extends State<SignUp> {
   void _inserir(List lista) async {
     //[nome, regiao, email, senha, nascimento];
     String nome = lista[0];
-    String regiao = 'Brasília';
+    String regiao = lista[1];
     String email = lista[2];
     String senha = lista[3];
     String nascimento = lista[4].toIso8601String();
