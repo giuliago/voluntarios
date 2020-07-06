@@ -142,8 +142,12 @@ class _Events extends State<Events> with TickerProviderStateMixin {
           _buildTableCalendarWithBuilders(),
           Container(
               color: Colors.cyan[300],
-              height: 274,
+              height: 200,
               child: Expanded(child: _buildEventList())),
+          Expanded(
+              child: Container(
+            color: Colors.cyan[300],
+          ))
         ],
       ),
     );
@@ -275,7 +279,7 @@ class _Events extends State<Events> with TickerProviderStateMixin {
     return Row(children: <Widget>[
       Expanded(
         child: ListView.builder(
-            scrollDirection: Axis.vertical,
+            scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             itemCount: 10,
             itemBuilder: (BuildContext context, int index) {
@@ -289,7 +293,7 @@ class _Events extends State<Events> with TickerProviderStateMixin {
                       ),
                     );
                   },
-                  child: _buildCard(true, 220, 220));
+                  child: _buildCard(true, 200, 220));
             }),
       )
     ]);
