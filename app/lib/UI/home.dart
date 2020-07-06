@@ -11,6 +11,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
+  final dbHelper = database.DatabaseHelper.instance;
+
   @override
   State<StatefulWidget> createState() {
     return _Home();
@@ -181,14 +183,35 @@ class _Home extends State<Home> {
         });
   }
 
-  /*Widget _buildList() {
+  String _nome(Map<dynamic, dynamic> user) {
+    return user['tb_evento']['nome'];
+  }
+
+  String _data(Map<dynamic, dynamic> user) {
+    var dataSplitted = user['tb_evento']['data'];
+    dataSplitted[0].split("T");
+    return dataSplitted[0];
+  }
+
+  List<dynamic> _events = [];
+  double tamanho = 0;
+
+  void listLength() async {
+    _consultarEventos().then((valorList) => setState(() {
+          _events = valorList;
+        }));
+  }
+
+  Widget _buildList() {
     //valida
-    
-    //return _events.length != 0 ? RefreshIndicator(
+    //final _events = _consultarEventos();
+    return _events.length != 0
+        ? RefreshIndicator(
+            //return _events.length != 0 ? RefreshIndicator(
             child: ListView.builder(
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.all(tamanho),
                 //limita o tamanho da lista pra quantidade de eventos que há
-                //itemCount: _events.length,
+                itemCount: _events.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
                     child: Column(
@@ -197,33 +220,33 @@ class _Home extends State<Home> {
                           leading: CircleAvatar(
                               radius: 30,
                               backgroundImage: NetworkImage(
-                                  _users[index]['picture']['large'])),
-                          title: Text(_name(_users[index])),
-                          subtitle: Text(_location(_users[index])),
-                          trailing: Text(_age(_users[index])),
+                                  'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/)),
+                          title: Text(_nome(_events[index])),
+                          subtitle: Text(_data(_events[index])),
+                          //trailing: Text(_age(_events[index])),
                         )
                       ],
                     ),
                   );
                 }),
             //refresh list
-            //onRefresh: _getData,
+            onRefresh: _getData,
           )
         : Center(child: CircularProgressIndicator());
-  }*/
+  }
 
   //refresh dados do db
-  /*Future<void> _getData() async {
+  Future<void> _getData() async {
     setState(() {
-      dbInformations();
+      listLength();
     });
   }
 
   @override
   void initState() {
     super.initState();
-    dbInformations();
-  }*/
+    listLength();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -294,10 +317,11 @@ class _Home extends State<Home> {
       ),
     );
   }*/
-  void _consultarEventos() async {
+  _consultarEventos() async {
     final todasLinhas = await dbHelper.queryEventos();
     print('Consulta todas os eventos:');
     todasLinhas.forEach((row) => print(row));
+    return todasLinhas;
   }
 
   void _consultarEventosInscritos() async {

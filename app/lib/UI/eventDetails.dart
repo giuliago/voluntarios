@@ -1,4 +1,6 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'package:voluntarios/UI/home.dart';
 import './navBar.dart';
 import 'package:flutter/gestures.dart';
@@ -8,6 +10,7 @@ class EventDetails extends StatefulWidget {
 }
 
 class _EventDetails extends State<EventDetails> {
+  final dbHelper = database.DatabaseHelper.instance;
   Widget build(BuildContext context) {
     return Scaffold(
       //implementar builder dos icons
@@ -220,5 +223,12 @@ class _EventDetails extends State<EventDetails> {
         ],
       ),
     );
+  }
+
+  _consultarEvento() async {
+    final todasLinhas = await dbHelper.queryEventos();
+    print('Consulta todas os eventos:');
+    todasLinhas.forEach((row) => print(row));
+    return todasLinhas;
   }
 }

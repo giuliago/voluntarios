@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart'
 
 class DatabaseHelper {
   static final _databaseName = "db_voluntarios.db";
-  static final _databaseVersion = 18;
+  static final _databaseVersion = 20;
   //static final newVersion = 2;
   static final tableUser = 'tb_perfilusuario';
   static final columnIdUser = 'pk_idusuario';
@@ -20,6 +20,7 @@ class DatabaseHelper {
   static final tableEvent = 'tb_evento';
   static final eventDate = 'data';
   static final eventName = 'nome';
+  static final eventRegion = 'regiao';
   static final eventDescription = 'descricao';
   static final eventDisponibility = 'disponibilidade';
   static final eventFK1 = 'fk_tb_perfilorganizacao_pk_idorganizacao';
@@ -61,7 +62,7 @@ class DatabaseHelper {
     await db.execute(
         "CREATE TABLE tb_perfilorganizacao(pk_idorganizacao INTEGER PRIMARY KEY, nome VARCHAR(60), descricao VARCHAR(255), fk_tb_perfilusuario_pk_idusuario INTEGER, FOREIGN KEY(fk_tb_perfilusuario_pk_idusuario) REFERENCES tb_perfilusuario(pk_idusuario));");
     await db.execute(
-        "CREATE TABLE tb_evento(pk_idevento INTEGER PRIMARY KEY, data DATETIME, nome VARCHAR(60), descricao VARCHAR(255), disponibilidade TINYINT, fk_tb_perfilorganizacao_pk_idorganizacao INTEGER NULL,fk_tb_perfilorganizacao_tb_perfilusuario_pk_idusuario INTEGER NULL, FOREIGN KEY(fk_tb_perfilorganizacao_pk_idorganizacao) REFERENCES tb_perfilorganizacao(pk_idorganizacao), FOREIGN KEY(fk_tb_perfilorganizacao_tb_perfilusuario_pk_idusuario) REFERENCES tb_perfilusuario(pk_idusuario));");
+        "CREATE TABLE tb_evento(pk_idevento INTEGER PRIMARY KEY, data DATETIME, nome VARCHAR(60), descricao VARCHAR(255), regiao VARCHAR(45), disponibilidade TINYINT, fk_tb_perfilorganizacao_pk_idorganizacao INTEGER NULL,fk_tb_perfilorganizacao_tb_perfilusuario_pk_idusuario INTEGER NULL, FOREIGN KEY(fk_tb_perfilorganizacao_pk_idorganizacao) REFERENCES tb_perfilorganizacao(pk_idorganizacao), FOREIGN KEY(fk_tb_perfilorganizacao_tb_perfilusuario_pk_idusuario) REFERENCES tb_perfilusuario(pk_idusuario));");
     await db.execute(
         "CREATE TABLE tb_competencias(pk_idcompetencias INTEGER PRIMARY KEY, nome VARCHAR(60), descricao VARCHAR(255));");
     await db.execute(

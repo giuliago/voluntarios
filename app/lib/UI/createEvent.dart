@@ -136,6 +136,13 @@ class _CreateEvent extends State<CreateEvent> {
                     width: 180,
                     child: RaisedButton(
                       onPressed: () {
+                        final String nome = nomeController.text;
+                        final String regiao = dropdownValue;
+                        final String descricao = descriptionController.text;
+                        data = _selectedDate;
+                        final DateTime dataEvento = data;
+                        var lista = [nome, descricao, dataEvento, regiao];
+                        _inserir(lista);
                         Navigator.pop(context);
                       },
                       shape: RoundedRectangleBorder(
@@ -194,7 +201,7 @@ class _CreateEvent extends State<CreateEvent> {
     String fk = 'NULL';
     String fk1 = 'NULL';
     int disponibilidade = 1;
-    //String regiao = lista[3];
+    String regiao = lista[3];
     // linha para incluir
     Map<String, dynamic> row = {
       database.DatabaseHelper.eventName: nome,
@@ -202,8 +209,8 @@ class _CreateEvent extends State<CreateEvent> {
       database.DatabaseHelper.eventDate: data,
       database.DatabaseHelper.eventFK1: fk,
       database.DatabaseHelper.eventFK2: fk1,
-      database.DatabaseHelper.eventDisponibility: disponibilidade
-      //database.DatabaseHelper.eventRegion: regiao
+      database.DatabaseHelper.eventDisponibility: disponibilidade,
+      database.DatabaseHelper.eventRegion: regiao
     };
     final id = await dbHelper.insertEvent(row);
     print('linha inserida id: $id');
