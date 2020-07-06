@@ -69,7 +69,7 @@ class _Home extends State<Home> {
                                       color: Colors.lightGreen, fontSize: 17))
                             ])))),
             Padding(
-              padding: EdgeInsets.fromLTRB(40, 0, 40, 20),
+              padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
               child: _buildEvents(),
             )
           ],

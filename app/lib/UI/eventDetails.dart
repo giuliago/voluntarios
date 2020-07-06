@@ -3,7 +3,11 @@ import 'package:voluntarios/UI/home.dart';
 import './navBar.dart';
 import 'package:flutter/gestures.dart';
 
-class EventDetails extends StatelessWidget {
+class EventDetails extends StatefulWidget {
+  _EventDetails createState() => _EventDetails();
+}
+
+class _EventDetails extends State<EventDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       //implementar builder dos icons

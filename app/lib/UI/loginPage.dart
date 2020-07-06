@@ -34,7 +34,7 @@ class LoginPage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => NavBar(),
+                builder: (context) => LoadingScreen(tela: 1),
               ),
             );
           } else {

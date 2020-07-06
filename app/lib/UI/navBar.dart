@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
-import './home.dart';
+import 'home.dart';
 import 'yourEvents.dart';
 import './profile.dart';
 import 'createEvent.dart';
+import 'organizationTab.dart';
 
 class NavBar extends StatefulWidget {
   NavBar({Key key}) : super(key: key);
@@ -26,7 +27,7 @@ class _NavBar extends State<NavBar> {
     return [
       Home(),
       CreateEvent(),
-      Profile(),
+      OrganizationTab(),
       Profile(),
     ];
   }
@@ -49,7 +50,7 @@ class _NavBar extends State<NavBar> {
         isTranslucent: false,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.group),
+        icon: Icon(Icons.business),
         title: ("Organização"),
         activeColor: Colors.lightGreen[300],
         inactiveColor: Colors.white,

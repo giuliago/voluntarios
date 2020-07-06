@@ -6,10 +6,20 @@ import 'editProfile.dart';
 //import 'DB/database_helper.dart';
 //import 'package:sqflite/sqflite.dart'
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
+  _Profile createState() => _Profile();
+}
+
+class _Profile extends State<Profile> {
   Widget _buildProfile(BuildContext context) {
     return Column(
-      children: <Widget>[_buildAvatar(context), _description(context)],
+      children: <Widget>[
+        _buildAvatar(context),
+        _description(context),
+        _info(context),
+        //se não for o proprio perfil, mudar a info para esse:
+        //convidar(context)
+      ],
     );
   }
 
@@ -35,6 +45,99 @@ class Profile extends StatelessWidget {
             ),
           ],
         ));
+  }
+
+  Widget _info(BuildContext context) {
+    return Container(
+      width: 400,
+      height: 200,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Column(
+        children: <Widget>[
+          Padding(
+              padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
+              child: Text(
+                'Informações pessoais',
+                style: TextStyle(fontSize: 16, color: Colors.lightGreen[700]),
+              )),
+          Row(
+            children: <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(left: 80),
+                  child: Icon(
+                    Icons.email,
+                    size: 20,
+                    color: Colors.grey[500],
+                  )),
+              Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Text(
+                    'giu@hotmail.com',
+                    style: TextStyle(color: Colors.grey[500]),
+                  ))
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _convidar(BuildContext context) {
+    return Center(
+        child: Column(children: <Widget>[
+      Padding(
+          padding: EdgeInsets.only(bottom: 10),
+          child: Text(
+            'Deseja convidar para sua organização?',
+            style: TextStyle(fontSize: 14),
+          )),
+      Container(
+        height: 40.0,
+        width: 180,
+        child: RaisedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                //validação pra home
+                builder: (context) => Home(),
+              ),
+            );
+          },
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(40.0)),
+          padding: EdgeInsets.all(0.0),
+          child: Ink(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.lightGreen, Colors.lightBlue],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(10.0)),
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 350.0, minHeight: 50.0),
+              alignment: Alignment.center,
+              child: Text(
+                "Participar",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+      )
+    ]));
   }
 
 /*  Widget _buildList(BuildContext context) {
@@ -174,7 +277,7 @@ class Profile extends StatelessWidget {
                   )))
         ],
         leading: Icon(
-          Icons.arrow_back,
+          Icons.help,
           color: Colors.white70,
         ),
         backgroundColor: Colors.cyan[700],
