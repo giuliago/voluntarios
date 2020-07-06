@@ -111,6 +111,7 @@ class _CreateEvent extends State<CreateEvent> {
                     String nome = nomeController.text;
                     String descricao = descriptionController.text;
                     data = _selectedDate;
+                    //String regiao = dropdownValue;
                     final DateTime dataEvento = data;
                     var lista = [nome, descricao, dataEvento, 'Brasilia'];
                     print(lista);
@@ -139,6 +140,7 @@ class _CreateEvent extends State<CreateEvent> {
     String data = lista[2].toIso8601String();
     String fk = 'NULL';
     String fk1 = 'NULL';
+    int disponibilidade = 1;
     //String regiao = lista[3];
     // linha para incluir
     Map<String, dynamic> row = {
@@ -146,7 +148,8 @@ class _CreateEvent extends State<CreateEvent> {
       database.DatabaseHelper.eventDescription: descricao,
       database.DatabaseHelper.eventDate: data,
       database.DatabaseHelper.eventFK1: fk,
-      database.DatabaseHelper.eventFK2: fk1
+      database.DatabaseHelper.eventFK2: fk1,
+      database.DatabaseHelper.eventDisponibility: disponibilidade
       //database.DatabaseHelper.eventRegion: regiao
     };
     final id = await dbHelper.insertEvent(row);
@@ -154,8 +157,9 @@ class _CreateEvent extends State<CreateEvent> {
   }
 
   void _consultarEventos() async {
-    final todasEventos = await dbHelper.queryAllRows();
+    final todosEventos =
+        await dbHelper.queryEventos(); // Eventos são list<map<string,dynamic>>
     print('Consulta todos os eventos:');
-    todasEventos.forEach((row) => print(row));
+    todosEventos.forEach((row) => print(row));
   }
 }
