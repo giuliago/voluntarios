@@ -32,14 +32,15 @@ class _Events extends State<YourEvents> {
                     child: Icon(
                       Icons.add_circle,
                       color: Colors.white70,
-                      size: 40.0,
+                      size: 60.0,
                     )),
               ),
               preferredSize: Size.fromHeight(0.0)),
           pinned: false,
           expandedHeight: 140.0,
           flexibleSpace: FlexibleSpaceBar(
-            title: Text('Criar evento', style: TextStyle(color: Colors.white)),
+            title: Text('Criar evento',
+                style: TextStyle(color: Colors.white, fontSize: 26)),
           ),
         ),
         SliverList(

@@ -18,6 +18,7 @@ class _CreateEvent extends State<CreateEvent> {
   int firstDate;
   int lastDate;
   int stateVar;
+  String dropdownValue = 'Brasília';
   final maxLines = 8;
   final dbHelper = database.DatabaseHelper.instance;
   TextEditingController nomeController = new TextEditingController();
@@ -93,16 +94,38 @@ class _CreateEvent extends State<CreateEvent> {
                         filled: true,
                       ))),
               calendar(context),
-              Container(
-                  width: 400,
-                  padding: EdgeInsets.only(top: 12.0),
-                  child: TextField(
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
-                    decoration: InputDecoration(
-                      labelText: 'Localização',
-                      icon: Icon(Icons.location_on),
+              Expanded(
+                  flex: 4,
+                  child: Container(
+                    height: 60,
+                    child: DropdownButton<String>(
+                      value: dropdownValue,
+                      isExpanded: true,
+                      underline: Container(
+                        height: 2,
+                        color: Colors.grey[300],
+                      ),
+                      icon: Icon(
+                        Icons.arrow_downward,
+                        color: Colors.lightGreen,
+                      ),
+                      iconSize: 24,
+                      elevation: 16,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          dropdownValue = newValue;
+                        });
+                      },
+                      items: <String>['Brasília', 'São Paulo', 'Rio de Janeiro']
+                          .map<DropdownMenuItem<String>>(
+                              (String regiaoController) {
+                        return DropdownMenuItem<String>(
+                          value: regiaoController,
+                          child: Text(regiaoController,
+                              style: TextStyle(
+                                  color: Colors.grey[700], fontSize: 16.0)),
+                        );
+                      }).toList(),
                     ),
                   )),
               UploadImage(),
@@ -113,13 +136,7 @@ class _CreateEvent extends State<CreateEvent> {
                     width: 180,
                     child: RaisedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            //validação pra home
-                            builder: (context) => YourEvents(),
-                          ),
-                        );
+                        Navigator.pop(context);
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(0.0)),
