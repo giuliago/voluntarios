@@ -21,13 +21,7 @@ class Home extends StatefulWidget {
 
 class _Home extends State<Home> {
   final dbHelper = database.DatabaseHelper.instance;
-  List _events = [
-    '929299',
-    '20/02/2021',
-    'Nome Evento',
-    'Description',
-    'Brasília'
-  ];
+  List _events = [];
 
   String nomeCookie = "";
   String regiaoCookie = "";
