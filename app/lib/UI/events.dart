@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'eventDetails.dart';
+import 'messages.dart';
 
 class Events extends StatefulWidget {
   Events({Key key, this.title}) : super(key: key);
@@ -121,10 +122,15 @@ class _Events extends State<Events> with TickerProviderStateMixin {
         actions: <Widget>[
           Padding(
               padding: EdgeInsets.only(right: 20),
-              child: Icon(
-                Icons.message,
-                color: Colors.white70,
-              ))
+              child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Messages()));
+                  },
+                  child: Icon(
+                    Icons.message,
+                    color: Colors.white70,
+                  )))
         ],
         leading: GestureDetector(
             onTap: () {

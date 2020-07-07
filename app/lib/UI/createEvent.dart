@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:voluntarios/UI/eventDetails.dart';
 import 'package:voluntarios/UI/imageUploader.dart';
+import 'package:voluntarios/UI/messages.dart';
 import 'package:voluntarios/UI/yourEvents.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'package:flutter/cupertino.dart';
@@ -177,10 +178,15 @@ class _CreateEvent extends State<CreateEvent> {
         actions: <Widget>[
           Padding(
               padding: EdgeInsets.only(right: 20),
-              child: Icon(
-                Icons.message,
-                color: Colors.white70,
-              ))
+              child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Messages()));
+                  },
+                  child: Icon(
+                    Icons.message,
+                    color: Colors.white70,
+                  )))
         ],
         leading: GestureDetector(
             onTap: () {

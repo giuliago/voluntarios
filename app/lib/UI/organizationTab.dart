@@ -145,7 +145,7 @@ class _OrganizationTab extends State<OrganizationTab>
         Padding(
           padding: EdgeInsets.all(10),
           child: Text(
-            '$descricaoOrganizacao',
+            'Organização',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16, color: Colors.black),
           ),
@@ -242,7 +242,7 @@ class _OrganizationTab extends State<OrganizationTab>
               Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Text(
-                    '$nomeOrganizacao',
+                    'Organização',
                     style: TextStyle(
                         fontSize: 24, color: Colors.white70.withOpacity(0.8)),
                   )),
@@ -255,8 +255,7 @@ class _OrganizationTab extends State<OrganizationTab>
                         size: 20,
                         color: Colors.white70,
                       )),
-                  Text('$regiaoOrganizacao',
-                      style: TextStyle(color: Colors.white60))
+                  Text('Brasília', style: TextStyle(color: Colors.white60))
                 ],
               )
             ],

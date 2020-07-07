@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 import './home.dart';
+import 'messages.dart';
 
 class ListPeople extends StatefulWidget {
   _ListPeople createState() => _ListPeople();
@@ -46,10 +47,15 @@ class _ListPeople extends State<ListPeople> {
         actions: <Widget>[
           Padding(
               padding: EdgeInsets.only(right: 20),
-              child: Icon(
-                Icons.message,
-                color: Colors.white70,
-              ))
+              child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Messages()));
+                  },
+                  child: Icon(
+                    Icons.message,
+                    color: Colors.white70,
+                  )))
         ],
         leading: GestureDetector(
             onTap: () {
