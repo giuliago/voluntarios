@@ -173,30 +173,11 @@ class _Home extends State<Home> {
                 return new GestureDetector(
                     //You need to make my child interactive
                     onTap: () {
-                      var dataSplitted = _events[index]['data'];
-                      dataSplitted[0].split("T");
-                      String nome =
-                          _events[index].toString() != null ? ['nome'] : 'Nada';
-                      debugPrint('Nome $nome');
-                      String data = _events[index].toString() != null
-                          ? [dataSplitted[0]]
-                          : 'Nada';
-                      String descricao = _events[index].toString() != null
-                          ? ['descricao']
-                          : 'Nada';
-                      String regiao = _events[index].toString() != null
-                          ? ['regiao']
-                          : 'Nada';
-                      int idevento = _events[index].toString() != null
-                          ? ['idevento']
-                          : 'Nada';
-                      final details =
-                          Details(idevento, data, nome, descricao, regiao);
                       //Navigator.pop(context, details);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => EventDetails(details: details),
+                          builder: (context) => EventDetails(),
                         ),
                       );
                     },
