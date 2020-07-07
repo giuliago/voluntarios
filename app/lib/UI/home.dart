@@ -34,8 +34,17 @@ class _Home extends State<Home> {
     'Brasília'
   ];
 
+  List _eventsInscritos = [
+    '929299',
+    '20/02/2021',
+    'Nome Evento',
+    'Description',
+    'Brasília'
+  ];
+
   String nomeCookie = "";
   String regiaoCookie = "";
+  String idusuarioCookie = "";
 
   setNomeCookie() async {
     getNomeCookie().then((val) => setState(() {
@@ -57,20 +66,69 @@ class _Home extends State<Home> {
 
   getRegiaoCookie() async {
     final prefs = await SharedPreferences.getInstance();
-    final regiaoCookie = prefs.getString('regiaoCookie') ?? 0;
+    final regiaoCookie = prefs.getString('regiaoCookie');
     return regiaoCookie;
+  }
+
+  setidusuarioCookie() async {
+    getidusuarioCookie().then((valID) => setState(() {
+          idusuarioCookie = valID;
+        }));
+  }
+
+  getidusuarioCookie() async {
+    final prefs = await SharedPreferences.getInstance();
+    final idusuarioCookie = prefs.getInt('idusuarioCookie');
+    print(idusuarioCookie);
+    return idusuarioCookie;
   }
 
   listLength() async {
     _consultarEventos().then((valorList) => setState(() {
           //print(valorList);
-          _events = valorList;
+          if (valorList != null) {
+            _events = valorList;
+          } else {
+            _events = [
+              929299,
+              '20/02/2021',
+              'Nome Evento',
+              'Description',
+              'Brasília'
+            ];
+          }
+          return _events;
+        }));
+    //print("valor do List _events");
+    //print(_events);
+  }
+
+  listLengthInscrito() async {
+    _consultarEventosInscritos().then((valorListInscritos) => setState(() {
+          //print(valorList);
+          if (valorListInscritos != null) {
+            _eventsInscritos = valorListInscritos;
+          } else {
+            _eventsInscritos = [
+              929299,
+              '20/02/2021',
+              'Nome Evento',
+              'Description',
+              'Brasília'
+            ];
+          }
+          return _eventsInscritos;
         }));
     //print("valor do List _events");
     //print(_events);
   }
 
   Widget _buildHome(BuildContext context) {
+    setidusuarioCookie();
+    setRegiaoCookie();
+    setNomeCookie();
+    listLength();
+    listLengthInscrito();
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
@@ -132,41 +190,79 @@ class _Home extends State<Home> {
     );
   }
 
-  Widget _buildCard(bool icone, double height, double width, int index) {
-    var dataSplitted = _events[index]['data'].toString();
-    var data = dataSplitted.substring(0, 10).replaceAll(RegExp('-'), '/');
-    String dataF = "$data";
-    //var dataSplitted = _events[index]['data'];
-    //DateFormat formatter = DateFormat('dd-MM-yyyy');
-    //String formatted = formatter.format(dataSplitted);
-    //String dataF = "$formatted";
-    return SizedBox(
-        height: height,
-        width: width,
-        child: Card(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0))),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8.0),
-                  topRight: Radius.circular(8.0),
+  Widget _buildCard(
+      bool icone, double height, double width, int index, String listas) {
+    if (listas.contains("_eventsInscritos")) {
+      var dataSplitted = _eventsInscritos[index]['data'].toString();
+      var data = dataSplitted.substring(0, 10).replaceAll(RegExp('-'), '/');
+      String dataF = "$data";
+      //var dataSplitted = _events[index]['data'];
+      //DateFormat formatter = DateFormat('dd-MM-yyyy');
+      //String formatted = formatter.format(dataSplitted);
+      //String dataF = "$formatted";
+      return SizedBox(
+          height: height,
+          width: width,
+          child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8.0))),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8.0),
+                    topRight: Radius.circular(8.0),
+                  ),
+                  child: Image.network(
+                      'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/,
+                      height: 120,
+                      fit: BoxFit.fill),
                 ),
-                child: Image.network(
-                    'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/,
-                    height: 120,
-                    fit: BoxFit.fill),
-              ),
-              ListTile(
-                title: Text(_events[index]['nome'].toString()),
-                trailing: Icon(Icons.calendar_today),
-                subtitle: Text(dataF),
-              ),
-            ],
-          ),
-        ));
+                ListTile(
+                  title: Text(_eventsInscritos[index]['nome'].toString()),
+                  trailing: Icon(Icons.calendar_today),
+                  subtitle: Text(dataF),
+                ),
+              ],
+            ),
+          ));
+    } else {
+      var dataSplitted = _events[index]['data'].toString();
+      var data = dataSplitted.substring(0, 10).replaceAll(RegExp('-'), '/');
+      String dataF = "$data";
+      //var dataSplitted = _events[index]['data'];
+      //DateFormat formatter = DateFormat('dd-MM-yyyy');
+      //String formatted = formatter.format(dataSplitted);
+      //String dataF = "$formatted";
+      return SizedBox(
+          height: height,
+          width: width,
+          child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8.0))),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8.0),
+                    topRight: Radius.circular(8.0),
+                  ),
+                  child: Image.network(
+                      'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/,
+                      height: 120,
+                      fit: BoxFit.fill),
+                ),
+                ListTile(
+                  title: Text(_events[index]['nome'].toString()),
+                  trailing: Icon(Icons.calendar_today),
+                  subtitle: Text(dataF),
+                ),
+              ],
+            ),
+          ));
+    }
   }
 
   Widget _buildYourEvents() {
@@ -175,22 +271,28 @@ class _Home extends State<Home> {
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
-              itemCount: _events.length,
+              itemCount: _eventsInscritos.length,
               itemBuilder: (BuildContext context, int index) {
+                String listas;
+                listas = "_eventsInscritos";
                 return new GestureDetector(
                     //You need to make my child interactive
                     onTap: () {
-                      var dataSplitted = _events[index]['data'].toString();
+                      var dataSplitted =
+                          _eventsInscritos[index]['data'].toString();
                       var data = dataSplitted
                           .substring(0, 10)
                           .replaceAll(RegExp('-'), '/');
                       String dataF = "$data";
-                      String nome = _events[index]['nome'].toString();
+                      String nome = _eventsInscritos[index]['nome'].toString();
                       debugPrint('Nome $nome');
 
-                      String descricao = _events[index]['descricao'].toString();
-                      String regiao = _events[index]['regiao'].toString();
-                      int idevento = _events[index]['idevento'].toInt();
+                      String descricao =
+                          _eventsInscritos[index]['descricao'].toString();
+                      String regiao =
+                          _eventsInscritos[index]['regiao'].toString();
+                      int idevento =
+                          _eventsInscritos[index]['idevento'].toInt();
                       final details =
                           Details(idevento, dataF, nome, descricao, regiao);
                       //Navigator.pop(context, details);
@@ -201,7 +303,7 @@ class _Home extends State<Home> {
                         ),
                       );
                     },
-                    child: _buildCard(true, 200, 220, index));
+                    child: _buildCard(true, 200, 220, index, listas));
               }))
     ]);
   }
@@ -212,6 +314,7 @@ class _Home extends State<Home> {
         scrollDirection: Axis.vertical,
         itemCount: _events.length,
         itemBuilder: (BuildContext context, int index) {
+          String listas = "_events";
           return new InkWell(
               //You need to make my child interactive
               onTap: () {
@@ -235,7 +338,7 @@ class _Home extends State<Home> {
                   ),
                 );
               },
-              child: _buildCard(true, 200, 220, index));
+              child: _buildCard(true, 200, 220, index, listas));
         });
   }
 
@@ -243,6 +346,13 @@ class _Home extends State<Home> {
 
   @override
   void initState() {
+    /*if (mounted) {
+      setidusuarioCookie();
+      setRegiaoCookie();
+      setNomeCookie();
+      listLength();
+      listLengthInscrito();
+    }*/
     super.initState();
   }
 
@@ -295,9 +405,6 @@ class _Home extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    listLength();
-    setRegiaoCookie();
-    setNomeCookie();
     return Scaffold(
       //implementar builder dos icons
       appBar: AppBar(
@@ -329,8 +436,9 @@ class _Home extends State<Home> {
     );
   }
 
-  /*var refreshKey = GlobalKey<RefreshIndicatorState>();
+  /*var refreshKey = GlobalKey<RefreshIndicatorState>(); */
 
+/*
   @override
   void initState() {
     super.initState();
@@ -371,16 +479,18 @@ class _Home extends State<Home> {
     );
   }*/
   _consultarEventos() async {
-    final todasLinhasEventos = await dbHelper.queryEventos();
+    final todasLinhasEventos = await dbHelper.queryEventosRegiao(regiaoCookie);
     List resultado = todasLinhasEventos.toList();
     /*print('Consulta todas os eventos:');
     todasLinhasEventos.forEach((row) => print(row));*/
-    return resultado;
+    //return resultado;
+    todasLinhasEventos.forEach((row) => print(row));
   }
 
   _consultarEventosInscritos() async {
-    final todasLinhas = await dbHelper.queryEventosInscritos();
+    final todasLinhasInscritos =
+        await dbHelper.queryEventosInscritos(idusuarioCookie);
     print('Consulta todas as linhas:');
-    todasLinhas.forEach((row) => print(row));
+    todasLinhasInscritos.forEach((row) => print(row));
   }
 }

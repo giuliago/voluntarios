@@ -387,7 +387,8 @@ class _OrganizationTab extends State<OrganizationTab>
   }
 
   _consultarEventosInscritos() async {
-    final todasLinhas = await dbHelper.queryEventosInscritos();
+    final todasLinhas =
+        await dbHelper.queryEventosInscritos(idusuarioCookie.toString());
     print('Consulta todas as linhas:');
     todasLinhas.forEach((row) => print(row));
   }

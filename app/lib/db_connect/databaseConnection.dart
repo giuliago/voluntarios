@@ -135,6 +135,7 @@ class DatabaseHelper {
   }
 
   Future<List<Map<String, dynamic>>> queryEventos() async {
+    //FORMAT(data, 'dd/MM/yyyy')
     Database db = await instance.database;
     String whereString = 'disponibilidade = ?';
     List<dynamic> whereArguments = [1];
@@ -142,8 +143,27 @@ class DatabaseHelper {
         where: whereString, whereArgs: whereArguments);
   }
 
-  Future<List<Map<String, dynamic>>> queryEventosInscritos() async {
+  Future<List<Map<String, dynamic>>> queryEventosRegiao(String string) async {
+    //FORMAT(data, 'dd/MM/yyyy')
     Database db = await instance.database;
+    String whereString = 'disponibilidade = ? AND regiao = ?';
+    String regiao = string;
+    List<dynamic> whereArguments = [1, regiao];
+    return await db.query(tableEvent,
+        where: whereString, whereArgs: whereArguments);
+  }
+
+  Future<List<Map<String, dynamic>>> queryEventosInscritos(
+      String string) async {
+    Database db = await instance.database;
+    //String whereString =
+    //  'disponibilidade = ? INNER JOIN ta_inscricao fk_tb_perfilusuario_pk_idusuario = ?';
+    var idUsuario = int.parse(string);
+    List<dynamic> whereArguments = [idUsuario, 1];
+
+    return await db.rawQuery(
+        "SELECT * FROM tb_evento INNER JOIN ta_inscricao ON ta_inscricao.fk_tb_perfilusuario_pk_idusuario = ? WHERE disponibilidade = ?",
+        whereArguments);
   }
 
   Future<List<Map<String, dynamic>>> queryOrganizationTab(int id) async {
