@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:voluntarios/UI/yourEvents.dart';
 import './eventDetails.dart';
 import 'package:path/path.dart';
@@ -17,6 +18,7 @@ class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     Intl.defaultLocale = "pt_BR";
+    initializeDateFormatting('pt_BR', null);
     return _Home();
   }
 }
@@ -176,15 +178,12 @@ class _Home extends State<Home> {
                       dataSplitted[0].split("T");
                       String nome = _events[index]['nome'].toString();
                       debugPrint('Nome $nome');
-                      String formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
-                          .format(dataSplitted[0]);
-                      debugPrint('date formatted: $formattedDate');
-                      String data = _events[index][formattedDate];
+
                       String descricao = _events[index]['descricao'].toString();
                       String regiao = _events[index]['regiao'].toString();
                       int idevento = _events[index]['idevento'].toInt();
-                      final details =
-                          Details(idevento, data, nome, descricao, regiao);
+                      final details = Details(
+                          idevento, dataSplitted[0], nome, descricao, regiao);
                       //Navigator.pop(context, details);
                       Navigator.push(
                         context,
@@ -207,16 +206,17 @@ class _Home extends State<Home> {
           return new InkWell(
               //You need to make my child interactive
               onTap: () {
-                var dataSplitted = _events[index]['data'];
-                dataSplitted[0].split("T");
+                DateTime dataSplitted = _events[index]['data'];
                 String nome = _events[index]['nome'].toString();
                 debugPrint('Nome $nome');
-                String data = _events[index][dataSplitted[0]].toString();
+                var newFormat = new DateFormat.yMMMMd('zh_HK');
+                String formatted = newFormat.format(dataSplitted);
+
                 String descricao = _events[index]['descricao'].toString();
                 String regiao = _events[index]['regiao'].toString();
                 int idevento = _events[index]['idevento'].toInt();
                 final details =
-                    Details(idevento, data, nome, descricao, regiao);
+                    Details(idevento, formatted, nome, descricao, regiao);
                 //Navigator.pop(context, details);
                 Navigator.push(
                   context,
@@ -249,6 +249,10 @@ class _Home extends State<Home> {
                 itemBuilder: (BuildContext context, int index) {
                   var dataSplitted = _events[index]['data'];
                   dataSplitted[0].split("T");
+                  String formattedDate =
+                      DateFormat('yyyy-MM-dd – kk:mm', 'pt_BR')
+                          .format(dataSplitted[0]);
+                  debugPrint('date formatted: $formattedDate');
                   return Card(
                     child: Column(
                       children: <Widget>[
@@ -258,7 +262,8 @@ class _Home extends State<Home> {
                               backgroundImage: NetworkImage(
                                   'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/)),
                           title: Text(_events[index] ?? ['nome']),
-                          subtitle: Text(_events[index] ?? [dataSplitted[0]]),
+                          subtitle:
+                              Text(_events[index][formattedDate].toString()),
                           //trailing: Text(_age(_events[index])),
                         )
                       ],
