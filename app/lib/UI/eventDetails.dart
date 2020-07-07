@@ -115,7 +115,7 @@ class _EventDetails extends State<EventDetails> {
               Padding(
                 padding: EdgeInsets.fromLTRB(0, 120, 0, 0.0),
                 child: Text(
-                  '24/07/2020',
+                  '$details.data',
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Colors.grey[800],
@@ -155,7 +155,7 @@ class _EventDetails extends State<EventDetails> {
             child: Padding(
                 padding: EdgeInsets.only(top: 250),
                 child: Text(
-                  'Federal Music',
+                  '$details.nome',
                   style: TextStyle(
                     fontSize: 36.0,
                     color: Colors.black,

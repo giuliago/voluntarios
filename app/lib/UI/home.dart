@@ -132,8 +132,13 @@ class _Home extends State<Home> {
   }
 
   Widget _buildCard(bool icone, double height, double width, int index) {
-    var dataSplitted = _events[index]['data'];
-    dataSplitted[0].split("T");
+    var dataSplitted = _events[index]['data'].toString();
+    var data = dataSplitted.substring(0, 10).replaceAll(RegExp('-'), '/');
+    String dataF = "$data";
+    //var dataSplitted = _events[index]['data'];
+    //DateFormat formatter = DateFormat('dd-MM-yyyy');
+    //String formatted = formatter.format(dataSplitted);
+    //String dataF = "$formatted";
     return SizedBox(
         height: height,
         width: width,
@@ -156,7 +161,7 @@ class _Home extends State<Home> {
               ListTile(
                 title: Text(_events[index]['nome'].toString()),
                 trailing: Icon(Icons.calendar_today),
-                subtitle: Text(_events[index][dataSplitted[0]].toString()),
+                subtitle: Text(dataF),
               ),
             ],
           ),
@@ -174,16 +179,19 @@ class _Home extends State<Home> {
                 return new GestureDetector(
                     //You need to make my child interactive
                     onTap: () {
-                      var dataSplitted = _events[index]['data'];
-                      dataSplitted[0].split("T");
+                      var dataSplitted = _events[index]['data'].toString();
+                      var data = dataSplitted
+                          .substring(0, 10)
+                          .replaceAll(RegExp('-'), '/');
+                      String dataF = "$data";
                       String nome = _events[index]['nome'].toString();
                       debugPrint('Nome $nome');
 
                       String descricao = _events[index]['descricao'].toString();
                       String regiao = _events[index]['regiao'].toString();
                       int idevento = _events[index]['idevento'].toInt();
-                      final details = Details(
-                          idevento, dataSplitted[0], nome, descricao, regiao);
+                      final details =
+                          Details(idevento, dataF, nome, descricao, regiao);
                       //Navigator.pop(context, details);
                       Navigator.push(
                         context,
@@ -206,17 +214,18 @@ class _Home extends State<Home> {
           return new InkWell(
               //You need to make my child interactive
               onTap: () {
-                DateTime dataSplitted = _events[index]['data'];
                 String nome = _events[index]['nome'].toString();
                 debugPrint('Nome $nome');
-                var newFormat = new DateFormat.yMMMMd('zh_HK');
-                String formatted = newFormat.format(dataSplitted);
+                var dataSplitted = _events[index]['data'].toString();
+                var data =
+                    dataSplitted.substring(0, 10).replaceAll(RegExp('-'), '/');
+                String dataF = "$data";
 
                 String descricao = _events[index]['descricao'].toString();
                 String regiao = _events[index]['regiao'].toString();
                 int idevento = _events[index]['idevento'].toInt();
                 final details =
-                    Details(idevento, formatted, nome, descricao, regiao);
+                    Details(idevento, dataF, nome, descricao, regiao);
                 //Navigator.pop(context, details);
                 Navigator.push(
                   context,
