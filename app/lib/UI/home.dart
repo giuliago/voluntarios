@@ -173,79 +173,80 @@ class _Home extends State<Home> {
     );
   }
 
-  Widget _buildCard(
-      bool icone, double height, double width, int index, String listas) {
-    if (listas.contains("_eventsInscritos")) {
-      var dataSplitted = _eventsInscritos[index]['data'].toString();
-      var data = dataSplitted.substring(0, 10).replaceAll(RegExp('-'), '/');
-      String dataF = "$data";
-      //var dataSplitted = _events[index]['data'];
-      //DateFormat formatter = DateFormat('dd-MM-yyyy');
-      //String formatted = formatter.format(dataSplitted);
-      //String dataF = "$formatted";
-      return SizedBox(
-          height: height,
-          width: width,
-          child: Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(8.0))),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8.0),
-                    topRight: Radius.circular(8.0),
-                  ),
-                  child: Image.network(
-                      'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/,
-                      height: 120,
-                      fit: BoxFit.fill),
+  Widget _buildCard(bool icone, double height, double width, int index) {
+    var dataSplitted = _eventsInscritos[index]['data'].toString();
+    var data = dataSplitted.substring(0, 10).replaceAll(RegExp('-'), '/');
+    String dataInscritos = "$data";
+    //var dataSplitted = _events[index]['data'];
+    //DateFormat formatter = DateFormat('dd-MM-yyyy');
+    //String formatted = formatter.format(dataSplitted);
+    //String dataF = "$formatted";
+    return SizedBox(
+        height: height,
+        width: width,
+        child: Card(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  topRight: Radius.circular(8.0),
                 ),
-                ListTile(
-                  title: Text(_eventsInscritos[index]['nome'].toString()),
-                  trailing: Icon(Icons.calendar_today),
-                  subtitle: Text(dataF),
+                child: Image.network(
+                    'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/,
+                    height: 120,
+                    fit: BoxFit.fill),
+              ),
+              ListTile(
+                title: Text(_eventsInscritos[index]['nome'].toString()),
+                trailing: Icon(Icons.calendar_today),
+                subtitle: Text(dataInscritos),
+              ),
+            ],
+          ),
+        ));
+  }
+
+  Widget _buildCardRegiao(bool icone, double height, double width, int index) {
+    print("entrou buildcardregiao");
+    var dataRegiao = _events[index]['data'].toString();
+    print(dataRegiao);
+    var dataR = dataRegiao.substring(0, 10).replaceAll(RegExp('-'), '/');
+    String dataF = "$dataR";
+    //var dataSplitted = _events[index]['data'];
+    //DateFormat formatter = DateFormat('dd-MM-yyyy');
+    //String formatted = formatter.format(dataSplitted);
+    //String dataF = "$formatted";
+    return SizedBox(
+        height: height,
+        width: width,
+        child: Card(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  topRight: Radius.circular(8.0),
                 ),
-              ],
-            ),
-          ));
-    } else {
-      var dataSplitted = _events[index]['data'].toString();
-      var data = dataSplitted.substring(0, 10).replaceAll(RegExp('-'), '/');
-      String dataF = "$data";
-      //var dataSplitted = _events[index]['data'];
-      //DateFormat formatter = DateFormat('dd-MM-yyyy');
-      //String formatted = formatter.format(dataSplitted);
-      //String dataF = "$formatted";
-      return SizedBox(
-          height: height,
-          width: width,
-          child: Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(8.0))),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8.0),
-                    topRight: Radius.circular(8.0),
-                  ),
-                  child: Image.network(
-                      'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/,
-                      height: 120,
-                      fit: BoxFit.fill),
-                ),
-                ListTile(
-                  title: Text(_events[index]['nome'].toString()),
-                  trailing: Icon(Icons.calendar_today),
-                  subtitle: Text(dataF),
-                ),
-              ],
-            ),
-          ));
-    }
+                child: Image.network(
+                    'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/,
+                    height: 120,
+                    fit: BoxFit.fill),
+              ),
+              ListTile(
+                title: Text(_events[index]['nome'].toString()),
+                trailing: Icon(Icons.calendar_today),
+                subtitle: Text(dataF),
+              ),
+            ],
+          ),
+        ));
   }
 
   Widget _buildYourEvents() {
@@ -256,8 +257,6 @@ class _Home extends State<Home> {
               shrinkWrap: true,
               itemCount: _eventsInscritos.length,
               itemBuilder: (BuildContext context, int index) {
-                String listas;
-                listas = "_eventsInscritos";
                 return new GestureDetector(
                     //You need to make my child interactive
                     onTap: () {
@@ -286,18 +285,18 @@ class _Home extends State<Home> {
                         ),
                       );
                     },
-                    child: _buildCard(true, 200, 220, index, listas));
+                    child: _buildCard(true, 200, 220, index));
               }))
     ]);
   }
 
   Widget _buildEvents() {
+    print("entrou _buildevents");
     return ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         itemCount: _events.length,
         itemBuilder: (BuildContext context, int index) {
-          String listas = "_events";
           return new InkWell(
               //You need to make my child interactive
               onTap: () {
@@ -321,16 +320,23 @@ class _Home extends State<Home> {
                   ),
                 );
               },
-              child: _buildCard(true, 200, 220, index, listas));
+              child: _buildCardRegiao(true, 200, 220, index));
         });
   }
 
   //double tamanho = 0;
-
+/*
   @override
   void initState() {
+    if (!mounted) {
+      setidusuarioCookie();
+      setRegiaoCookie();
+      setNomeCookie();
+      listLength();
+      listLengthInscrito();
+    }
     super.initState();
-  }
+  } */
 
   Widget _buildList() {
     //valida
