@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:voluntarios/UI/createEvent.dart';
 import 'eventDetails.dart';
+import 'messages.dart';
 //import 'DB/database_helper.dart';
 //import 'package:sqflite/sqflite.dart'
 
@@ -119,10 +120,15 @@ class _Events extends State<YourEvents> {
           actions: <Widget>[
             Padding(
                 padding: EdgeInsets.only(right: 20),
-                child: Icon(
-                  Icons.message,
-                  color: Colors.white70,
-                ))
+                child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Messages()));
+                    },
+                    child: Icon(
+                      Icons.message,
+                      color: Colors.white70,
+                    )))
           ],
           leading: Icon(
             Icons.help,

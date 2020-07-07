@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voluntarios/UI/lists.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'package:voluntarios/UI/home.dart';
-import './navBar.dart';
+import './messages.dart';
 import 'package:flutter/gestures.dart';
 
 class EventDetails extends StatefulWidget {
@@ -47,10 +47,15 @@ class _EventDetails extends State<EventDetails> {
         actions: <Widget>[
           Padding(
               padding: EdgeInsets.only(right: 20),
-              child: Icon(
-                Icons.message,
-                color: Colors.white70,
-              ))
+              child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Messages()));
+                  },
+                  child: Icon(
+                    Icons.message,
+                    color: Colors.white70,
+                  )))
         ],
         leading: GestureDetector(
             onTap: () {

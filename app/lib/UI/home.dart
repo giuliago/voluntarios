@@ -9,6 +9,7 @@ import 'package:path/path.dart';
 import './events.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'messages.dart';
 
 class Home extends StatefulWidget {
   final dbHelper = database.DatabaseHelper.instance;
@@ -274,10 +275,15 @@ class _Home extends State<Home> {
         actions: <Widget>[
           Padding(
               padding: EdgeInsets.only(right: 20),
-              child: Icon(
-                Icons.message,
-                color: Colors.white70,
-              ))
+              child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Messages()));
+                  },
+                  child: Icon(
+                    Icons.message,
+                    color: Colors.white70,
+                  )))
         ],
         leading: Icon(
           Icons.help,
@@ -337,8 +343,8 @@ class _Home extends State<Home> {
   _consultarEventos() async {
     final todasLinhasEventos = await dbHelper.queryEventos();
     List resultado = todasLinhasEventos.toList();
-    print('Consulta todas os eventos:');
-    todasLinhasEventos.forEach((row) => print(row));
+    /*print('Consulta todas os eventos:');
+    todasLinhasEventos.forEach((row) => print(row));*/
     return resultado;
   }
 
