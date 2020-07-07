@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'package:voluntarios/UI/yourEvents.dart';
@@ -15,6 +16,7 @@ class Home extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
+    Intl.defaultLocale = "pt_BR";
     return _Home();
   }
 }
@@ -66,9 +68,6 @@ class _Home extends State<Home> {
   }
 
   Widget _buildHome(BuildContext context) {
-    listLength();
-    setRegiaoCookie();
-    setNomeCookie();
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
@@ -175,21 +174,15 @@ class _Home extends State<Home> {
                     onTap: () {
                       var dataSplitted = _events[index]['data'];
                       dataSplitted[0].split("T");
-                      String nome =
-                          _events[index].toString() != null ? ['nome'] : 'Nada';
+                      String nome = _events[index]['nome'].toString();
                       debugPrint('Nome $nome');
-                      String data = _events[index].toString() != null
-                          ? [dataSplitted[0]]
-                          : 'Nada';
-                      String descricao = _events[index].toString() != null
-                          ? ['descricao']
-                          : 'Nada';
-                      String regiao = _events[index].toString() != null
-                          ? ['regiao']
-                          : 'Nada';
-                      int idevento = _events[index].toString() != null
-                          ? ['idevento']
-                          : 'Nada';
+                      String formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
+                          .format(dataSplitted[0]);
+                      debugPrint('date formatted: $formattedDate');
+                      String data = _events[index][formattedDate];
+                      String descricao = _events[index]['descricao'].toString();
+                      String regiao = _events[index]['regiao'].toString();
+                      int idevento = _events[index]['idevento'].toInt();
                       final details =
                           Details(idevento, data, nome, descricao, regiao);
                       //Navigator.pop(context, details);
@@ -216,11 +209,12 @@ class _Home extends State<Home> {
               onTap: () {
                 var dataSplitted = _events[index]['data'];
                 dataSplitted[0].split("T");
-                String nome = _events[index] ?? ['nome'];
-                String data = _events[index] ?? [dataSplitted[0]];
-                String descricao = _events[index] ?? ['descricao'];
-                String regiao = _events[index] ?? ['regiao'];
-                int idevento = _events[index] ?? ['idevento'];
+                String nome = _events[index]['nome'].toString();
+                debugPrint('Nome $nome');
+                String data = _events[index][dataSplitted[0]].toString();
+                String descricao = _events[index]['descricao'].toString();
+                String regiao = _events[index]['regiao'].toString();
+                int idevento = _events[index]['idevento'].toInt();
                 final details =
                     Details(idevento, data, nome, descricao, regiao);
                 //Navigator.pop(context, details);
@@ -286,6 +280,9 @@ class _Home extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    listLength();
+    setRegiaoCookie();
+    setNomeCookie();
     return Scaffold(
       //implementar builder dos icons
       appBar: AppBar(

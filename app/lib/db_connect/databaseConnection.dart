@@ -146,8 +146,8 @@ class DatabaseHelper {
     Database db = await instance.database;
   }
 
-  Future<List<Map<String, dynamic>>> queryOrganizationTab(String id) async {
-    String idusuario = id;
+  Future<List<Map<String, dynamic>>> queryOrganizationTab(int id) async {
+    int idusuario = id;
     Database db = await instance.database;
     String whereString = 'fk_tb_perfilusuario_pk_idusuario = ?';
     List<dynamic> whereArguments = [idusuario];
