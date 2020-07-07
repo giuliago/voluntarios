@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:voluntarios/UI/lists.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'package:voluntarios/UI/home.dart';
 import './navBar.dart';
@@ -179,13 +180,8 @@ class _EventDetails extends State<EventDetails> {
       height: 40.0,
       child: RaisedButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              //validação pra home
-              builder: (context) => Home(),
-            ),
-          );
+          //validação pra home
+          Navigator.pop(context);
         },
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(40.0)),
@@ -232,8 +228,8 @@ class _EventDetails extends State<EventDetails> {
           ),
           GestureDetector(
               onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Home()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ListPeople()));
               },
               child: Text('Participantes (200)...',
                   textAlign: TextAlign.left,

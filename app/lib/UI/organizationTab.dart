@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:voluntarios/UI/lists.dart';
 import 'package:voluntarios/UI/yourEvents.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import './eventDetails.dart';
@@ -151,8 +152,8 @@ class _OrganizationTab extends State<OrganizationTab>
         ),
         GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Home()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ListPeople()));
             },
             child: Text('Participantes (200)...',
                 textAlign: TextAlign.left,
