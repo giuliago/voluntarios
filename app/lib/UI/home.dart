@@ -153,9 +153,9 @@ class _Home extends State<Home> {
                     fit: BoxFit.fill),
               ),
               ListTile(
-                title: Text(_events[index] ?? ['nome']),
+                title: Text(_events[index]['nome'].toString()),
                 trailing: Icon(Icons.calendar_today),
-                subtitle: Text(_events[index] ?? [dataSplitted[0]]),
+                subtitle: Text(_events[index][dataSplitted[0]].toString()),
               ),
             ],
           ),
@@ -168,18 +168,28 @@ class _Home extends State<Home> {
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
-              itemCount: 10,
+              itemCount: _events.length,
               itemBuilder: (BuildContext context, int index) {
                 return new GestureDetector(
                     //You need to make my child interactive
                     onTap: () {
                       var dataSplitted = _events[index]['data'];
                       dataSplitted[0].split("T");
-                      String nome = _events[index] ?? ['nome'];
-                      String data = _events[index] ?? [dataSplitted[0]];
-                      String descricao = _events[index] ?? ['descricao'];
-                      String regiao = _events[index] ?? ['regiao'];
-                      int idevento = _events[index] ?? ['idevento'];
+                      String nome =
+                          _events[index].toString() != null ? ['nome'] : 'Nada';
+                      debugPrint('Nome $nome');
+                      String data = _events[index].toString() != null
+                          ? [dataSplitted[0]]
+                          : 'Nada';
+                      String descricao = _events[index].toString() != null
+                          ? ['descricao']
+                          : 'Nada';
+                      String regiao = _events[index].toString() != null
+                          ? ['regiao']
+                          : 'Nada';
+                      int idevento = _events[index].toString() != null
+                          ? ['idevento']
+                          : 'Nada';
                       final details =
                           Details(idevento, data, nome, descricao, regiao);
                       //Navigator.pop(context, details);
@@ -199,7 +209,7 @@ class _Home extends State<Home> {
     return ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: 10,
+        itemCount: _events.length,
         itemBuilder: (BuildContext context, int index) {
           return new InkWell(
               //You need to make my child interactive
