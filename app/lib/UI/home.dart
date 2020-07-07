@@ -169,11 +169,20 @@ class _Home extends State<Home> {
                     onTap: () {
                       var dataSplitted = _events[index]['data'];
                       dataSplitted[0].split("T");
-                      String nome = _events[index] ?? ['nome'];
-                      String data = _events[index] ?? [dataSplitted[0]];
-                      String descricao = _events[index] ?? ['descricao'];
-                      String regiao = _events[index] ?? ['regiao'];
-                      int idevento = _events[index] ?? ['idevento'];
+                      String nome =
+                          _events[index].toString() != null ? ['nome'] : 'Nada';
+                      String data = _events[index].toString() != null
+                          ? [dataSplitted[0]]
+                          : 'Nada';
+                      String descricao = _events[index].toString() != null
+                          ? ['descricao']
+                          : 'Nada';
+                      String regiao = _events[index].toString() != null
+                          ? ['regiao']
+                          : 'Nada';
+                      int idevento = _events[index].toString() != null
+                          ? ['idevento']
+                          : 'Nada';
                       final details =
                           Details(idevento, data, nome, descricao, regiao);
                       //Navigator.pop(context, details);
@@ -200,11 +209,17 @@ class _Home extends State<Home> {
               onTap: () {
                 var dataSplitted = _events[index]['data'];
                 dataSplitted[0].split("T");
-                String nome = _events[index] ?? ['nome'];
-                String data = _events[index] ?? [dataSplitted[0]];
-                String descricao = _events[index] ?? ['descricao'];
-                String regiao = _events[index] ?? ['regiao'];
-                int idevento = _events[index] ?? ['idevento'];
+                String nome =
+                    _events[index].toString() != null ? ['nome'] : 'Nada';
+                String data = _events[index].toString() != null
+                    ? [dataSplitted[0]]
+                    : 'Nada';
+                String descricao =
+                    _events[index].toString() != null ? ['descricao'] : 'Nada';
+                String regiao =
+                    _events[index].toString() != null ? ['regiao'] : 'Nada';
+                int idevento =
+                    _events[index].toString() != null ? ['idevento'] : 'Nada';
                 final details =
                     Details(idevento, data, nome, descricao, regiao);
                 //Navigator.pop(context, details);
