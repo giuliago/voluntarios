@@ -143,6 +143,7 @@ class _CreateEvent extends State<CreateEvent> {
                         final DateTime dataEvento = data;
                         var lista = [nome, descricao, dataEvento, regiao];
                         _inserir(lista);
+                        _consultarEventos();
                         Navigator.pop(context);
                       },
                       shape: RoundedRectangleBorder(

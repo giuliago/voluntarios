@@ -21,6 +21,14 @@ class Home extends StatefulWidget {
 
 class _Home extends State<Home> {
   final dbHelper = database.DatabaseHelper.instance;
+  List _events = [
+    '929299',
+    '20/02/2021',
+    'Nome Evento',
+    'Description',
+    'Brasília'
+  ];
+
   String nomeCookie = "";
   String regiaoCookie = "";
 
@@ -48,7 +56,17 @@ class _Home extends State<Home> {
     return regiaoCookie;
   }
 
+  listLength() async {
+    _consultarEventos().then((valorList) => setState(() {
+          //print(valorList);
+          _events = valorList;
+        }));
+    //print("valor do List _events");
+    //print(_events);
+  }
+
   Widget _buildHome(BuildContext context) {
+    listLength();
     setRegiaoCookie();
     setNomeCookie();
     return CustomScrollView(
@@ -112,7 +130,9 @@ class _Home extends State<Home> {
     );
   }
 
-  Widget _buildCard(bool icone, double height, double width) {
+  Widget _buildCard(bool icone, double height, double width, int index) {
+    var dataSplitted = _events[index]['data'];
+    dataSplitted[0].split("T");
     return SizedBox(
         height: height,
         width: width,
@@ -127,13 +147,15 @@ class _Home extends State<Home> {
                   topLeft: Radius.circular(8.0),
                   topRight: Radius.circular(8.0),
                 ),
-                child: Image.network('https://placeimg.com/640/480/any',
-                    height: 120, fit: BoxFit.fill),
+                child: Image.network(
+                    'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/,
+                    height: 120,
+                    fit: BoxFit.fill),
               ),
               ListTile(
-                title: Text('Evento Beneficente'),
+                title: Text(_events[index] ?? ['nome']),
                 trailing: Icon(Icons.calendar_today),
-                subtitle: Text('24/04/2019'),
+                subtitle: Text(_events[index] ?? [dataSplitted[0]]),
               ),
             ],
           ),
@@ -151,14 +173,24 @@ class _Home extends State<Home> {
                 return new GestureDetector(
                     //You need to make my child interactive
                     onTap: () {
+                      var dataSplitted = _events[index]['data'];
+                      dataSplitted[0].split("T");
+                      String nome = _events[index] ?? ['nome'];
+                      String data = _events[index] ?? [dataSplitted[0]];
+                      String descricao = _events[index] ?? ['descricao'];
+                      String regiao = _events[index] ?? ['regiao'];
+                      int idevento = _events[index] ?? ['idevento'];
+                      final details =
+                          Details(idevento, data, nome, descricao, regiao);
+                      //Navigator.pop(context, details);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => EventDetails(),
+                          builder: (context) => EventDetails(details: details),
                         ),
                       );
                     },
-                    child: _buildCard(true, 200, 220));
+                    child: _buildCard(true, 200, 220, index));
               }))
     ]);
   }
@@ -172,34 +204,32 @@ class _Home extends State<Home> {
           return new InkWell(
               //You need to make my child interactive
               onTap: () {
+                var dataSplitted = _events[index]['data'];
+                dataSplitted[0].split("T");
+                String nome = _events[index] ?? ['nome'];
+                String data = _events[index] ?? [dataSplitted[0]];
+                String descricao = _events[index] ?? ['descricao'];
+                String regiao = _events[index] ?? ['regiao'];
+                int idevento = _events[index] ?? ['idevento'];
+                final details =
+                    Details(idevento, data, nome, descricao, regiao);
+                //Navigator.pop(context, details);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EventDetails(),
+                    builder: (context) => EventDetails(details: details),
                   ),
                 );
               },
-              child: _buildCard(true, 200, 220));
+              child: _buildCard(true, 200, 220, index));
         });
   }
 
-  String _nome(Map<dynamic, dynamic> user) {
-    return user['tb_evento']['nome'];
-  }
+  //double tamanho = 0;
 
-  String _data(Map<dynamic, dynamic> user) {
-    var dataSplitted = user['tb_evento']['data'];
-    dataSplitted[0].split("T");
-    return dataSplitted[0];
-  }
-
-  List<dynamic> _events = [];
-  double tamanho = 0;
-
-  void listLength() async {
-    _consultarEventos().then((valorList) => setState(() {
-          _events = valorList;
-        }));
+  @override
+  void initState() {
+    super.initState();
   }
 
   Widget _buildList() {
@@ -209,10 +239,12 @@ class _Home extends State<Home> {
         ? RefreshIndicator(
             //return _events.length != 0 ? RefreshIndicator(
             child: ListView.builder(
-                padding: EdgeInsets.all(tamanho),
+                padding: EdgeInsets.all(8),
                 //limita o tamanho da lista pra quantidade de eventos que há
                 itemCount: _events.length,
                 itemBuilder: (BuildContext context, int index) {
+                  var dataSplitted = _events[index]['data'];
+                  dataSplitted[0].split("T");
                   return Card(
                     child: Column(
                       children: <Widget>[
@@ -221,8 +253,8 @@ class _Home extends State<Home> {
                               radius: 30,
                               backgroundImage: NetworkImage(
                                   'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/)),
-                          title: Text(_nome(_events[index])),
-                          subtitle: Text(_data(_events[index])),
+                          title: Text(_events[index] ?? ['nome']),
+                          subtitle: Text(_events[index] ?? [dataSplitted[0]]),
                           //trailing: Text(_age(_events[index])),
                         )
                       ],
@@ -238,14 +270,8 @@ class _Home extends State<Home> {
   //refresh dados do db
   Future<void> _getData() async {
     setState(() {
-      listLength();
+      //listLength();
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    listLength();
   }
 
   @override
@@ -318,13 +344,14 @@ class _Home extends State<Home> {
     );
   }*/
   _consultarEventos() async {
-    final todasLinhas = await dbHelper.queryEventos();
+    final todasLinhasEventos = await dbHelper.queryEventos();
+    List resultado = todasLinhasEventos.toList();
     print('Consulta todas os eventos:');
-    todasLinhas.forEach((row) => print(row));
-    return todasLinhas;
+    todasLinhasEventos.forEach((row) => print(row));
+    return resultado;
   }
 
-  void _consultarEventosInscritos() async {
+  _consultarEventosInscritos() async {
     final todasLinhas = await dbHelper.queryEventosInscritos();
     print('Consulta todas as linhas:');
     todasLinhas.forEach((row) => print(row));

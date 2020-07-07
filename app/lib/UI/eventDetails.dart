@@ -7,6 +7,33 @@ import 'package:flutter/gestures.dart';
 
 class EventDetails extends StatefulWidget {
   _EventDetails createState() => _EventDetails();
+  final Details details;
+  EventDetails({this.details});
+}
+
+class Details {
+  final int idevento;
+  final String data;
+  final String nome;
+  //final DateTime birthday;
+  final String descricao;
+  final String regiao;
+  //final DateTime date;
+
+  Details(
+    this.idevento,
+    this.data,
+    this.nome,
+    //this.birthday,
+    this.descricao,
+    this.regiao,
+    //this.date,
+  );
+
+  @override
+  String toString() {
+    return 'Details{idevento: $idevento, Data: $data, Nome: $nome, descricao: $descricao, regiao: $regiao}';
+  }
 }
 
 class _EventDetails extends State<EventDetails> {

@@ -1,7 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voluntarios/UI/yourEvents.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import './eventDetails.dart';
 import 'package:path/path.dart';
 import './events.dart';
@@ -16,7 +18,10 @@ class OrganizationTab extends StatefulWidget {
 
 class _OrganizationTab extends State<OrganizationTab>
     with SingleTickerProviderStateMixin {
+  String idusuarioCookie = "";
   TabController _controller;
+  final dbHelper = database.DatabaseHelper.instance;
+  List<dynamic> listaQuery = ['3', 'Nome', 'Descrição', 'Região'];
 
   @override
   void initState() {
@@ -24,7 +29,35 @@ class _OrganizationTab extends State<OrganizationTab>
       length: 2,
       vsync: this,
     );
+    listLength();
     super.initState();
+  }
+
+//idusuarioCookie
+  setidusuarioCookie() async {
+    getidusuarioCookie().then((valID) => setState(() {
+          idusuarioCookie = valID;
+        }));
+  }
+
+  getidusuarioCookie() async {
+    final prefs = await SharedPreferences.getInstance();
+    final idusuarioCookie = prefs.getString('idusuarioCookie') ?? 0;
+    return idusuarioCookie;
+  }
+
+  queryOrganization() async {
+    final queryOrganizacao =
+        await dbHelper.queryOrganizationTab(idusuarioCookie);
+    return queryOrganizacao;
+  }
+
+  setQueryOrganization() async {
+    queryOrganization().then((valQuery) => setState(() {
+          listaQuery = valQuery;
+          print("print 1:");
+          print(listaQuery);
+        }));
   }
 
   Widget _buildYourOrganization(BuildContext context) {
@@ -95,6 +128,8 @@ class _OrganizationTab extends State<OrganizationTab>
   }
 
   Widget _description(BuildContext context) {
+    setQueryOrganization();
+    String descricaoOrganizacao = listaQuery[2];
     return Column(
       children: <Widget>[
         Padding(
@@ -106,7 +141,7 @@ class _OrganizationTab extends State<OrganizationTab>
         Padding(
           padding: EdgeInsets.all(10),
           child: Text(
-            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,',
+            '$descricaoOrganizacao',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16, color: Colors.black),
           ),
@@ -153,6 +188,8 @@ class _OrganizationTab extends State<OrganizationTab>
   }
 
   Widget _buildAvatarSets(BuildContext context) {
+    String nomeOrganizacao = listaQuery[1];
+    String regiaoOrganizacao = listaQuery[3];
     return Column(children: <Widget>[
       Container(
         width: 400,
@@ -173,7 +210,7 @@ class _OrganizationTab extends State<OrganizationTab>
               Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Text(
-                    'Giulianna Gonçalves',
+                    '$nomeOrganizacao',
                     style: TextStyle(
                         fontSize: 24, color: Colors.white70.withOpacity(0.8)),
                   )),
@@ -186,7 +223,8 @@ class _OrganizationTab extends State<OrganizationTab>
                         size: 20,
                         color: Colors.white70,
                       )),
-                  Text('Brasília', style: TextStyle(color: Colors.white60))
+                  Text('$regiaoOrganizacao',
+                      style: TextStyle(color: Colors.white60))
                 ],
               )
             ],
@@ -252,4 +290,75 @@ class _OrganizationTab extends State<OrganizationTab>
           ),
         ));
   }
+
+  String _nome(Map<dynamic, dynamic> user) {
+    return user['tb_evento']['nome'];
+  }
+
+  String _descricao(Map<dynamic, dynamic> user) {
+    return user['tb_evento']['descricao'];
+  }
+
+  String _data(Map<dynamic, dynamic> user) {
+    var dataSplitted = user['tb_evento']['data'];
+    dataSplitted[0].split("T");
+    return dataSplitted[0];
+  }
+
+  List<dynamic> _events = [];
+  double tamanho = 0;
+
+  void listLength() async {
+    _consultarEventosInscritos().then((valorList) => setState(() {
+          _events = valorList;
+        }));
+  }
+
+  Widget _buildList() {
+    //valida
+    //final _events = _consultarEventos();
+    return _events.length != 0
+        ? RefreshIndicator(
+            //return _events.length != 0 ? RefreshIndicator(
+            child: ListView.builder(
+                padding: EdgeInsets.all(tamanho),
+                //limita o tamanho da lista pra quantidade de eventos que há
+                itemCount: _events.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Card(
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                          leading: CircleAvatar(
+                              radius: 30,
+                              backgroundImage: NetworkImage(
+                                  'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/)),
+                          title: Text(_nome(_events[index])),
+                          subtitle: Text(_descricao(_events[index])),
+                          //trailing: Text(_age(_events[index])),
+                        )
+                      ],
+                    ),
+                  );
+                }),
+            //refresh list
+            onRefresh: _getData,
+          )
+        : Center(child: CircularProgressIndicator());
+  }
+
+  //refresh dados do db
+  Future<void> _getData() async {
+    setState(() {
+      listLength();
+    });
+  }
+
+  _consultarEventosInscritos() async {
+    final todasLinhas = await dbHelper.queryEventosInscritos();
+    print('Consulta todas as linhas:');
+    todasLinhas.forEach((row) => print(row));
+  }
 }
+
+//idusuarioCookie

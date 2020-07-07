@@ -18,6 +18,7 @@ class DatabaseHelper {
   static final columnRegiao = 'regiao';
 
   static final tableEvent = 'tb_evento';
+  static final eventId = 'pk_idevento';
   static final eventDate = 'data';
   static final eventName = 'nome';
   static final eventRegion = 'regiao';
@@ -26,6 +27,8 @@ class DatabaseHelper {
   static final eventFK1 = 'fk_tb_perfilorganizacao_pk_idorganizacao';
   static final eventFK2 =
       'fk_tb_perfilorganizacao_tb_perfilusuario_pk_idusuario';
+
+  static final tableOrganizacao = 'tb_perfilorganizacao';
 
   // torna esta classe singleton
   DatabaseHelper._privateConstructor();
@@ -60,7 +63,7 @@ class DatabaseHelper {
     await db.execute(
         "CREATE TABLE tb_perfilusuario(pk_idusuario INTEGER PRIMARY KEY, nome VARCHAR(60), uk_email VARCHAR(45), senha VARCHAR(45), nascimento DATETIME, regiao VARCHAR(45));");
     await db.execute(
-        "CREATE TABLE tb_perfilorganizacao(pk_idorganizacao INTEGER PRIMARY KEY, nome VARCHAR(60), descricao VARCHAR(255), fk_tb_perfilusuario_pk_idusuario INTEGER, FOREIGN KEY(fk_tb_perfilusuario_pk_idusuario) REFERENCES tb_perfilusuario(pk_idusuario));");
+        "CREATE TABLE tb_perfilorganizacao(pk_idorganizacao INTEGER PRIMARY KEY, nome VARCHAR(60), descricao VARCHAR(255), regiao VARCHAR(60), fk_tb_perfilusuario_pk_idusuario INTEGER, FOREIGN KEY(fk_tb_perfilusuario_pk_idusuario) REFERENCES tb_perfilusuario(pk_idusuario));");
     await db.execute(
         "CREATE TABLE tb_evento(pk_idevento INTEGER PRIMARY KEY, data DATETIME, nome VARCHAR(60), descricao VARCHAR(255), regiao VARCHAR(45), disponibilidade TINYINT, fk_tb_perfilorganizacao_pk_idorganizacao INTEGER NULL,fk_tb_perfilorganizacao_tb_perfilusuario_pk_idusuario INTEGER NULL, FOREIGN KEY(fk_tb_perfilorganizacao_pk_idorganizacao) REFERENCES tb_perfilorganizacao(pk_idorganizacao), FOREIGN KEY(fk_tb_perfilorganizacao_tb_perfilusuario_pk_idusuario) REFERENCES tb_perfilusuario(pk_idusuario));");
     await db.execute(
@@ -141,6 +144,15 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>> queryEventosInscritos() async {
     Database db = await instance.database;
+  }
+
+  Future<List<Map<String, dynamic>>> queryOrganizationTab(String id) async {
+    String idusuario = id;
+    Database db = await instance.database;
+    String whereString = 'fk_tb_perfilusuario_pk_idusuario = ?';
+    List<dynamic> whereArguments = [idusuario];
+    return await db.query(tableOrganizacao,
+        where: whereString, whereArgs: whereArguments);
   }
 
   Future<String> queryLogin(List lista) async {

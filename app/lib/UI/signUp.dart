@@ -108,12 +108,12 @@ class _SignUp extends State<SignUp> {
           final String email = emailController.text;
           final String senha = senhaController.text;
           data = _selectedDate;
+          //String validaData = data.toIso8601String();
           final DateTime nascimento = data;
           print(data);
           var lista = [nome, regiao, email, senha, nascimento];
           _inserir(lista);
           _consultar();
-
           final Cadastro novoCadastro =
               new Cadastro(nome, regiao, email, senha, nascimento);
           Navigator.pop(context, novoCadastro);
