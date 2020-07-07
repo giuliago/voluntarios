@@ -39,6 +39,8 @@ class Details {
 
 class _EventDetails extends State<EventDetails> {
   final dbHelper = database.DatabaseHelper.instance;
+  final Details details;
+  _EventDetails({this.details});
   Widget build(BuildContext context) {
     return Scaffold(
       //implementar builder dos icons
@@ -98,6 +100,7 @@ class _EventDetails extends State<EventDetails> {
   }
 
   Widget _buildInitialInfo(BuildContext context) {
+    //String regiao = details.regiao;
     return Stack(
       children: <Widget>[
         Container(
@@ -135,7 +138,7 @@ class _EventDetails extends State<EventDetails> {
               Padding(
                   padding: EdgeInsets.fromLTRB(5, 120, 0, 0),
                   child: Text(
-                    'Brasília',
+                    '$details.regiao',
                     style: TextStyle(
                       fontSize: 16.0,
                       color: Colors.grey[800],

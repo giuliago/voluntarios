@@ -19,7 +19,7 @@ class OrganizationTab extends StatefulWidget {
 
 class _OrganizationTab extends State<OrganizationTab>
     with SingleTickerProviderStateMixin {
-  String idusuarioCookie = "";
+  int idusuarioCookie;
   TabController _controller;
   final dbHelper = database.DatabaseHelper.instance;
   List<dynamic> listaQuery = ['3', 'Nome', 'Descrição', 'Região'];
@@ -43,21 +43,25 @@ class _OrganizationTab extends State<OrganizationTab>
 
   getidusuarioCookie() async {
     final prefs = await SharedPreferences.getInstance();
-    final idusuarioCookie = prefs.getString('idusuarioCookie') ?? 0;
+    final idusuarioCookie = prefs.getInt('idusuarioCookie');
+    print(idusuarioCookie);
     return idusuarioCookie;
   }
 
   queryOrganization() async {
     final queryOrganizacao =
         await dbHelper.queryOrganizationTab(idusuarioCookie);
+    print(idusuarioCookie);
     return queryOrganizacao;
   }
 
   setQueryOrganization() async {
     queryOrganization().then((valQuery) => setState(() {
-          listaQuery = valQuery;
-          print("print 1:");
-          print(listaQuery);
+          if (valQuery != null) {
+            listaQuery = valQuery;
+            print("print 1:");
+            print(listaQuery);
+          }
         }));
   }
 
@@ -129,7 +133,6 @@ class _OrganizationTab extends State<OrganizationTab>
   }
 
   Widget _description(BuildContext context) {
-    setQueryOrganization();
     String descricaoOrganizacao = listaQuery[2];
     return Column(
       children: <Widget>[
@@ -270,6 +273,7 @@ class _OrganizationTab extends State<OrganizationTab>
 
   @override
   Widget build(BuildContext context) {
+    setQueryOrganization();
     return Scaffold(
         body: Column(
           children: [
