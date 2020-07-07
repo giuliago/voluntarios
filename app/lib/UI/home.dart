@@ -27,7 +27,7 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> {
   final dbHelper = database.DatabaseHelper.instance;
   List _events = [
-    '929299',
+    929299,
     '20/02/2021',
     'Nome Evento',
     'Description',
@@ -35,7 +35,7 @@ class _Home extends State<Home> {
   ];
 
   List _eventsInscritos = [
-    '929299',
+    929299,
     '20/02/2021',
     'Nome Evento',
     'Description',
@@ -44,7 +44,7 @@ class _Home extends State<Home> {
 
   String nomeCookie = "";
   String regiaoCookie = "";
-  String idusuarioCookie = "";
+  int idusuarioCookie;
 
   setNomeCookie() async {
     getNomeCookie().then((val) => setState(() {
@@ -78,26 +78,20 @@ class _Home extends State<Home> {
 
   getidusuarioCookie() async {
     final prefs = await SharedPreferences.getInstance();
-    final idusuarioCookie = prefs.getInt('idusuarioCookie');
+    idusuarioCookie = prefs.getInt('idusuarioCookie');
     print(idusuarioCookie);
     return idusuarioCookie;
   }
 
   listLength() async {
+    print("Enter listLength: ");
+    print(_events);
     _consultarEventos().then((valorList) => setState(() {
+          print("Enter setState: ");
           //print(valorList);
-          if (valorList != null) {
-            _events = valorList;
-          } else {
-            _events = [
-              929299,
-              '20/02/2021',
-              'Nome Evento',
-              'Description',
-              'Brasília'
-            ];
-          }
-          return _events;
+          _events = valorList;
+          print("Enter insert _events: ");
+          print(_events);
         }));
     //print("valor do List _events");
     //print(_events);
@@ -106,21 +100,10 @@ class _Home extends State<Home> {
   listLengthInscrito() async {
     _consultarEventosInscritos().then((valorListInscritos) => setState(() {
           //print(valorList);
-          if (valorListInscritos != null) {
-            _eventsInscritos = valorListInscritos;
-          } else {
-            _eventsInscritos = [
-              929299,
-              '20/02/2021',
-              'Nome Evento',
-              'Description',
-              'Brasília'
-            ];
-          }
-          return _eventsInscritos;
+          _eventsInscritos = valorListInscritos;
         }));
     //print("valor do List _events");
-    //print(_events);
+    //print(print("Enter listLength: ");_events);
   }
 
   Widget _buildHome(BuildContext context) {
@@ -346,13 +329,6 @@ class _Home extends State<Home> {
 
   @override
   void initState() {
-    /*if (mounted) {
-      setidusuarioCookie();
-      setRegiaoCookie();
-      setNomeCookie();
-      listLength();
-      listLengthInscrito();
-    }*/
     super.initState();
   }
 
@@ -483,14 +459,14 @@ class _Home extends State<Home> {
     List resultado = todasLinhasEventos.toList();
     /*print('Consulta todas os eventos:');
     todasLinhasEventos.forEach((row) => print(row));*/
-    //return resultado;
+    return resultado;
     todasLinhasEventos.forEach((row) => print(row));
   }
 
   _consultarEventosInscritos() async {
     final todasLinhasInscritos =
         await dbHelper.queryEventosInscritos(idusuarioCookie);
-    print('Consulta todas as linhas:');
-    todasLinhasInscritos.forEach((row) => print(row));
+    List resultado = todasLinhasInscritos.toList();
+    return resultado;
   }
 }
