@@ -4,7 +4,7 @@ import 'dart:convert';
 import './eventDetails.dart';
 /*import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';*/
- 
+
 class UploadImage extends StatelessWidget {
   /*UploadImage() : super();
  
@@ -86,37 +86,33 @@ class UploadImageState extends State<UploadImage> {
       },
     );
   }*/
- 
+
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(0.0)),
-        child: Column(
-          children: <Widget>[
-            const Image(
-              image: NetworkImage('https://fbcd.co/product-lg/e0be382e770d873f0ef4633a0a760900_resize.jpg'),
-              fit: BoxFit.fitWidth,
-            ),
-            SizedBox(
-              width: 400.0,
-              height: 50.0,
-              child: RaisedButton(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+      child: Column(
+        children: <Widget>[
+          Image.asset('images/camera.png', fit: BoxFit.fitWidth),
+          SizedBox(
+            width: 400.0,
+            height: 50.0,
+            child: RaisedButton(
               padding: EdgeInsets.all(0.0),
               color: Colors.white70,
-              onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EventDetails(),
-                    ),
-                  );
-                },
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EventDetails(),
+                  ),
+                );
+              },
               child: Text('Escolher imagem'),
             ),
-            ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
   }
 }

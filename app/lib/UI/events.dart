@@ -126,10 +126,14 @@ class _Events extends State<Events> with TickerProviderStateMixin {
                 color: Colors.white70,
               ))
         ],
-        leading: Icon(
-          Icons.arrow_back,
-          color: Colors.white70,
-        ),
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back,
+              color: Colors.white70,
+            )),
         backgroundColor: Colors.cyan[700],
         title: Text(
           'Voluntários',
