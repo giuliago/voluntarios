@@ -30,6 +30,8 @@ class _OrganizationTab extends State<OrganizationTab>
       length: 2,
       vsync: this,
     );
+    setQueryOrganization();
+    setidusuarioCookie();
     listLength();
     super.initState();
   }
@@ -220,6 +222,7 @@ class _OrganizationTab extends State<OrganizationTab>
   }
 
   Widget _buildAvatarSets(BuildContext context) {
+    setidusuarioCookie();
     String nomeOrganizacao = listaQuery[1];
     String regiaoOrganizacao = listaQuery[3];
     return Column(children: <Widget>[
@@ -242,7 +245,7 @@ class _OrganizationTab extends State<OrganizationTab>
               Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Text(
-                    'Organização',
+                    '$nomeOrganizacao',
                     style: TextStyle(
                         fontSize: 24, color: Colors.white70.withOpacity(0.8)),
                   )),
@@ -255,7 +258,8 @@ class _OrganizationTab extends State<OrganizationTab>
                         size: 20,
                         color: Colors.white70,
                       )),
-                  Text('Brasília', style: TextStyle(color: Colors.white60))
+                  Text('$regiaoOrganizacao',
+                      style: TextStyle(color: Colors.white60))
                 ],
               )
             ],
@@ -267,6 +271,8 @@ class _OrganizationTab extends State<OrganizationTab>
 
   @override
   void dispose() {
+    setQueryOrganization().dispose();
+    setidusuarioCookie().dispose();
     _controller.dispose();
     super.dispose();
   }

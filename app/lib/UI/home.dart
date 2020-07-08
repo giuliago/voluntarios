@@ -46,9 +46,23 @@ class _Home extends State<Home> {
   String regiaoCookie = "";
   int idusuarioCookie;
 
+  @override
+  void initState() {
+    if (mounted) {
+      setidusuarioCookie();
+      setRegiaoCookie();
+      setNomeCookie();
+      //listLength();
+      //listLengthInscrito();
+      super.initState();
+    }
+  }
+
   setNomeCookie() async {
     getNomeCookie().then((val) => setState(() {
-          nomeCookie = val;
+          this.nomeCookie = val;
+          print("print nomeCookie:");
+          print(nomeCookie);
         }));
   }
 
@@ -61,32 +75,43 @@ class _Home extends State<Home> {
   setRegiaoCookie() async {
     getRegiaoCookie().then((val2) => setState(() {
           regiaoCookie = val2;
+          listLength(regiaoCookie);
         }));
   }
 
   getRegiaoCookie() async {
     final prefs = await SharedPreferences.getInstance();
-    final regiaoCookie = prefs.getString('regiaoCookie');
+    final regiaoCookie = prefs.getString('regiaoCookie') ?? 0;
     return regiaoCookie;
   }
 
   setidusuarioCookie() async {
     getidusuarioCookie().then((valID) => setState(() {
           idusuarioCookie = valID;
+          listLengthInscrito(idusuarioCookie);
         }));
   }
 
   getidusuarioCookie() async {
     final prefs = await SharedPreferences.getInstance();
-    idusuarioCookie = prefs.getInt('idusuarioCookie');
+    idusuarioCookie = prefs.getInt('idusuarioCookie') ?? 0;
     print(idusuarioCookie);
     return idusuarioCookie;
   }
 
-  listLength() async {
+  _consultarEventos(String regiaoCookies) async {
+    final todasLinhasEventos = await dbHelper.queryEventosRegiao(regiaoCookie);
+    List resultado = todasLinhasEventos.toList();
+    /*print('Consulta todas os eventos:');
+    todasLinhasEventos.forEach((row) => print(row));*/
+    return resultado;
+    todasLinhasEventos.forEach((row) => print(row));
+  }
+
+  listLength(String regiaoCookies) async {
     print("Enter listLength: ");
     print(_events);
-    _consultarEventos().then((valorList) => setState(() {
+    _consultarEventos(regiaoCookies).then((valorList) => setState(() {
           print("Enter setState: ");
           //print(valorList);
           _events = valorList;
@@ -97,21 +122,31 @@ class _Home extends State<Home> {
     //print(_events);
   }
 
-  listLengthInscrito() async {
-    _consultarEventosInscritos().then((valorListInscritos) => setState(() {
-          //print(valorList);
-          _eventsInscritos = valorListInscritos;
-        }));
+  _consultarEventosInscritos(int idusuarioCookies) async {
+    print("Print do nome Cookie em outra função:");
+    print(nomeCookie);
+    final todasLinhasInscritos =
+        await dbHelper.queryEventosInscritos(idusuarioCookies);
+    List resultado = todasLinhasInscritos.toList();
+    return resultado;
+  }
+
+  listLengthInscrito(int idusuarioCookies) async {
+    _consultarEventosInscritos(idusuarioCookies)
+        .then((valorListInscritos) => setState(() {
+              //print(valorList);
+              _eventsInscritos = valorListInscritos;
+            }));
     //print("valor do List _events");
     //print(print("Enter listLength: ");_events);
   }
 
   Widget _buildHome(BuildContext context) {
-    setidusuarioCookie();
+    /*setidusuarioCookie();
     setRegiaoCookie();
     setNomeCookie();
     listLength();
-    listLengthInscrito();
+    listLengthInscrito(); */
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
@@ -273,8 +308,7 @@ class _Home extends State<Home> {
                           _eventsInscritos[index]['descricao'].toString();
                       String regiao =
                           _eventsInscritos[index]['regiao'].toString();
-                      int idevento =
-                          _eventsInscritos[index]['idevento'].toInt();
+                      int idevento = _eventsInscritos[index]['pk_idevento'];
                       final details =
                           Details(idevento, dataF, nome, descricao, regiao);
                       //Navigator.pop(context, details);
@@ -309,7 +343,7 @@ class _Home extends State<Home> {
 
                 String descricao = _events[index]['descricao'].toString();
                 String regiao = _events[index]['regiao'].toString();
-                int idevento = _events[index]['idevento'].toInt();
+                int idevento = _events[index]['idevento'];
                 final details =
                     Details(idevento, dataF, nome, descricao, regiao);
                 //Navigator.pop(context, details);
@@ -417,7 +451,17 @@ class _Home extends State<Home> {
       body: _buildHome(context),
     );
   }
-
+/*
+  @override
+  void dispose() {
+    setidusuarioCookie().dispose();
+    setRegiaoCookie().dispose();
+    setNomeCookie().dispose();
+    listLength().dispose();
+    listLengthInscrito().dispose();
+    super.dispose();
+  }
+*/
   /*var refreshKey = GlobalKey<RefreshIndicatorState>(); */
 
 /*
@@ -460,19 +504,4 @@ class _Home extends State<Home> {
       ),
     );
   }*/
-  _consultarEventos() async {
-    final todasLinhasEventos = await dbHelper.queryEventosRegiao(regiaoCookie);
-    List resultado = todasLinhasEventos.toList();
-    /*print('Consulta todas os eventos:');
-    todasLinhasEventos.forEach((row) => print(row));*/
-    return resultado;
-    todasLinhasEventos.forEach((row) => print(row));
-  }
-
-  _consultarEventosInscritos() async {
-    final todasLinhasInscritos =
-        await dbHelper.queryEventosInscritos(idusuarioCookie);
-    List resultado = todasLinhasInscritos.toList();
-    return resultado;
-  }
 }

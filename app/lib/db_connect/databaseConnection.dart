@@ -148,6 +148,9 @@ class DatabaseHelper {
     Database db = await instance.database;
     String whereString = 'disponibilidade = ? AND regiao = ?';
     String regiao = string;
+    print("Entrou query regiao evento:");
+    print(whereString);
+    print(regiao);
     List<dynamic> whereArguments = [1, regiao];
     return await db.query(tableEvent,
         where: whereString, whereArgs: whereArguments);
