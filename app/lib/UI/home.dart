@@ -102,9 +102,11 @@ class _Home extends State<Home> {
 
   _consultarEventos(String regiaoCookies) async {
     final todasLinhasEventos = await dbHelper.queryEventosRegiao(regiaoCookie);
+    print("Todaslinhaseventos $todasLinhasEventos");
     List resultado = todasLinhasEventos.toList();
     /*print('Consulta todas os eventos:');
     todasLinhasEventos.forEach((row) => print(row));*/
+    print("Resultado região $resultado");
     return resultado;
     todasLinhasEventos.forEach((row) => print(row));
   }
@@ -174,7 +176,7 @@ class _Home extends State<Home> {
             Container(
               color: Colors.cyan,
               height: 210.0,
-              child: _buildYourEvents(),
+              child: _buildEvents(),
             ),
             Container(
                 color: Colors.white,
@@ -201,7 +203,7 @@ class _Home extends State<Home> {
                             ])))),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-              child: _buildEvents(),
+              child: _buildYourEvents(),
             )
           ],
         )),
@@ -289,7 +291,7 @@ class _Home extends State<Home> {
     return Row(children: <Widget>[
       Expanded(
           child: ListView.builder(
-              scrollDirection: Axis.horizontal,
+              scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: _eventsInscritos.length,
               itemBuilder: (BuildContext context, int index) {
@@ -329,7 +331,7 @@ class _Home extends State<Home> {
     print("entrou _buildevents");
     return ListView.builder(
         shrinkWrap: true,
-        scrollDirection: Axis.vertical,
+        scrollDirection: Axis.horizontal,
         itemCount: _events.length,
         itemBuilder: (BuildContext context, int index) {
           return new InkWell(
@@ -416,7 +418,8 @@ class _Home extends State<Home> {
   //refresh dados do db
   Future<void> _getData() async {
     setState(() {
-      //listLength();
+      _consultarEventos(setRegiaoCookie());
+      _consultarEventosInscritos(getidusuarioCookie());
     });
   }
 
@@ -454,7 +457,7 @@ class _Home extends State<Home> {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: _buildHome(context),
+      body: RefreshIndicator(child: _buildHome(context), onRefresh: _getData),
     );
   }
 /*

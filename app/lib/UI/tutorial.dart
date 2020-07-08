@@ -14,20 +14,20 @@ class _Tutorial extends State<Tutorial> {
 
     slides.add(
       new Slide(
-        title: "ERASER",
+        title: "VOLUNTÁRIOS",
         description:
-            "Allow miles wound place the leave had. To sitting subject no improve studied limited",
-        pathImage: "images/photo_eraser.png",
-        backgroundColor: Colors.amber,
+            "Um aplicativo que facilita a divulgação de organizações e eventos voluntários. Aqui você pode começar seus eventos beneficentes e consegue encontrar facilmente formas de participar.",
+        pathImage: "images/dica1.png",
+        backgroundColor: Colors.cyan[400],
       ),
     );
     slides.add(
       new Slide(
-        title: "PENCIL",
+        title: "ORGANIZAÇÕES",
         description:
-            "Ye indulgence unreserved connection alteration appearance",
-        pathImage: "images/photo_pencil.png",
-        backgroundColor: Colors.amber,
+            "Aqui você pode representar sua ONG criando um perfil e convidando voluntários para fazer parte. Assim todas essas pessoas são cadastradas automaticamente em seus eventos.",
+        pathImage: "images/dica2.png",
+        backgroundColor: Colors.lightGreen,
       ),
     );
     slides.add(

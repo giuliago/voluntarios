@@ -12,23 +12,30 @@ class EditProfile extends StatefulWidget {
 class _EditProfile extends State<EditProfile> {
   File _image;
   bool _isEditingText = false;
-  TextEditingController _editingController;
+  TextEditingController _emailController;
+  TextEditingController _nameController;
+  TextEditingController _senhaController;
   String initialText;
   String dropdownValue = 'Brasília';
   int maxLines = 8;
 
   void initState() {
     super.initState();
-    _editingController = TextEditingController(text: initialText);
+    _emailController = TextEditingController(text: initialText);
+    _nameController = TextEditingController(text: initialText);
+    _senhaController = TextEditingController(text: initialText);
   }
 
   @override
   void dispose() {
-    _editingController.dispose();
+    _emailController.dispose();
+    _nameController.dispose();
+    _senhaController.dispose();
     super.dispose();
   }
 
-  Widget _editTitleTextField(String initialText) {
+  Widget _editTitleTextField(
+      String initialText, TextEditingController _controller) {
     if (_isEditingText)
       return SizedBox(
         width: 269,
@@ -40,7 +47,7 @@ class _EditProfile extends State<EditProfile> {
             });
           },
           autofocus: true,
-          controller: _editingController,
+          controller: _controller,
         ),
       );
     return InkWell(
@@ -106,7 +113,8 @@ class _EditProfile extends State<EditProfile> {
                           padding: EdgeInsets.only(right: 7),
                           child: Icon(Icons.person),
                         ),
-                        _editTitleTextField('Giulianna Gonçalves')
+                        _editTitleTextField(
+                            'Giulianna Gonçalves', _nameController)
                       ])),
                   Padding(
                       padding: EdgeInsets.only(top: 10),
@@ -173,7 +181,7 @@ class _EditProfile extends State<EditProfile> {
                           padding: EdgeInsets.only(right: 7),
                           child: Icon(Icons.email),
                         ),
-                        _editTitleTextField('giulianna@hotmail.com')
+                        _editTitleTextField('giu@hotmail.com', _emailController)
                       ])),
                   Padding(
                       padding: EdgeInsets.only(top: 20),
@@ -182,7 +190,7 @@ class _EditProfile extends State<EditProfile> {
                           padding: EdgeInsets.only(right: 7),
                           child: Icon(Icons.lock),
                         ),
-                        _editTitleTextField('Password')
+                        _editTitleTextField('Password', _senhaController)
                       ])),
                   Padding(
                       padding: EdgeInsets.only(top: 20),
