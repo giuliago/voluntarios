@@ -151,8 +151,8 @@ class _CreateEvent extends State<CreateEvent> {
                           regiao,
                           idusuarioCookie
                         ];
-                        _inserir(lista);
-                        _consultarEventos();
+                        setidusuarioCookie(lista);
+                        //_consultarEventos();
                         Navigator.pop(context);
                       },
                       shape: RoundedRectangleBorder(
@@ -213,9 +213,10 @@ class _CreateEvent extends State<CreateEvent> {
     );
   }
 
-  setidusuarioCookie() async {
+  setidusuarioCookie(List<Object> lista) async {
     getidusuarioCookie().then((valID) => setState(() {
           idusuarioCookie = valID;
+          _inserir(lista, idusuarioCookie);
         }));
   }
 
@@ -226,12 +227,13 @@ class _CreateEvent extends State<CreateEvent> {
     return idusuarioCookie;
   }
 
-  void _inserir(List lista) async {
+  void _inserir(List lista, int idusuarioCookie) async {
+    var idUser = idusuarioCookie;
     String nome = lista[0];
     String descricao = lista[1];
     String data = lista[2].toIso8601String();
     String fk = 'NULL';
-    String fk1 = 'NULL';
+    int fk1 = idUser;
     int disponibilidade = 1;
     String regiao = lista[3];
     int idOwner = lista[4];
@@ -245,18 +247,21 @@ class _CreateEvent extends State<CreateEvent> {
       database.DatabaseHelper.eventDisponibility: disponibilidade,
       database.DatabaseHelper.eventRegion: regiao
     };
-    final idEvent = await dbHelper.insertEvent(row);
-    _inserirDono(idEvent, idOwner);
+    //final idEvent = await dbHelper.insertEvent(row);
+    _inserirDono(row, idUser, idOwner, lista);
     //print('linha inserida id: $id');
   }
 
-  void _inserirDono(int idEvent, int idOwner) async {
-    final id = await dbHelper
-        .insertOwner(idEvent, idOwner)
-        .then((valorList) => setState(() {
-              print("Inserindo dono entra setState:");
-              print(valorList);
-            }));
+  void _inserirDono(
+      Map<String, dynamic> row, int idUser, int idOwner, List lista) async {
+    final id = await dbHelper.insertEvent(row);
+    final id4 = await dbHelper.getEventOwner(lista);
+    print("print iduser");
+    print(idUser);
+    final id2 = await dbHelper.insertEventOwner(idUser, id4[0]['pk_idevento']);
+    final id3 = await dbHelper.queryEventOwner();
+    id3.forEach((row) => print(row));
+    //id.forEach((row) => print(row));
   }
 
   void _consultarEventos() async {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './home.dart';
 import 'messages.dart';
 
@@ -21,6 +22,8 @@ class _EditProfile extends State<EditProfile> {
   TextEditingController nomeController = new TextEditingController();
   TextEditingController regiaoController = new TextEditingController();
   TextEditingController descricaoController = new TextEditingController();
+  String nomeCookie = "";
+  String emailCookie = "";
 
   void initState() {
     super.initState();
@@ -35,6 +38,30 @@ class _EditProfile extends State<EditProfile> {
     _nameController.dispose();
     _senhaController.dispose();
     super.dispose();
+  }
+
+  setNomeCookie() async {
+    getNomeCookie().then((val) => setState(() {
+          nomeCookie = val;
+        }));
+  }
+
+  getNomeCookie() async {
+    final prefs = await SharedPreferences.getInstance();
+    final nomeCookie = prefs.getString('nomeCookie') ?? 0;
+    return nomeCookie;
+  }
+
+  setEmailCookie() async {
+    getEmailCookie().then((val3) => setState(() {
+          emailCookie = val3;
+        }));
+  }
+
+  getEmailCookie() async {
+    final prefs = await SharedPreferences.getInstance();
+    final emailCookie = prefs.getString('emailCookie') ?? 0;
+    return emailCookie;
   }
 
   Widget _editTitleTextField(
@@ -70,6 +97,8 @@ class _EditProfile extends State<EditProfile> {
   }
 
   Widget _buildForm(BuildContext context) {
+    setNomeCookie();
+    setEmailCookie();
     return Builder(
         builder: (context) => Center(
               child: Container(
@@ -116,8 +145,7 @@ class _EditProfile extends State<EditProfile> {
                           padding: EdgeInsets.only(right: 7),
                           child: Icon(Icons.person),
                         ),
-                        _editTitleTextField(
-                            'Giulianna Gonçalves', _nameController)
+                        _editTitleTextField('$nomeCookie', _nameController)
                       ])),
                   Padding(
                       padding: EdgeInsets.only(top: 10),
@@ -184,7 +212,7 @@ class _EditProfile extends State<EditProfile> {
                           padding: EdgeInsets.only(right: 7),
                           child: Icon(Icons.email),
                         ),
-                        _editTitleTextField('giu@hotmail.com', _emailController)
+                        _editTitleTextField('$emailCookie', _emailController)
                       ])),
                   Padding(
                       padding: EdgeInsets.only(top: 20),

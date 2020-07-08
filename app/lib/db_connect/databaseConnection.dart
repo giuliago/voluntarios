@@ -113,15 +113,44 @@ class DatabaseHelper {
     //print(results);
     //results.commit();
     //last_insert_rowid()
-    db.insert(tableEvent, row);
-    int idowner;
-    return idowner = await db.rawInsert("SELECT last_insert_rowid()", null);
+    return db.insert(tableEvent, row);
+  }
+
+  Future<int> insertEventOwner(int idUser, int idOwner) async {
+    Database db = await instance.database;
+    List<dynamic> args = [idUser, idOwner];
+    return db.rawInsert("INSERT INTO ta_inscricao VALUES (?, ?)", args);
+  }
+
+  Future<List<Map<String, dynamic>>> getEventOwner(List lista) async {
+    Database db = await instance.database;
+    String whereString =
+        'data = ?, nome = ?, descricao = ?, regiao = ?, disponibilidade = ?';
+    List<dynamic> whereArguments = [
+      lista[2].toIso8601String(),
+      lista[0],
+      lista[1],
+      lista[3],
+      1
+    ];
+    List<String> columnsToSelect = ['pk_idevento'];
+    return await db.query(tableEvent,
+        columns: columnsToSelect,
+        where: whereString,
+        whereArgs: whereArguments);
+  }
+
+  Future<List<Map<String, dynamic>>> queryEventOwner() async {
+    Database db = await instance.database;
+    print("entra select all ta_inscricao");
+    return db.query("SELECT * FROM ta_inscricao");
   }
 
   Future<int> insertOwner(int idOwner, int idEvent) async {
     Database db = await instance.database;
     List<dynamic> args = [idOwner, idEvent];
     //print(db.rawInsert("INSERT INTO ta_inscricao VALUES (?, ?)", args));
+    print("Inscriccaooo");
     return await db.rawInsert("INSERT INTO ta_inscricao VALUES (?, ?)", args);
   }
 
