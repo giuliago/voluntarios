@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voluntarios/UI/eventDetails.dart';
 import 'package:voluntarios/UI/imageUploader.dart';
 import 'package:voluntarios/UI/messages.dart';
@@ -25,6 +26,7 @@ class _CreateEvent extends State<CreateEvent> {
   TextEditingController nomeController = new TextEditingController();
   TextEditingController descriptionController = new TextEditingController();
   DateTime data;
+  int idusuarioCookie;
 
   void _pickDateDialog(BuildContext context) {
     showDatePicker(
@@ -142,9 +144,15 @@ class _CreateEvent extends State<CreateEvent> {
                         final String descricao = descriptionController.text;
                         data = _selectedDate;
                         final DateTime dataEvento = data;
-                        var lista = [nome, descricao, dataEvento, regiao];
-                        _inserir(lista);
-                        _consultarEventos();
+                        var lista = [
+                          nome,
+                          descricao,
+                          dataEvento,
+                          regiao,
+                          idusuarioCookie
+                        ];
+                        setidusuarioCookie(lista);
+                        //_consultarEventos();
                         Navigator.pop(context);
                       },
                       shape: RoundedRectangleBorder(
@@ -205,14 +213,30 @@ class _CreateEvent extends State<CreateEvent> {
     );
   }
 
-  void _inserir(List lista) async {
+  setidusuarioCookie(List<Object> lista) async {
+    getidusuarioCookie().then((valID) => setState(() {
+          idusuarioCookie = valID;
+          _inserir(lista, idusuarioCookie);
+        }));
+  }
+
+  getidusuarioCookie() async {
+    final prefs = await SharedPreferences.getInstance();
+    idusuarioCookie = prefs.getInt('idusuarioCookie') ?? 0;
+    print(idusuarioCookie);
+    return idusuarioCookie;
+  }
+
+  void _inserir(List lista, int idusuarioCookie) async {
+    var idUser = idusuarioCookie;
     String nome = lista[0];
     String descricao = lista[1];
     String data = lista[2].toIso8601String();
     String fk = 'NULL';
-    String fk1 = 'NULL';
+    int fk1 = idUser;
     int disponibilidade = 1;
     String regiao = lista[3];
+    int idOwner = lista[4];
     // linha para incluir
     Map<String, dynamic> row = {
       database.DatabaseHelper.eventName: nome,
@@ -223,8 +247,21 @@ class _CreateEvent extends State<CreateEvent> {
       database.DatabaseHelper.eventDisponibility: disponibilidade,
       database.DatabaseHelper.eventRegion: regiao
     };
+    //final idEvent = await dbHelper.insertEvent(row);
+    _inserirDono(row, idUser, idOwner, lista);
+    //print('linha inserida id: $id');
+  }
+
+  void _inserirDono(
+      Map<String, dynamic> row, int idUser, int idOwner, List lista) async {
     final id = await dbHelper.insertEvent(row);
-    print('linha inserida id: $id');
+    final id4 = await dbHelper.getEventOwner(lista);
+    print("print iduser");
+    print(idUser);
+    final id2 = await dbHelper.insertEventOwner(idUser, id4[0]['pk_idevento']);
+    final id3 = await dbHelper.queryEventOwner();
+    id3.forEach((row) => print(row));
+    //id.forEach((row) => print(row));
   }
 
   void _consultarEventos() async {
