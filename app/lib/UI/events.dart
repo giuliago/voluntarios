@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'eventDetails.dart';
@@ -297,8 +297,8 @@ class _Events extends State<Events> with TickerProviderStateMixin {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => EventDetails(),
-                      ),
+                          builder: (BuildContext
+                              context) {}), //builder: (context) => EventDetails(),
                     );
                   },
                   child: _buildCard(true, 200, 220));

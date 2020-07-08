@@ -7,9 +7,14 @@ import './messages.dart';
 import 'package:flutter/gestures.dart';
 
 class EventDetails extends StatefulWidget {
-  _EventDetails createState() => _EventDetails();
+  //_EventDetails createState() => _EventDetails();
   final Details details;
-  EventDetails({this.details});
+
+  EventDetails(this.details);
+
+  State<StatefulWidget> createState() {
+    return _EventDetails(this.details);
+  }
 }
 
 class Details {
@@ -38,10 +43,9 @@ class Details {
 }
 
 class _EventDetails extends State<EventDetails> {
-  final detalhes = List<Details>.generate(
-    5,
-    (index) => Details(1, '', '', '', ''),
-  );
+  final Details details;
+  _EventDetails(this.details);
+
   final dbHelper = database.DatabaseHelper.instance;
   //final Details details;
   //_EventDetails({this.details});
@@ -124,7 +128,7 @@ class _EventDetails extends State<EventDetails> {
               Padding(
                 padding: EdgeInsets.fromLTRB(0, 120, 0, 0.0),
                 child: Text(
-                  detalhes[0].data,
+                  details.data,
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Colors.grey[800],
@@ -142,7 +146,7 @@ class _EventDetails extends State<EventDetails> {
               Padding(
                   padding: EdgeInsets.fromLTRB(5, 120, 0, 0),
                   child: Text(
-                    detalhes[0].regiao,
+                    details.regiao,
                     style: TextStyle(
                       fontSize: 16.0,
                       color: Colors.grey[800],
@@ -164,7 +168,7 @@ class _EventDetails extends State<EventDetails> {
             child: Padding(
                 padding: EdgeInsets.only(top: 250),
                 child: Text(
-                  detalhes[0].nome,
+                  details.nome,
                   style: TextStyle(
                     fontSize: 36.0,
                     color: Colors.black,
@@ -227,7 +231,7 @@ class _EventDetails extends State<EventDetails> {
           Padding(
             padding: EdgeInsets.all(20.0),
             child: Text(
-              'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+              details.descricao,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16.0,

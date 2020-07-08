@@ -126,12 +126,10 @@ class _Home extends State<Home> {
   }
 
   _consultarEventosInscritos(int idusuarioCookies) async {
-    print("Print do nome Cookie em outra função:");
-    print(nomeCookie);
     final todasLinhasInscritos =
         await dbHelper.queryEventosInscritos(idusuarioCookies);
-    List resultado = todasLinhasInscritos.toList();
-    return resultado;
+    List resultadoInscritos = todasLinhasInscritos.toList();
+    return resultadoInscritos;
   }
 
   listLengthInscrito(int idusuarioCookies) async {
@@ -318,7 +316,7 @@ class _Home extends State<Home> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => EventDetails(details: details),
+                          builder: (context) => EventDetails(details),
                         ),
                       );
                     },
@@ -353,7 +351,7 @@ class _Home extends State<Home> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EventDetails(details: details),
+                    builder: (context) => EventDetails(details),
                   ),
                 );
               },

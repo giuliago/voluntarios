@@ -74,9 +74,9 @@ class _Events extends State<YourEvents> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => EventDetails(),
-                        ),
+                        MaterialPageRoute(builder: (BuildContext context) {}
+                            //builder: (context) => EventDetails(),
+                            ),
                       );
                     },
                     child: _buildCard(context));

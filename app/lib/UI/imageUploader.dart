@@ -104,8 +104,8 @@ class UploadImageState extends State<UploadImage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EventDetails(),
-                  ),
+                      builder: (BuildContext
+                          context) {}), //builder: (context) => EventDetails(),
                 );
               },
               child: Text('Escolher imagem'),
