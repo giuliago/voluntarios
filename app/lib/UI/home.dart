@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:voluntarios/UI/navBar.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:voluntarios/UI/yourEvents.dart';
@@ -425,6 +426,7 @@ class _Home extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       //implementar builder dos icons
+      bottomNavigationBar: NavBar(),
       appBar: AppBar(
         centerTitle: true,
         actions: <Widget>[

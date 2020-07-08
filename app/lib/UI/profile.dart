@@ -2,8 +2,11 @@
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:splashscreen/splashscreen.dart';
+import 'package:voluntarios/UI/splashScreen.dart';
 import './home.dart';
 import 'editProfile.dart';
+import 'package:async/async.dart';
 //import 'DB/database_helper.dart';
 //import 'package:sqflite/sqflite.dart'
 
@@ -134,6 +137,15 @@ class _Profile extends State<Profile> {
     ));
   }
 
+  void logoutUser(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs?.clear();
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => LoadingScreen()),
+        ModalRoute.withName('/LoginPage'));
+  }
+
   Widget _buttonLogout(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(20),
@@ -142,13 +154,7 @@ class _Profile extends State<Profile> {
       child: RaisedButton(
         color: Colors.red,
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              //validação pra home
-              builder: (context) => Home(),
-            ),
-          );
+          logoutUser(context);
         },
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),

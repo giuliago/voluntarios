@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
+import 'package:voluntarios/UI/home.dart';
+import 'package:voluntarios/UI/loginPage.dart';
 import 'mainPage.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'navBar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoadingScreen extends StatefulWidget {
   LoadingScreen({Key key, this.tela}) : super(key: key);
@@ -30,7 +33,7 @@ class _LoadingScreen extends State<LoadingScreen> {
           return Stack(children: <Widget>[
             SplashScreen(
               seconds: 6,
-              navigateAfterSeconds: NavBar(),
+              navigateAfterSeconds: navigateUser,
               loaderColor: Colors.lightGreen,
             ),
             ShaderMask(
@@ -77,6 +80,19 @@ class _LoadingScreen extends State<LoadingScreen> {
                 )))
           ]);
         });
+  }
+
+  void navigateUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var status = prefs.getBool('isLoggedIn') ?? false;
+    print(status);
+    if (status) {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => Home()));
+    } else {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
+    }
   }
 
   @override

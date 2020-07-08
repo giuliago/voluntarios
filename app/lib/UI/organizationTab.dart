@@ -176,7 +176,6 @@ class _OrganizationTab extends State<OrganizationTab>
                         return _buildAvatar(context, 40, 40);
                       }))
             ]))),
-        _buttonExcluir(context),
       ],
     );
   }
