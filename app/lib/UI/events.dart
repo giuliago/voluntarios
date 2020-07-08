@@ -27,8 +27,6 @@ class _Events extends State<Events> with TickerProviderStateMixin {
     _events = {
       _selectedDay.subtract(Duration(days: 30)): [
         'Event A0',
-        'Event B0',
-        'Event C0'
       ],
       _selectedDay.subtract(Duration(days: 27)): ['Event A1'],
       _selectedDay.subtract(Duration(days: 20)): [
