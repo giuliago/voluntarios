@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart'
 
 class DatabaseHelper {
   static final _databaseName = "db_voluntarios.db";
-  static final _databaseVersion = 20;
+  static final _databaseVersion = 21;
   //static final newVersion = 2;
   static final tableUser = 'tb_perfilusuario';
   static final columnIdUser = 'pk_idusuario';
@@ -15,6 +15,7 @@ class DatabaseHelper {
   static final columnEmail = 'uk_email';
   static final columnSenha = 'senha';
   static final columnNascimento = 'nascimento';
+  static final columnDescricao = 'descricao';
   static final columnRegiao = 'regiao';
 
   static final tableEvent = 'tb_evento';
@@ -61,7 +62,7 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     //Batch batch = db.batch();
     await db.execute(
-        "CREATE TABLE tb_perfilusuario(pk_idusuario INTEGER PRIMARY KEY, nome VARCHAR(60), uk_email VARCHAR(45), senha VARCHAR(45), nascimento DATETIME, regiao VARCHAR(45));");
+        "CREATE TABLE tb_perfilusuario(pk_idusuario INTEGER PRIMARY KEY, nome VARCHAR(60), uk_email VARCHAR(45), senha VARCHAR(45), nascimento DATETIME, descricao VARCHAR(255), regiao VARCHAR(45));");
     await db.execute(
         "CREATE TABLE tb_perfilorganizacao(pk_idorganizacao INTEGER PRIMARY KEY, nome VARCHAR(60), descricao VARCHAR(255), regiao VARCHAR(60), fk_tb_perfilusuario_pk_idusuario INTEGER, FOREIGN KEY(fk_tb_perfilusuario_pk_idusuario) REFERENCES tb_perfilusuario(pk_idusuario));");
     await db.execute(
@@ -69,7 +70,7 @@ class DatabaseHelper {
     await db.execute(
         "CREATE TABLE tb_competencias(pk_idcompetencias INTEGER PRIMARY KEY, nome VARCHAR(60), descricao VARCHAR(255));");
     await db.execute(
-        "CREATE TABLE ta_inscricao(fk_tb_perfilusuario_pk_idusuario INTEGER, fk_tb_evento_pk_idevento INTEGER,FOREIGN KEY(fk_tb_perfilusuario_pk_idusuario) REFERENCES tb_perfilusuario(pk_idusuario), FOREIGN KEY(fk_tb_evento_pk_idevento) REFERENCES tb_evento(pk_idevento));");
+        "CREATE TABLE ta_inscricao(fk_tb_perfilusuario_pk_idusuario INTEGER, cargo VARCHAR(60), fk_tb_evento_pk_idevento INTEGER,FOREIGN KEY(fk_tb_perfilusuario_pk_idusuario) REFERENCES tb_perfilusuario(pk_idusuario), FOREIGN KEY(fk_tb_evento_pk_idevento) REFERENCES tb_evento(pk_idevento));");
     await db.execute(
         "CREATE TABLE ta_perfilusuario_has_tb_competencias(fk_perfilusuario_pk_idusuario INTEGER, fk_competencias_pk_idcompetencias INTEGER, FOREIGN KEY(fk_perfilusuario_pk_idusuario) REFERENCES perfilusuario(pk_idusuario), FOREIGN KEY(fk_competencias_pk_idcompetencias) REFERENCES fk_competencias(pk_idcompetencias));");
     //batch.commit();
@@ -77,8 +78,8 @@ class DatabaseHelper {
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < newVersion) {
-      print("Oldddd:" + oldVersion.toString());
-      print("upgradingggggggggg");
+      print("Old:" + oldVersion.toString());
+      print("upgrading");
       //await db.delete(tableUser, where: null, whereArgs: null);
       //await db.delete(tableEvent, where: null, whereArgs: null);
       await db.execute("DROP TABLE IF EXISTS tb_perfilusuario;");
@@ -94,6 +95,14 @@ class DatabaseHelper {
 
   static Future _onConfigure(Database db) async {
     await db.execute('PRAGMA foreign_keys = OFF');
+  }
+
+  Future<int> update(Map<String, dynamic> row, int idusuarioCookie) async {
+    Database db = await instance.database;
+    String whereString = 'pk_idusuario = ?';
+    List<dynamic> whereArguments = [idusuarioCookie];
+    return await db.update(tableUser, row,
+        where: whereString, whereArgs: whereArguments);
   }
 
   Future<int> insert(Map<String, dynamic> row) async {

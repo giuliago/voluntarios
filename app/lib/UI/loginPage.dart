@@ -190,7 +190,7 @@ class LoginPage extends StatelessWidget {
 
   dynamic cookiesLogin(List lista) async {
     final prefs = await SharedPreferences.getInstance();
-    print("Entra?");
+    print("Entra");
     final cookie = await dbHelper.queryCookie(lista);
     int idusuarioCookie = cookie[0]['pk_idusuario'];
     String nomeCookie = cookie[0]['nome'];

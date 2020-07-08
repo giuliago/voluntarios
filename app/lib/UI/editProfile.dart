@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import './home.dart';
 import 'messages.dart';
 
@@ -13,23 +14,31 @@ class EditProfile extends StatefulWidget {
 class _EditProfile extends State<EditProfile> {
   File _image;
   bool _isEditingText = false;
+  final dbHelper = database.DatabaseHelper.instance;
   TextEditingController _emailController;
   TextEditingController _nameController;
   TextEditingController _senhaController;
+  TextEditingController nomeController;
+  TextEditingController regiaoController;
+  TextEditingController descricaoController;
   String initialText;
   String dropdownValue = 'Brasília';
   int maxLines = 8;
-  TextEditingController nomeController = new TextEditingController();
-  TextEditingController regiaoController = new TextEditingController();
-  TextEditingController descricaoController = new TextEditingController();
   String nomeCookie = "";
   String emailCookie = "";
+  int idusuarioCookie;
 
   void initState() {
     super.initState();
     _emailController = TextEditingController(text: initialText);
     _nameController = TextEditingController(text: initialText);
     _senhaController = TextEditingController(text: initialText);
+    nomeController = new TextEditingController();
+    regiaoController = new TextEditingController();
+    descricaoController = new TextEditingController();
+    setNomeCookie();
+    setEmailCookie();
+    setidusuarioCookie();
   }
 
   @override
@@ -37,6 +46,7 @@ class _EditProfile extends State<EditProfile> {
     _emailController.dispose();
     _nameController.dispose();
     _senhaController.dispose();
+    descricaoController.dispose();
     super.dispose();
   }
 
@@ -62,6 +72,19 @@ class _EditProfile extends State<EditProfile> {
     final prefs = await SharedPreferences.getInstance();
     final emailCookie = prefs.getString('emailCookie') ?? 0;
     return emailCookie;
+  }
+
+  setidusuarioCookie() async {
+    getidusuarioCookie().then((valID) => setState(() {
+          idusuarioCookie = valID;
+        }));
+  }
+
+  getidusuarioCookie() async {
+    final prefs = await SharedPreferences.getInstance();
+    idusuarioCookie = prefs.getInt('idusuarioCookie') ?? 0;
+    print(idusuarioCookie);
+    return idusuarioCookie;
   }
 
   Widget _editTitleTextField(
@@ -97,8 +120,6 @@ class _EditProfile extends State<EditProfile> {
   }
 
   Widget _buildForm(BuildContext context) {
-    setNomeCookie();
-    setEmailCookie();
     return Builder(
         builder: (context) => Center(
               child: Container(
@@ -191,6 +212,7 @@ class _EditProfile extends State<EditProfile> {
                           height: maxLines * 10.0,
                           padding: EdgeInsets.only(top: 12.0),
                           child: TextField(
+                              controller: descricaoController,
                               maxLines: maxLines,
                               style: TextStyle(
                                 fontSize: 16.0,
@@ -227,7 +249,18 @@ class _EditProfile extends State<EditProfile> {
                       padding: EdgeInsets.only(top: 20),
                       child: FlatButton(
                           color: Colors.lightGreen[600],
-                          onPressed: () => debugPrint('Salvar perfil'),
+                          onPressed: () {
+                            final String nome = nomeController.text;
+                            final String descricao = descricaoController.text;
+                            final String regiao = dropdownValue;
+                            final String email = _emailController.text;
+                            final String senha = _senhaController.text;
+                            var lista = [nome, descricao, regiao, email, senha];
+                            print("idusuario");
+                            print(idusuarioCookie);
+                            _update(lista, idusuarioCookie);
+                            Navigator.pop(context);
+                          },
                           child: Text(
                             'Salvar Perfil',
                             style: TextStyle(color: Colors.white, fontSize: 14),
@@ -270,5 +303,25 @@ class _EditProfile extends State<EditProfile> {
             style: TextStyle(color: Colors.white),
           ),
         ));
+  }
+
+  void _update(List lista, int idusuarioCookie) async {
+    //[nome, regiao, email, senha, nascimento];
+    String nome = lista[0];
+    String descricao = lista[1];
+    String regiao = lista[2];
+    String email = lista[3];
+    String senha = lista[4];
+    //print("Nascimento????: " + nascimento);
+    // linha para incluir
+    Map<String, dynamic> row = {
+      database.DatabaseHelper.columnNome: nome,
+      database.DatabaseHelper.columnDescricao: descricao,
+      database.DatabaseHelper.columnRegiao: regiao,
+      database.DatabaseHelper.columnEmail: email,
+      database.DatabaseHelper.columnSenha: senha
+    };
+    final id = await dbHelper.update(row, idusuarioCookie);
+    print('linha inserida id: $id');
   }
 }

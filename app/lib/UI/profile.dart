@@ -21,6 +21,14 @@ class _Profile extends State<Profile> {
   String regiaoCookie = "";
   String emailCookie = "";
 
+  @override
+  void initState() {
+    setEmailCookie();
+    setRegiaoCookie();
+    setNomeCookie();
+    super.initState();
+  }
+
   Widget _buildProfile(BuildContext context) {
     return Column(
       children: <Widget>[
@@ -94,7 +102,6 @@ class _Profile extends State<Profile> {
   }
 
   Widget _info(BuildContext context) {
-    setEmailCookie();
     return Expanded(
         child: Container(
       decoration: BoxDecoration(
@@ -279,8 +286,6 @@ class _Profile extends State<Profile> {
   }*/
 
   Widget _buildAvatar(BuildContext context) {
-    setRegiaoCookie();
-    setNomeCookie();
     return Stack(children: <Widget>[
       Container(
         width: 400,

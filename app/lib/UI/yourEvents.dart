@@ -1,5 +1,7 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voluntarios/UI/createEvent.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'eventDetails.dart';
 import 'messages.dart';
 //import 'DB/database_helper.dart';
@@ -11,6 +13,9 @@ class YourEvents extends StatefulWidget {
   @override
   _Events createState() => _Events();
 }
+
+//print("valor do List _events");
+//print(print("Enter listLength: ");_events);
 
 class _Events extends State<YourEvents> {
   int flag = 0;
@@ -67,7 +72,7 @@ class _Events extends State<YourEvents> {
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
-              itemCount: 10,
+              itemCount: _eventsInscritos.length,
               itemBuilder: (BuildContext context, int index) {
                 return new GestureDetector(
                     //You need to make my child interactive
@@ -79,12 +84,15 @@ class _Events extends State<YourEvents> {
                             ),
                       );
                     },
-                    child: _buildCard(context));
+                    child: _buildCard(context, index));
               }))
     ]);
   }
 
-  Widget _buildCard(BuildContext context) {
+  Widget _buildCard(BuildContext context, index) {
+    var dataSplitted = _eventsInscritos[index]['data'].toString();
+    var data = dataSplitted.substring(0, 10).replaceAll(RegExp('-'), '/');
+    String dataInscritos = "$data";
     return SizedBox(
         width: 240,
         child: Card(
@@ -102,9 +110,9 @@ class _Events extends State<YourEvents> {
                     height: 120, fit: BoxFit.fill),
               ),
               ListTile(
-                title: Text('Evento Beneficente'),
+                title: Text(_eventsInscritos[index]['nome'].toString()),
                 trailing: Icon(Icons.calendar_today),
-                subtitle: Text('24/04/2019'),
+                subtitle: Text(dataInscritos),
               ),
             ],
           ),
@@ -141,6 +149,57 @@ class _Events extends State<YourEvents> {
           ),
         ),
         body: _buildEventPage(context));
+  }
+
+  List _eventsInscritos = [
+    929299,
+    '20/02/2021',
+    'Nome Evento',
+    'Description',
+    'Brasília'
+  ];
+
+  @override
+  void initState() {
+    if (mounted) {
+      setidusuarioCookie();
+    }
+    super.initState();
+  }
+
+  int idusuarioCookie;
+
+  final dbHelper = database.DatabaseHelper.instance;
+
+  setidusuarioCookie() async {
+    getidusuarioCookie().then((valID) => setState(() {
+          idusuarioCookie = valID;
+          listLengthInscrito(idusuarioCookie);
+        }));
+  }
+
+  getidusuarioCookie() async {
+    final prefs = await SharedPreferences.getInstance();
+    idusuarioCookie = prefs.getInt('idusuarioCookie') ?? 0;
+    print(idusuarioCookie);
+    return idusuarioCookie;
+  }
+
+  _consultarEventosInscritos(int idusuarioCookies) async {
+    final todasLinhasInscritos =
+        await dbHelper.queryEventosInscritos(idusuarioCookies);
+    List resultadoInscritos = todasLinhasInscritos.toList();
+    return resultadoInscritos;
+  }
+
+  listLengthInscrito(int idusuarioCookies) async {
+    _consultarEventosInscritos(idusuarioCookies)
+        .then((valorListInscritos) => setState(() {
+              //print(valorList);
+              _eventsInscritos = valorListInscritos;
+            }));
+    //print("valor do List _events");
+    //print(print("Enter listLength: ");_events);
   }
 }
 /* place code inside a class
