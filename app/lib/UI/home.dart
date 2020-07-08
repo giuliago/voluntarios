@@ -12,6 +12,7 @@ import './events.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'messages.dart';
+import 'tutorial.dart';
 
 class Home extends StatefulWidget {
   final dbHelper = database.DatabaseHelper.instance;
@@ -422,10 +423,15 @@ class _Home extends State<Home> {
                     color: Colors.white70,
                   )))
         ],
-        leading: Icon(
-          Icons.help,
-          color: Colors.white70,
-        ),
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Tutorial()));
+            },
+            child: Icon(
+              Icons.help,
+              color: Colors.white70,
+            )),
         backgroundColor: Colors.cyan[700],
         title: Text(
           'Voluntários',

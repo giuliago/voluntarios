@@ -33,6 +33,7 @@ dependencies:
   persistent_bottom_nav_bar: any
   http: any
   table_calendar: ^2.0.2
+  intro_slider: ^1.0.8
   #http: "0.11.3+17"
   #image_picker: ^0.4.10
 
