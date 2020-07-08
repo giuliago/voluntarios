@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splashscreen/splashscreen.dart';
+import 'package:voluntarios/UI/loginPage.dart';
 import 'package:voluntarios/UI/splashScreen.dart';
 import './home.dart';
 import 'editProfile.dart';
+import 'mainPage.dart';
 import 'package:async/async.dart';
 //import 'DB/database_helper.dart';
 //import 'package:sqflite/sqflite.dart'
@@ -82,7 +84,7 @@ class _Profile extends State<Profile> {
             Padding(
               padding: EdgeInsets.only(top: 10),
               child: Text(
-                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,',
+                'Escreva sua descrição aqui',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, color: Colors.black),
               ),
@@ -138,12 +140,7 @@ class _Profile extends State<Profile> {
   }
 
   void logoutUser(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs?.clear();
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (BuildContext context) => LoadingScreen()),
-        ModalRoute.withName('/LoginPage'));
+    Navigator.popUntil(context, ModalRoute.withName('/MainPage'));
   }
 
   Widget _buttonLogout(BuildContext context) {

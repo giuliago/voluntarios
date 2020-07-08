@@ -426,7 +426,6 @@ class _Home extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       //implementar builder dos icons
-      bottomNavigationBar: NavBar(),
       appBar: AppBar(
         centerTitle: true,
         actions: <Widget>[

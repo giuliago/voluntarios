@@ -30,9 +30,6 @@ class _Events extends State<Events> with TickerProviderStateMixin {
     final _selectedDay = DateTime.now();
 
     _events = {
-      _selectedDay.subtract(Duration(days: 30)): [
-        'Event A0',
-      ],
       _selectedDay.subtract(Duration(days: 27)): ['Event A1'],
       _selectedDay.subtract(Duration(days: 20)): [
         'Event A2',
@@ -299,58 +296,38 @@ class _Events extends State<Events> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildCard(bool icone, double height, double width, int index) {
-    var dataSplitted = _eventsInscritos[index]['data'].toString();
-    var data = dataSplitted.substring(0, 10).replaceAll(RegExp('-'), '/');
-    String dataInscritos = "$data";
-    return SizedBox(
-        height: height,
-        width: width,
-        child: Card(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0))),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8.0),
-                  topRight: Radius.circular(8.0),
-                ),
-                child: Image.network('https://placeimg.com/640/480/any',
-                    height: 120, fit: BoxFit.fill),
-              ),
-              ListTile(
-                title: Text(_eventsInscritos[index]['nome'].toString()),
-                trailing: icone ? Icon(Icons.calendar_today) : null,
-                subtitle: Text(dataInscritos),
-              ),
-            ],
-          ),
-        ));
-  }
-
   Widget _buildEventList() {
-    return Row(children: <Widget>[
-      Expanded(
-        child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemCount: 10,
-            itemBuilder: (BuildContext context, int index) {
-              return new GestureDetector(
-                  //You need to make my child interactive
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext
-                              context) {}), //builder: (context) => EventDetails(),
-                    );
-                  },
-                  child: _buildCard(true, 200, 220, index));
-            }),
-      )
-    ]);
+    return ListView(
+      scrollDirection: Axis.horizontal,
+      children: _selectedEvents
+          .map((event) => Container(
+              child: SizedBox(
+                  height: 220,
+                  width: 200,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8.0),
+                            topRight: Radius.circular(8.0),
+                          ),
+                          child: Image.network(
+                              'https://placeimg.com/640/480/any',
+                              height: 120,
+                              fit: BoxFit.fill),
+                        ),
+                        ListTile(
+                          title: Text(event.toString()),
+                          trailing: Icon(Icons.calendar_today),
+                        ),
+                      ],
+                    ),
+                  ))))
+          .toList(),
+    );
   }
 }

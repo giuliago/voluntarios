@@ -23,7 +23,12 @@ class _OrganizationTab extends State<OrganizationTab>
   int idusuarioCookie;
   TabController _controller;
   final dbHelper = database.DatabaseHelper.instance;
-  List<dynamic> listaQuery = ['3', 'Nome', 'Descrição', 'Região'];
+  List<dynamic> listaQuery = [
+    '3',
+    'ONG de Animais',
+    'Somos uma ONG que adota animais de rua, faz a castração e coloca para adoção.',
+    'Brasília'
+  ];
 
   @override
   void initState() {
@@ -149,13 +154,13 @@ class _OrganizationTab extends State<OrganizationTab>
         Padding(
             padding: EdgeInsets.fromLTRB(0, 20, 220, 0),
             child: Text(
-              descricaoOrganizacao,
+              'Organização',
               style: TextStyle(fontSize: 20, color: Colors.lightGreen[700]),
             )),
         Padding(
           padding: EdgeInsets.all(10),
           child: Text(
-            'Organização',
+            descricaoOrganizacao,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16, color: Colors.black),
           ),
@@ -183,33 +188,6 @@ class _OrganizationTab extends State<OrganizationTab>
                       }))
             ]))),
       ],
-    );
-  }
-
-  Widget _buttonExcluir(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(20),
-      height: 30.0,
-      width: 120,
-      child: RaisedButton(
-        color: Colors.red,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              //validação pra home
-              builder: (context) => Home(),
-            ),
-          );
-        },
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
-        child: Text(
-          "Excluir",
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
     );
   }
 
