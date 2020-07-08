@@ -197,7 +197,7 @@ class _Home extends State<Home> {
                                     },
                                   text: 'Ver todos',
                                   style: TextStyle(
-                                      color: Colors.lightGreen, fontSize: 17))
+                                      color: Colors.lightGreen, fontSize: 20))
                             ])))),
             Padding(
               padding: EdgeInsets.fromLTRB(40, 0, 40, 0),

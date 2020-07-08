@@ -27,26 +27,26 @@ class _Tutorial extends State<Tutorial> {
         description:
             "Aqui você pode representar sua ONG criando um perfil e convidando voluntários para fazer parte. Assim todas essas pessoas são cadastradas automaticamente em seus eventos.",
         pathImage: "images/dica2.png",
-        backgroundColor: Colors.lightGreen,
+        backgroundColor: Colors.lightGreen[400],
       ),
     );
     slides.add(
       new Slide(
-        title: "RULER",
+        title: "EVENTOS",
         description:
-            "Much evil soon high in hope do view. Out may few northward believing attempted. Yet timed being songs marry one defer men our. Although finished blessing do of",
-        pathImage: "images/photo_ruler.png",
-        backgroundColor: Colors.amber,
+            "Gerencie seus eventos, tenha formas fáceis de visualizar e uma timeline simples e intuitiva.",
+        pathImage: "images/calendar.png",
+        backgroundColor: Colors.lightBlue,
       ),
     );
   }
 
   void onDonePress() {
-    // TODO: go to next screen
+    Navigator.pop(context);
   }
 
   void onSkipPress() {
-    // TODO: go to next screen
+    Navigator.pop(context);
   }
 
   @override

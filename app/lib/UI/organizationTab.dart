@@ -2,12 +2,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:voluntarios/UI/editProfile.dart';
 import 'package:voluntarios/UI/lists.dart';
 import 'package:voluntarios/UI/yourEvents.dart';
 import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import './eventDetails.dart';
 import 'package:path/path.dart';
-import './events.dart';
+import './editProfile.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'home.dart';
@@ -318,10 +319,19 @@ class _OrganizationTab extends State<OrganizationTab>
           actions: <Widget>[
             Padding(
                 padding: EdgeInsets.only(right: 20),
-                child: Icon(
-                  Icons.edit,
-                  color: Colors.white70,
-                ))
+                child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (BuildContext context) {
+                          EditProfile();
+                        }), //builder: (context) => EventDetails(),
+                      );
+                    },
+                    child: Icon(
+                      Icons.edit,
+                      color: Colors.white70,
+                    )))
           ],
           leading: Icon(
             Icons.help,
