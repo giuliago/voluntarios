@@ -148,17 +148,19 @@ class DatabaseHelper {
     Database db = await instance.database;
     String whereString = 'disponibilidade = ? AND regiao = ?';
     String regiao = string;
+    print("Entrou query regiao evento:");
+    print(whereString);
+    print(regiao);
     List<dynamic> whereArguments = [1, regiao];
     return await db.query(tableEvent,
         where: whereString, whereArgs: whereArguments);
   }
 
-  Future<List<Map<String, dynamic>>> queryEventosInscritos(
-      String string) async {
+  Future<List<Map<String, dynamic>>> queryEventosInscritos(int iduser) async {
     Database db = await instance.database;
     //String whereString =
     //  'disponibilidade = ? INNER JOIN ta_inscricao fk_tb_perfilusuario_pk_idusuario = ?';
-    var idUsuario = int.parse(string);
+    int idUsuario = iduser;
     List<dynamic> whereArguments = [idUsuario, 1];
 
     return await db.rawQuery(

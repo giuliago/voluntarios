@@ -28,7 +28,7 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> {
   final dbHelper = database.DatabaseHelper.instance;
   List _events = [
-    '929299',
+    929299,
     '20/02/2021',
     'Nome Evento',
     'Description',
@@ -36,7 +36,7 @@ class _Home extends State<Home> {
   ];
 
   List _eventsInscritos = [
-    '929299',
+    929299,
     '20/02/2021',
     'Nome Evento',
     'Description',
@@ -45,11 +45,25 @@ class _Home extends State<Home> {
 
   String nomeCookie = "";
   String regiaoCookie = "";
-  String idusuarioCookie = "";
+  int idusuarioCookie;
+
+  @override
+  void initState() {
+    if (mounted) {
+      setidusuarioCookie();
+      setRegiaoCookie();
+      setNomeCookie();
+      //listLength();
+      //listLengthInscrito();
+      super.initState();
+    }
+  }
 
   setNomeCookie() async {
     getNomeCookie().then((val) => setState(() {
-          nomeCookie = val;
+          this.nomeCookie = val;
+          print("print nomeCookie:");
+          print(nomeCookie);
         }));
   }
 
@@ -62,74 +76,78 @@ class _Home extends State<Home> {
   setRegiaoCookie() async {
     getRegiaoCookie().then((val2) => setState(() {
           regiaoCookie = val2;
+          listLength(regiaoCookie);
         }));
   }
 
   getRegiaoCookie() async {
     final prefs = await SharedPreferences.getInstance();
-    final regiaoCookie = prefs.getString('regiaoCookie');
+    final regiaoCookie = prefs.getString('regiaoCookie') ?? 0;
     return regiaoCookie;
   }
 
   setidusuarioCookie() async {
     getidusuarioCookie().then((valID) => setState(() {
           idusuarioCookie = valID;
+          listLengthInscrito(idusuarioCookie);
         }));
   }
 
   getidusuarioCookie() async {
     final prefs = await SharedPreferences.getInstance();
-    final idusuarioCookie = prefs.getInt('idusuarioCookie');
+    idusuarioCookie = prefs.getInt('idusuarioCookie') ?? 0;
     print(idusuarioCookie);
     return idusuarioCookie;
   }
 
-  listLength() async {
-    _consultarEventos().then((valorList) => setState(() {
+  _consultarEventos(String regiaoCookies) async {
+    final todasLinhasEventos = await dbHelper.queryEventosRegiao(regiaoCookie);
+    List resultado = todasLinhasEventos.toList();
+    /*print('Consulta todas os eventos:');
+    todasLinhasEventos.forEach((row) => print(row));*/
+    return resultado;
+    todasLinhasEventos.forEach((row) => print(row));
+  }
+
+  listLength(String regiaoCookies) async {
+    print("Enter listLength: ");
+    print(_events);
+    _consultarEventos(regiaoCookies).then((valorList) => setState(() {
+          print("Enter setState: ");
           //print(valorList);
-          if (valorList != null) {
-            _events = valorList;
-          } else {
-            _events = [
-              929299,
-              '20/02/2021',
-              'Nome Evento',
-              'Description',
-              'Brasília'
-            ];
-          }
-          return _events;
+          _events = valorList;
+          print("Enter insert _events: ");
+          print(_events);
         }));
     //print("valor do List _events");
     //print(_events);
   }
 
-  listLengthInscrito() async {
-    _consultarEventosInscritos().then((valorListInscritos) => setState(() {
-          //print(valorList);
-          if (valorListInscritos != null) {
-            _eventsInscritos = valorListInscritos;
-          } else {
-            _eventsInscritos = [
-              929299,
-              '20/02/2021',
-              'Nome Evento',
-              'Description',
-              'Brasília'
-            ];
-          }
-          return _eventsInscritos;
-        }));
+  _consultarEventosInscritos(int idusuarioCookies) async {
+    print("Print do nome Cookie em outra função:");
+    print(nomeCookie);
+    final todasLinhasInscritos =
+        await dbHelper.queryEventosInscritos(idusuarioCookies);
+    List resultado = todasLinhasInscritos.toList();
+    return resultado;
+  }
+
+  listLengthInscrito(int idusuarioCookies) async {
+    _consultarEventosInscritos(idusuarioCookies)
+        .then((valorListInscritos) => setState(() {
+              //print(valorList);
+              _eventsInscritos = valorListInscritos;
+            }));
     //print("valor do List _events");
-    //print(_events);
+    //print(print("Enter listLength: ");_events);
   }
 
   Widget _buildHome(BuildContext context) {
-    setidusuarioCookie();
+    /*setidusuarioCookie();
     setRegiaoCookie();
     setNomeCookie();
     listLength();
-    listLengthInscrito();
+    listLengthInscrito(); */
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
@@ -191,79 +209,80 @@ class _Home extends State<Home> {
     );
   }
 
-  Widget _buildCard(
-      bool icone, double height, double width, int index, String listas) {
-    if (listas.contains("_eventsInscritos")) {
-      var dataSplitted = _eventsInscritos[index]['data'].toString();
-      var data = dataSplitted.substring(0, 10).replaceAll(RegExp('-'), '/');
-      String dataF = "$data";
-      //var dataSplitted = _events[index]['data'];
-      //DateFormat formatter = DateFormat('dd-MM-yyyy');
-      //String formatted = formatter.format(dataSplitted);
-      //String dataF = "$formatted";
-      return SizedBox(
-          height: height,
-          width: width,
-          child: Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(8.0))),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8.0),
-                    topRight: Radius.circular(8.0),
-                  ),
-                  child: Image.network(
-                      'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/,
-                      height: 120,
-                      fit: BoxFit.fill),
+  Widget _buildCard(bool icone, double height, double width, int index) {
+    var dataSplitted = _eventsInscritos[index]['data'].toString();
+    var data = dataSplitted.substring(0, 10).replaceAll(RegExp('-'), '/');
+    String dataInscritos = "$data";
+    //var dataSplitted = _events[index]['data'];
+    //DateFormat formatter = DateFormat('dd-MM-yyyy');
+    //String formatted = formatter.format(dataSplitted);
+    //String dataF = "$formatted";
+    return SizedBox(
+        height: height,
+        width: width,
+        child: Card(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  topRight: Radius.circular(8.0),
                 ),
-                ListTile(
-                  title: Text(_eventsInscritos[index]['nome'].toString()),
-                  trailing: Icon(Icons.calendar_today),
-                  subtitle: Text(dataF),
+                child: Image.network(
+                    'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/,
+                    height: 120,
+                    fit: BoxFit.fill),
+              ),
+              ListTile(
+                title: Text(_eventsInscritos[index]['nome'].toString()),
+                trailing: Icon(Icons.calendar_today),
+                subtitle: Text(dataInscritos),
+              ),
+            ],
+          ),
+        ));
+  }
+
+  Widget _buildCardRegiao(bool icone, double height, double width, int index) {
+    print("entrou buildcardregiao");
+    var dataRegiao = _events[index]['data'].toString();
+    print(dataRegiao);
+    var dataR = dataRegiao.substring(0, 10).replaceAll(RegExp('-'), '/');
+    String dataF = "$dataR";
+    //var dataSplitted = _events[index]['data'];
+    //DateFormat formatter = DateFormat('dd-MM-yyyy');
+    //String formatted = formatter.format(dataSplitted);
+    //String dataF = "$formatted";
+    return SizedBox(
+        height: height,
+        width: width,
+        child: Card(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  topRight: Radius.circular(8.0),
                 ),
-              ],
-            ),
-          ));
-    } else {
-      var dataSplitted = _events[index]['data'].toString();
-      var data = dataSplitted.substring(0, 10).replaceAll(RegExp('-'), '/');
-      String dataF = "$data";
-      //var dataSplitted = _events[index]['data'];
-      //DateFormat formatter = DateFormat('dd-MM-yyyy');
-      //String formatted = formatter.format(dataSplitted);
-      //String dataF = "$formatted";
-      return SizedBox(
-          height: height,
-          width: width,
-          child: Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(8.0))),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8.0),
-                    topRight: Radius.circular(8.0),
-                  ),
-                  child: Image.network(
-                      'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/,
-                      height: 120,
-                      fit: BoxFit.fill),
-                ),
-                ListTile(
-                  title: Text(_events[index]['nome'].toString()),
-                  trailing: Icon(Icons.calendar_today),
-                  subtitle: Text(dataF),
-                ),
-              ],
-            ),
-          ));
-    }
+                child: Image.network(
+                    'https://placeimg.com/640/480/any' /*_events[index]['picture']['large']*/,
+                    height: 120,
+                    fit: BoxFit.fill),
+              ),
+              ListTile(
+                title: Text(_events[index]['nome'].toString()),
+                trailing: Icon(Icons.calendar_today),
+                subtitle: Text(dataF),
+              ),
+            ],
+          ),
+        ));
   }
 
   Widget _buildYourEvents() {
@@ -274,8 +293,6 @@ class _Home extends State<Home> {
               shrinkWrap: true,
               itemCount: _eventsInscritos.length,
               itemBuilder: (BuildContext context, int index) {
-                String listas;
-                listas = "_eventsInscritos";
                 return new GestureDetector(
                     //You need to make my child interactive
                     onTap: () {
@@ -292,8 +309,7 @@ class _Home extends State<Home> {
                           _eventsInscritos[index]['descricao'].toString();
                       String regiao =
                           _eventsInscritos[index]['regiao'].toString();
-                      int idevento =
-                          _eventsInscritos[index]['idevento'].toInt();
+                      int idevento = _eventsInscritos[index]['pk_idevento'];
                       final details =
                           Details(idevento, dataF, nome, descricao, regiao);
                       //Navigator.pop(context, details);
@@ -304,18 +320,18 @@ class _Home extends State<Home> {
                         ),
                       );
                     },
-                    child: _buildCard(true, 200, 220, index, listas));
+                    child: _buildCard(true, 200, 220, index));
               }))
     ]);
   }
 
   Widget _buildEvents() {
+    print("entrou _buildevents");
     return ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         itemCount: _events.length,
         itemBuilder: (BuildContext context, int index) {
-          String listas = "_events";
           return new InkWell(
               //You need to make my child interactive
               onTap: () {
@@ -328,7 +344,7 @@ class _Home extends State<Home> {
 
                 String descricao = _events[index]['descricao'].toString();
                 String regiao = _events[index]['regiao'].toString();
-                int idevento = _events[index]['idevento'].toInt();
+                int idevento = _events[index]['idevento'];
                 final details =
                     Details(idevento, dataF, nome, descricao, regiao);
                 //Navigator.pop(context, details);
@@ -339,23 +355,23 @@ class _Home extends State<Home> {
                   ),
                 );
               },
-              child: _buildCard(true, 200, 220, index, listas));
+              child: _buildCardRegiao(true, 200, 220, index));
         });
   }
 
   //double tamanho = 0;
-
+/*
   @override
   void initState() {
-    /*if (mounted) {
+    if (!mounted) {
       setidusuarioCookie();
       setRegiaoCookie();
       setNomeCookie();
       listLength();
       listLengthInscrito();
-    }*/
+    }
     super.initState();
-  }
+  } */
 
   Widget _buildList() {
     //valida
@@ -441,7 +457,17 @@ class _Home extends State<Home> {
       body: _buildHome(context),
     );
   }
-
+/*
+  @override
+  void dispose() {
+    setidusuarioCookie().dispose();
+    setRegiaoCookie().dispose();
+    setNomeCookie().dispose();
+    listLength().dispose();
+    listLengthInscrito().dispose();
+    super.dispose();
+  }
+*/
   /*var refreshKey = GlobalKey<RefreshIndicatorState>(); */
 
 /*
@@ -484,19 +510,4 @@ class _Home extends State<Home> {
       ),
     );
   }*/
-  _consultarEventos() async {
-    final todasLinhasEventos = await dbHelper.queryEventosRegiao(regiaoCookie);
-    List resultado = todasLinhasEventos.toList();
-    /*print('Consulta todas os eventos:');
-    todasLinhasEventos.forEach((row) => print(row));*/
-    //return resultado;
-    todasLinhasEventos.forEach((row) => print(row));
-  }
-
-  _consultarEventosInscritos() async {
-    final todasLinhasInscritos =
-        await dbHelper.queryEventosInscritos(idusuarioCookie);
-    print('Consulta todas as linhas:');
-    todasLinhasInscritos.forEach((row) => print(row));
-  }
 }
