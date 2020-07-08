@@ -31,8 +31,8 @@ class _OrganizationTab extends State<OrganizationTab>
       vsync: this,
     );
     setQueryOrganization();
-    setidusuarioCookie();
-    listLength();
+    //setidusuarioCookie();
+    //listLength();
     super.initState();
   }
 
@@ -40,6 +40,7 @@ class _OrganizationTab extends State<OrganizationTab>
   setidusuarioCookie() async {
     getidusuarioCookie().then((valID) => setState(() {
           idusuarioCookie = valID;
+          listLength(idusuarioCookie);
         }));
   }
 
@@ -222,7 +223,6 @@ class _OrganizationTab extends State<OrganizationTab>
   }
 
   Widget _buildAvatarSets(BuildContext context) {
-    setidusuarioCookie();
     String nomeOrganizacao = listaQuery[1];
     String regiaoOrganizacao = listaQuery[3];
     return Column(children: <Widget>[
@@ -271,8 +271,8 @@ class _OrganizationTab extends State<OrganizationTab>
 
   @override
   void dispose() {
-    setQueryOrganization().dispose();
-    setidusuarioCookie().dispose();
+    //setQueryOrganization().dispose();
+    //setidusuarioCookie().dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -346,12 +346,13 @@ class _OrganizationTab extends State<OrganizationTab>
   List<dynamic> _events = [];
   double tamanho = 0;
 
-  void listLength() async {
-    _consultarEventosInscritos().then((valorList) => setState(() {
-          _events = valorList;
-        }));
+  void listLength(int idusuarioCookies) async {
+    _consultarEventosInscritos(idusuarioCookies)
+        .then((valorList) => setState(() {
+              _events = valorList;
+            }));
   }
-
+/*
   Widget _buildList() {
     //valida
     //final _events = _consultarEventos();
@@ -390,10 +391,12 @@ class _OrganizationTab extends State<OrganizationTab>
     setState(() {
       listLength();
     });
-  }
+  } */
 
-  _consultarEventosInscritos() async {
+  _consultarEventosInscritos(int idusuarioCookies) async {
     final todasLinhas = await dbHelper.queryEventosInscritos(idusuarioCookie);
+    List resultadoEventosInscritos = todasLinhas.toList();
+    return resultadoEventosInscritos;
     print('Consulta todas as linhas:');
     todasLinhas.forEach((row) => print(row));
   }
