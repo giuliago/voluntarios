@@ -1,6 +1,8 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:voluntarios/db_connect/databaseConnection.dart' as database;
 import 'eventDetails.dart';
 import 'messages.dart';
 
@@ -18,9 +20,12 @@ class _Events extends State<Events> with TickerProviderStateMixin {
   List _selectedEvents;
   AnimationController _animationController;
   CalendarController _calendarController;
+  int idusuarioCookie;
+  final dbHelper = database.DatabaseHelper.instance;
 
   @override
   void initState() {
+    setidusuarioCookie();
     super.initState();
     final _selectedDay = DateTime.now();
 
@@ -85,6 +90,45 @@ class _Events extends State<Events> with TickerProviderStateMixin {
     );
 
     _animationController.forward();
+  }
+
+  List _eventsInscritos = [
+    929299,
+    '20/02/2021',
+    'Nome Evento',
+    'Description',
+    'Brasília'
+  ];
+
+  setidusuarioCookie() async {
+    getidusuarioCookie().then((valID) => setState(() {
+          idusuarioCookie = valID;
+          listLengthInscrito(idusuarioCookie);
+        }));
+  }
+
+  getidusuarioCookie() async {
+    final prefs = await SharedPreferences.getInstance();
+    idusuarioCookie = prefs.getInt('idusuarioCookie') ?? 0;
+    print(idusuarioCookie);
+    return idusuarioCookie;
+  }
+
+  _consultarEventosInscritos(int idusuarioCookies) async {
+    final todasLinhasInscritos =
+        await dbHelper.queryEventosInscritos(idusuarioCookies);
+    List resultadoInscritos = todasLinhasInscritos.toList();
+    return resultadoInscritos;
+  }
+
+  listLengthInscrito(int idusuarioCookies) async {
+    _consultarEventosInscritos(idusuarioCookies)
+        .then((valorListInscritos) => setState(() {
+              //print(valorList);
+              _eventsInscritos = valorListInscritos;
+            }));
+    //print("valor do List _events");
+    //print(print("Enter listLength: ");_events);
   }
 
   @override
@@ -255,7 +299,10 @@ class _Events extends State<Events> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildCard(bool icone, double height, double width) {
+  Widget _buildCard(bool icone, double height, double width, int index) {
+    var dataSplitted = _eventsInscritos[index]['data'].toString();
+    var data = dataSplitted.substring(0, 10).replaceAll(RegExp('-'), '/');
+    String dataInscritos = "$data";
     return SizedBox(
         height: height,
         width: width,
@@ -274,9 +321,9 @@ class _Events extends State<Events> with TickerProviderStateMixin {
                     height: 120, fit: BoxFit.fill),
               ),
               ListTile(
-                title: Text('Evento Beneficente'),
+                title: Text(_eventsInscritos[index]['nome'].toString()),
                 trailing: icone ? Icon(Icons.calendar_today) : null,
-                subtitle: Text('24/04/2019'),
+                subtitle: Text(dataInscritos),
               ),
             ],
           ),
@@ -301,7 +348,7 @@ class _Events extends State<Events> with TickerProviderStateMixin {
                               context) {}), //builder: (context) => EventDetails(),
                     );
                   },
-                  child: _buildCard(true, 200, 220));
+                  child: _buildCard(true, 200, 220, index));
             }),
       )
     ]);
