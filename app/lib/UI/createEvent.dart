@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voluntarios/UI/eventDetails.dart';
 import 'package:voluntarios/UI/imageUploader.dart';
 import 'package:voluntarios/UI/messages.dart';
@@ -25,6 +26,7 @@ class _CreateEvent extends State<CreateEvent> {
   TextEditingController nomeController = new TextEditingController();
   TextEditingController descriptionController = new TextEditingController();
   DateTime data;
+  int idusuarioCookie;
 
   void _pickDateDialog(BuildContext context) {
     showDatePicker(
@@ -142,7 +144,13 @@ class _CreateEvent extends State<CreateEvent> {
                         final String descricao = descriptionController.text;
                         data = _selectedDate;
                         final DateTime dataEvento = data;
-                        var lista = [nome, descricao, dataEvento, regiao];
+                        var lista = [
+                          nome,
+                          descricao,
+                          dataEvento,
+                          regiao,
+                          idusuarioCookie
+                        ];
                         _inserir(lista);
                         _consultarEventos();
                         Navigator.pop(context);
@@ -205,6 +213,19 @@ class _CreateEvent extends State<CreateEvent> {
     );
   }
 
+  setidusuarioCookie() async {
+    getidusuarioCookie().then((valID) => setState(() {
+          idusuarioCookie = valID;
+        }));
+  }
+
+  getidusuarioCookie() async {
+    final prefs = await SharedPreferences.getInstance();
+    idusuarioCookie = prefs.getInt('idusuarioCookie') ?? 0;
+    print(idusuarioCookie);
+    return idusuarioCookie;
+  }
+
   void _inserir(List lista) async {
     String nome = lista[0];
     String descricao = lista[1];
@@ -213,6 +234,7 @@ class _CreateEvent extends State<CreateEvent> {
     String fk1 = 'NULL';
     int disponibilidade = 1;
     String regiao = lista[3];
+    int idOwner = lista[4];
     // linha para incluir
     Map<String, dynamic> row = {
       database.DatabaseHelper.eventName: nome,
@@ -223,8 +245,18 @@ class _CreateEvent extends State<CreateEvent> {
       database.DatabaseHelper.eventDisponibility: disponibilidade,
       database.DatabaseHelper.eventRegion: regiao
     };
-    final id = await dbHelper.insertEvent(row);
-    print('linha inserida id: $id');
+    final idEvent = await dbHelper.insertEvent(row);
+    _inserirDono(idEvent, idOwner);
+    //print('linha inserida id: $id');
+  }
+
+  void _inserirDono(int idEvent, int idOwner) async {
+    final id = await dbHelper
+        .insertOwner(idEvent, idOwner)
+        .then((valorList) => setState(() {
+              print("Inserindo dono entra setState:");
+              print(valorList);
+            }));
   }
 
   void _consultarEventos() async {

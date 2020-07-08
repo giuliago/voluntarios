@@ -16,6 +16,9 @@ class _EditProfile extends State<EditProfile> {
   String initialText;
   String dropdownValue = 'Brasília';
   int maxLines = 8;
+  TextEditingController nomeController = new TextEditingController();
+  TextEditingController regiaoController = new TextEditingController();
+  TextEditingController descricaoController = new TextEditingController();
 
   void initState() {
     super.initState();

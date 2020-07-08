@@ -112,7 +112,17 @@ class DatabaseHelper {
     //dynamic results = await batch.commit();
     //print(results);
     //results.commit();
-    return await db.insert(tableEvent, row);
+    //last_insert_rowid()
+    db.insert(tableEvent, row);
+    int idowner;
+    return idowner = await db.rawInsert("SELECT last_insert_rowid()", null);
+  }
+
+  Future<int> insertOwner(int idOwner, int idEvent) async {
+    Database db = await instance.database;
+    List<dynamic> args = [idOwner, idEvent];
+    //print(db.rawInsert("INSERT INTO ta_inscricao VALUES (?, ?)", args));
+    return await db.rawInsert("INSERT INTO ta_inscricao VALUES (?, ?)", args);
   }
 
   Future<List<Map<String, dynamic>>> queryAllRows() async {

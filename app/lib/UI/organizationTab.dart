@@ -108,14 +108,20 @@ class _OrganizationTab extends State<OrganizationTab>
     );
   }
 
+  ScrollController scrollController = ScrollController(
+    initialScrollOffset: 1, // or whatever offset you wish
+    keepScrollOffset: true,
+  );
+
   Widget _buildYourOrganizations(BuildContext context) {
+    //int index = 1;
     return Expanded(
         child: SizedBox(
       width: 300,
       height: 100,
       child: ListView.builder(
           padding: EdgeInsets.all(8),
-          itemCount: 5,
+          itemCount: 1 + 5,
           itemBuilder: (BuildContext context, int index) {
             return Card(
               child: Column(
@@ -125,7 +131,7 @@ class _OrganizationTab extends State<OrganizationTab>
                         radius: 30,
                         backgroundImage:
                             NetworkImage('https://placeimg.com/640/480/any')),
-                    title: Text('nome'),
+                    title: Text('Organização $index'),
                     subtitle: Text('Descrição aqui'),
                   )
                 ],
@@ -142,7 +148,7 @@ class _OrganizationTab extends State<OrganizationTab>
         Padding(
             padding: EdgeInsets.fromLTRB(0, 20, 220, 0),
             child: Text(
-              'Descrição',
+              descricaoOrganizacao,
               style: TextStyle(fontSize: 20, color: Colors.lightGreen[700]),
             )),
         Padding(
@@ -158,7 +164,7 @@ class _OrganizationTab extends State<OrganizationTab>
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => ListPeople()));
             },
-            child: Text('Participantes (200)...',
+            child: Text('Participantes (13)...',
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 16, color: Colors.lightBlue))),
         Padding(
